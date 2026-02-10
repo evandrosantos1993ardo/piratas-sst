@@ -658,7 +658,7 @@
             <p class="subtitle">Ranking de Gamificação - Segurança do Trabalho</p>
         </header>
 
-        <div class="config-section" id="configSection">
+        <div class="config-section" id="configSection" style="display:none;">
             <h3 style="color: #FF9800; margin-bottom: 15px;">⚙️ Configuração Inicial</h3>
             <p style="margin-bottom: 10px;">Cole as URLs CSV publicadas da planilha:</p>
             <input type="text" id="urlPlan1" placeholder="URL CSV Plan1 (Ranking)">
@@ -751,7 +751,9 @@
 
     <script>
         const SPREADSHEET_ID = '1SwsNVqPEncf03k3fmUUpn4Qzv5UrqnQtL6jB9gxQc_s';
-        let URL_RANKING = '', URL_LOG = '', dadosRanking = [], dadosLog = [];
+        let URL_RANKING = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRBoC0tbh7Ac2meQloNopSoqPmrbJwHyEeWWRrr370rmXby7eK6_6agfxV-zywdIwzRq6YCpI2GEwwN/pub?gid=0&single=true&output=csv';
+        let URL_LOG     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRBoC0tbh7Ac2meQloNopSoqPmrbJwHyEeWWRrr370rmXby7eK6_6agfxV-zywdIwzRq6YCpI2GEwwN/pub?gid=1808064967&single=true&output=csv';
+        let dadosRanking = [], dadosLog = [];
 
         const patentes = [
             { min: 0, max: 49, nome: "Tripulante Perdido", emoji: "🌊" },
@@ -1047,6 +1049,9 @@
         window.onclick = e => {
             if (e.target.classList.contains('modal')) e.target.style.display = 'none';
         };
+        window.addEventListener('DOMContentLoaded', () => {
+        carregarDados();
+});
     </script>
 </body>
 </html>
