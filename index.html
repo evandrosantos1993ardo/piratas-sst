@@ -1,4 +1,4 @@
-14+20<!DOCTYPE html>
+14+25<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -840,47 +840,23 @@
             document.getElementById('alunoDetalhes').style.display = 'block';
         }
 
-        async function salvarLancamento(event) {
+        function salvarLancamento(event) {
             event.preventDefault();
-        
+            
             const aluno = document.getElementById('alunoSelect').value;
             const tipo = document.querySelector('input[name="tipo"]:checked').value;
             const quantidade = document.getElementById('quantidadeOuro').value;
             const descricao = document.getElementById('descricaoLancamento').value;
             const data = new Date().toLocaleDateString('pt-BR');
-        
-            const dados = {
-                aluno,
-                tipo,
-                quantidade,
-                descricao,
-                data
-            };
-        
-            try {
-                fetch("https://script.google.com/macros/s/AKfycbw9tT2q4cNa11bt6ezTEGUUoIAKWBTKIndTO13VtGB-EO-wGfZZBsK-WdSbxWeasSkD/exec", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "text/plain;charset=utf-8"
-                  },
-                  body: JSON.stringify({
-                    nome: "Aluno Teste",
-                    valor: 10,
-                    descricao: "Teste moedas"
-                  })
-                })
-                .then(res => res.json())
-                .then(data => console.log(data))
-                .catch(err => console.error(err));
-                });
-        
-                mostrarAlerta('success', '✅ Enviado para Plan2!');
+            
+            const texto = `${aluno}\t${tipo}\t${quantidade}\t${descricao}\t${data}`;
+            
+            navigator.clipboard.writeText(texto).then(() => {
+                mostrarAlerta('success', `✅ Copiado! Cole na Plan2 e atualize Plan1.`);
                 fecharModal('modalLancamento');
-                carregarDados();
-        
-            } catch (erro) {
-                mostrarAlerta('error', '❌ Erro ao enviar');
-            }
+            });
+            
+            return false;
         }
 
         function mostrarAlerta(tipo, msg) {
