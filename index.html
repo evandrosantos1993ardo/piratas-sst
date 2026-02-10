@@ -1,4 +1,4 @@
-14+15<!DOCTYPE html>
+14+20<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -858,10 +858,20 @@
             };
         
             try {
-                await fetch("https://script.google.com/macros/s/AKfycbxrQcgC_5Z4rh2ra5bToVnF_y-PFEpO9A__OiC8RFWJEPHdvRsqIn5MxNtgfnpjEbnV/exec", {
-                    method: "POST",
-                    body: JSON.stringify(dados),
-                    headers: { "Content-Type": "application/json" }
+                fetch("https://script.google.com/macros/s/AKfycbw9tT2q4cNa11bt6ezTEGUUoIAKWBTKIndTO13VtGB-EO-wGfZZBsK-WdSbxWeasSkD/exec", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "text/plain;charset=utf-8"
+                  },
+                  body: JSON.stringify({
+                    nome: "Aluno Teste",
+                    valor: 10,
+                    descricao: "Teste moedas"
+                  })
+                })
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(err => console.error(err));
                 });
         
                 mostrarAlerta('success', '✅ Enviado para Plan2!');
