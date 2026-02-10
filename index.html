@@ -1,4 +1,4 @@
-14+25<!DOCTYPE html>
+14+29<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -840,24 +840,41 @@
             document.getElementById('alunoDetalhes').style.display = 'block';
         }
 
-        function salvarLancamento(event) {
-            event.preventDefault();
+            async function salvarLancamento(event) {
+              event.preventDefault();
             
-            const aluno = document.getElementById('alunoSelect').value;
-            const tipo = document.querySelector('input[name="tipo"]:checked').value;
-            const quantidade = document.getElementById('quantidadeOuro').value;
-            const descricao = document.getElementById('descricaoLancamento').value;
-            const data = new Date().toLocaleDateString('pt-BR');
+              const aluno = document.getElementById('alunoSelect').value;
+              const quantidade = document.getElementById('quantidadeOuro').value;
+              const descricao = document.getElementById('descricaoLancamento').value;
+              const tipo = document.querySelector('input[name="tipo"]:checked').value;
             
-            const texto = `${aluno}\t${tipo}\t${quantidade}\t${descricao}\t${data}`;
+              try {
+                await fetch(
+                  "https://script.google.com/macros/s/AKfycbyU4nrdTDCnQgac10Df0yZ9te-FheXWWQZFHqIYS-5p0qYbFHfEVTFc2fK_-k7i3je94w/exec",
+                  {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                      "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                      aluno,
+                      quantidade,
+                      descricao,
+                      tipo
+                    })
+                  }
+                );
             
-            navigator.clipboard.writeText(texto).then(() => {
-                mostrarAlerta('success', `✅ Copiado! Cole na Plan2 e atualize Plan1.`);
+                alert("✅ Salvo na Plan2!");
                 fecharModal('modalLancamento');
-            });
             
-            return false;
-        }
+              } catch (erro) {
+                alert("❌ Erro ao salvar");
+              }
+            
+              return false;
+            }
 
         function mostrarAlerta(tipo, msg) {
             document.getElementById('alertContainer').innerHTML = 
