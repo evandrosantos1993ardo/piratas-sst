@@ -1,4 +1,4 @@
-14+29<!DOCTYPE html>
+14+33<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -840,41 +840,44 @@
             document.getElementById('alunoDetalhes').style.display = 'block';
         }
 
-            async function salvarLancamento(event) {
-              event.preventDefault();
-            
-              const aluno = document.getElementById('alunoSelect').value;
-              const quantidade = document.getElementById('quantidadeOuro').value;
-              const descricao = document.getElementById('descricaoLancamento').value;
-              const tipo = document.querySelector('input[name="tipo"]:checked').value;
-            
-              try {
-                await fetch(
-                  "https://script.google.com/macros/s/AKfycbyU4nrdTDCnQgac10Df0yZ9te-FheXWWQZFHqIYS-5p0qYbFHfEVTFc2fK_-k7i3je94w/exec",
-                  {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: {
-                      "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                      aluno,
-                      quantidade,
-                      descricao,
-                      tipo
-                    })
-                  }
-                );
-            
-                alert("✅ Salvo na Plan2!");
-                fecharModal('modalLancamento');
-            
-              } catch (erro) {
-                alert("❌ Erro ao salvar");
+        async function salvarLancamento(event) {
+          event.preventDefault();
+        
+          const aluno = document.getElementById('alunoSelect').value;
+          const quantidade = document.getElementById('quantidadeOuro').value;
+          const descricao = document.getElementById('descricaoLancamento').value;
+          const tipo = document.querySelector('input[name="tipo"]:checked').value;
+        
+          try {
+            const response = await fetch(
+              "https://script.google.com/macros/s/AKfycbyU4nrdTDCnQgac10Df0yZ9te-FheXWWQZFHqIYS-5p0qYbFHfEVTFc2fK_-k7i3je94w/exec",
+              {
+                method: "POST",
+                mode: "no-cors", // evita bloqueio CORS
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  aluno,
+                  quantidade,
+                  descricao,
+                  tipo
+                })
               }
-            
-              return false;
-            }
+            );
+        
+            mostrarAlerta("success", "✅ Enviado para Plan2!");
+            fecharModal("modalLancamento");
+            document.getElementById("formLancamento").reset();
+        
+          } catch (error) {
+            console.error(error);
+            mostrarAlerta("error", "❌ Erro ao enviar");
+          }
+        
+          return false;
+        }
+
 
         function mostrarAlerta(tipo, msg) {
             document.getElementById('alertContainer').innerHTML = 
