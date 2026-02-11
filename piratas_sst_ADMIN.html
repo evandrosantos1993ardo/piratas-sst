@@ -1,4 +1,5 @@
-13+24<!DOCTYPE html>
+13+28
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -881,7 +882,7 @@
             <div class="card">
                 <h2>🏆 Ranking da Tripulação</h2>
                 <div id="rankingPrincipal">
-                    <div style="text-align: center; padding: 40px; color: #ffd700;">⚙️ Configure as URLs acima para começar</div>
+                    <div style="text-align: center; padding: 40px; color: #ffd700;">⚙️ Carregando dados...</div>
                 </div>
             </div>
 
@@ -1013,12 +1014,14 @@
     </div>
 
     <script>
-        const urlPlan1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBoC0tbh7Ac2meQloNopSoqPmrbJwHyEeWWRrr370rmXby7eK6_6agfxV-zywdIwzRq6YCpI2GEwwN/pub?gid=0&single=true&output=csv";
-        const urlPlan2 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBoC0tbh7Ac2meQloNopSoqPmrbJwHyEeWWRrr370rmXby7eK6_6agfxV-zywdIwzRq6YCpI2GEwwN/pub?gid=1808064967&single=true&output=csv";
-        
         const SENHA_ADMIN = '01478963';
         const SPREADSHEET_ID = '1SwsNVqPEncf03k3fmUUpn4Qzv5UrqnQtL6jB9gxQc_s';
-        let URL_RANKING = '', URL_LOG = '', dadosRanking = [], dadosLog = [];
+        
+        // URLs CSV fixadas diretamente no código
+        const URL_RANKING = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
+        const URL_LOG = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=1831260806`;
+        
+        let dadosRanking = [], dadosLog = [];
 
         const patentes = [
             { min: 0, max: 49, nome: "Tripulante Perdido", emoji: "🌊" },
@@ -1115,6 +1118,7 @@
             if (sessionStorage.getItem('adminLogado') === 'true') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
+                carregarDados();
             }
         }
 
@@ -1225,21 +1229,6 @@
             `).join('');
         }
 
-        function salvarURLs() {
-            URL_RANKING = document.getElementById('urlPlan1').value.trim();
-            URL_LOG = document.getElementById('urlPlan2').value.trim();
-            
-            if (!URL_RANKING || !URL_LOG) {
-                mostrarAlerta('error', '❌ Preencha ambas as URLs!');
-                return;
-            }
-            
-            localStorage.setItem('urlPlan1', URL_RANKING);
-            localStorage.setItem('urlPlan2', URL_LOG);
-            
-            carregarDados();
-        }
-
         function parseCSV(csv) {
             const lines = csv.trim().split('\n');
             if (!lines.length) return [];
@@ -1260,11 +1249,6 @@
         }
 
         async function carregarDados() {
-            if (!URL_RANKING || !URL_LOG) {
-                mostrarAlerta('error', '❌ Configure as URLs primeiro!');
-                return;
-            }
-            
             mostrarAlerta('info', '⏳ Carregando dados...');
             
             try {
@@ -1458,17 +1442,6 @@
 
         window.onload = () => {
             verificarLogin();
-            
-            URL_RANKING = localStorage.getItem('urlPlan1') || '';
-            URL_LOG = localStorage.getItem('urlPlan2') || '';
-            
-            if (URL_RANKING) document.getElementById('urlPlan1').value = URL_RANKING;
-            if (URL_LOG) document.getElementById('urlPlan2').value = URL_LOG;
-            
-            if (URL_RANKING && URL_LOG && sessionStorage.getItem('adminLogado') === 'true') {
-                carregarDados();
-                document.getElementById('configSection').style.display = 'none';
-            }
         };
 
         document.getElementById('searchInput').addEventListener('keypress', e => {
