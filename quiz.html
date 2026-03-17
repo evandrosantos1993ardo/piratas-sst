@@ -134,10 +134,10 @@
     <div class="entry-wrap">
       <div class="entry-badge">🛡️ SEGURANÇA DO TRABALHO</div>
       <div class="entry-title">Quiz <span>Challenge</span></div>
-      <div class="entry-sub">Responda 20 questões e mostre seu conhecimento!</div>
+      <div class="entry-sub">Responda 20 questões em até 5 minutos e mostre seu conhecimento!</div>
       <div class="stats-row">
         <div class="stat-box"><div class="stat-icon">❓</div><div class="stat-val">20</div><div class="stat-lbl">Questões</div></div>
-        <div class="stat-box"><div class="stat-icon">⏱️</div><div class="stat-val">60</div><div class="stat-lbl">Minutos</div></div>
+        <div class="stat-box"><div class="stat-icon">⏱️</div><div class="stat-val">5</div><div class="stat-lbl">Minutos</div></div>
         <div class="stat-box"><div class="stat-icon">⭐</div><div class="stat-val">100</div><div class="stat-lbl">XP máx</div></div>
       </div>
 
@@ -206,7 +206,7 @@
             <div class="player-sub" id="q-progress-lbl">Questão 1 de 20</div>
           </div>
         </div>
-        <div class="timer-chip" id="timer-chip">⏱ <span id="timer-display">60:00</span></div>
+        <div class="timer-chip" id="timer-chip">⏱ <span id="timer-display">05:00</span></div>
       </div>
       <div class="xp-row">
         <span class="xp-label">XP</span>
@@ -269,93 +269,79 @@
 const SHEETS_URL="https://script.google.com/macros/s/AKfycbwVjIoHrK1UTV72f5k8dm1r4dmX9y0hhrvliMomqxGR-Wh_R4-yCX73s8N2xYuxNIf-/exec";
 
 const ALL_Q=[
-  {q:"Um perigo pode causar danos, o risco é a probabilidade de que isso aconteça, e os riscos e perigos potenciais NÃO são prioridade quando avaliados juntos. Qual sequência V/F está correta?",opts:["V, V, F","V, F, V","F, V, F","F, F, V"],ans:0},
-  {q:"Qual é a ordem correta do conceito de segurança do trabalho?",opts:["Execução, monitoramento e planejamento","Monitoramento, execução e planejamento","Monitoramento, planejamento e execução","Planejamento, execução, monitoramento"],ans:3},
-  {q:"Qual o significado da letra C na sigla PDCA?",opts:["Verificar","Capacitar","Informar","Nenhuma alternativa correta"],ans:0},
-  {q:"Qual o significado da letra D na sigla PDCA?",opts:["Direcionar","Treinamento","Executar","Nenhuma alternativa correta"],ans:2},
-  {q:"Qual a característica dos indicadores reativos?",opts:["Avaliam consequências; Atuam depois do problema","Atuam antes do acidente; Foco na prevenção","Todas as alternativas corretas","Nenhuma alternativa correta"],ans:0},
-  {q:"Qual a característica dos indicadores proativos?",opts:["Avaliam consequências; Atuam depois do problema","Atuam antes do acidente; Foco na prevenção","Todas as alternativas estão corretas","Nenhuma alternativa correta"],ans:1},
-  {q:"O que significa a letra P na sigla PDCA?",opts:["Prevenir","Planejar","Produzir","Priorizar"],ans:1},
-  {q:"O que significa a letra A na sigla PDCA?",opts:["Avaliar","Ajustar","Agir","Analisar"],ans:2},
-  {q:"Qual a sequência correta do ciclo PDCA?",opts:["Planejar, Executar, Verificar, Agir","Agir, Planejar, Executar, Verificar","Verificar, Agir, Planejar, Executar","Executar, Verificar, Agir, Planejar"],ans:0},
-  {q:"O que significa EPI?",opts:["Equipamento de Proteção Individual","Equipamento de Prevenção de Incêndio","Estrutura de Proteção Industrial","Equipamento de Proteção Integrada"],ans:0},
-  {q:"O que significa CIPA?",opts:["Comissão Interna de Prevenção de Acidentes","Comitê Industrial de Proteção Ambiental","Centro de Inspeção de Processos Administrativos","Comissão Internacional de Prevenção Ambiental"],ans:0},
-  {q:"Qual cor identifica equipamentos de combate a incêndio?",opts:["Azul","Verde","Vermelho","Amarelo"],ans:2},
-  {q:"O que é risco ergonômico?",opts:["Exposição a produtos químicos","Problemas causados por postura inadequada ou esforço repetitivo","Risco de explosão","Contato com eletricidade"],ans:1},
-  {q:"Qual equipamento é utilizado para proteção auditiva?",opts:["Óculos de proteção","Luvas","Protetor auricular","Máscara respiratória"],ans:2},
-  {q:"O que fazer ao identificar uma situação de risco no trabalho?",opts:["Ignorar","Continuar trabalhando normalmente","Comunicar imediatamente ao responsável","Resolver sozinho sem avisar"],ans:2},
-  {q:"O que significa a sigla PGR?",opts:["Ordem de serviço","Programa de controle médico e saúde ocupacional","Programa de gerenciamento de risco","Gerenciamento de risco ocupacional"],ans:2},
-  {q:"Qual a diferença entre risco e perigo?",opts:["Perigo é a chance de algo acontecer, e risco é aquilo que causa dano","Perigo é a fonte que pode causar dano, e risco é a probabilidade desse dano acontecer","Perigo e risco são a mesma coisa","Risco é sempre maior que o perigo"],ans:1},
-  {q:"Quais são os tipos de risco ocupacionais?",opts:["Físico, químico, biológico, ergonômico e acidentes","Acidente, biológico, ergonômico, químico, físico","Ergonômico, químico, biológico, acidente, físico","Químico, acidente, físico, ergonômico, biológico"],ans:0},
-  {q:"Qual é a diferença entre perigo imediato e oculto?",opts:["Perigo imediato pode causar dano na hora; o perigo oculto não é facilmente percebido","Perigo imediato só existe em máquinas","Perigo imediato não causa acidentes","Perigo oculto é visível e o perigo imediato é invisível"],ans:0},
-  {q:"Qual é a principal função do PGR?",opts:["Apenas registrar acidentes","Identificar, avaliar e controlar os riscos ocupacionais no ambiente de trabalho","Substituir todas as normas de segurança","Garantir apenas o uso de EPIs"],ans:1},
-  {q:"O que significa APR?",opts:["Análise de Processo de Risco","Avaliação de Perigo Rotativo","Análise Preliminar de Risco","Ação Preventiva de Rotina"],ans:2},
-  {q:"Qual o principal objetivo da APR?",opts:["Demitir funcionários","Aumentar produção","Punir erros","Identificar e prevenir riscos antes da atividade"],ans:3},
-  {q:"Qual desses é um EPI?",opts:["Escada","Andaime","Máquina","Capacete"],ans:3},
-  {q:"Quem é responsável por fornecer os EPIs?",opts:["Funcionário","Governo","Cliente","Empregador"],ans:3},
-  {q:"O que são NRs?",opts:["Normas Regionais","Normas de Risco","Normas Regulamentadoras","Normas de Rotina"],ans:2},
-  {q:"Qual NR trata da CIPA?",opts:["NR-10","NR-6","NR-5","NR-12"],ans:2},
-  {q:"A NR-6 está relacionada a:",opts:["Máquinas","Eletricidade","Trabalho em altura","EPIs"],ans:3},
-  {q:"O que significa PCMSO?",opts:["Laudo Técnico das Condições Ambientais","Saúde e Segurança no Trabalho","Programa de Controle Médico de Saúde Ocupacional","Diálogo Diário de Segurança"],ans:2},
-  {q:"Qual a função do PCMSO?",opts:["Identificar e classificar riscos","Monitorar a saúde dos trabalhadores por meio de exames ocupacionais","Elaborar ordens de serviço","Substituir o PGR"],ans:1},
-  {q:"Quantos tipos principais de riscos ocupacionais existem?",opts:["3","4","5","7"],ans:2},
-  {q:"Qual dos exemplos abaixo é um risco físico?",opts:["Vírus","Poeira química","Ruídos","Bactérias"],ans:2},
-  {q:"O que a matriz de risco avalia?",opts:["O salário do trabalhador","A probabilidade e a gravidade do risco","O horário de trabalho","A produção da empresa"],ans:1},
-  {q:"Qual NR trata do Gerenciamento de Risco Ocupacional?",opts:["NR-1","NR-5","NR-6","NR-9"],ans:0},
-  {q:"A NR-33 trata de:",opts:["Ergonomia no trabalho","Trabalho em altura","Segurança em espaços confinados","Uso de EPIs"],ans:2},
-  {q:"A NR-35 estabelece regras para:",opts:["Trabalho em escritório","Trabalho em altura","Trabalho com máquinas","Trabalho com eletricidade"],ans:1},
-  {q:"O que é perigo oculto?",opts:["É o perigo sempre visível","É específico de caminhões","É o perigo que não é percebido facilmente","Não existe perigo oculto"],ans:2},
-  {q:"Qual é um exemplo de risco biológico?",opts:["Ruído excessivo","Produtos químicos","Queda de altura","Bactérias"],ans:3},
-  {q:"O que é a CIPA?",opts:["Comissão paritária para prevenir acidentes e doenças no trabalho","Órgão Federal que fiscaliza empresas","Sindicato de técnicos de segurança","Programa de exames médicos"],ans:0},
-  {q:"Em qual situação a APR deve ser realizada?",opts:["Após o término da atividade","Antes de iniciar qualquer tarefa com riscos","Apenas em caso de acidente","Somente em empresas grandes"],ans:1},
-  {q:"O trabalhador pode recusar o uso de EPI?",opts:["Sim, se não quiser","Sim, se estiver calor","Não, o uso é obrigatório","Só em dias específicos"],ans:2},
-  {q:"Para que servem as NRs?",opts:["Organizar empresas","Criar regras de produção","Garantir segurança e saúde no trabalho","Controlar salários"],ans:2},
-  {q:"Quem deve garantir que as NR sejam cumpridas?",opts:["Apenas o trabalhador","Apenas o governo","O empregador e os trabalhadores","Somente o sindicato"],ans:2},
-  {q:"Qual o significado do PDCA?",opts:["Planejar, desenvolver, controlar, avaliar","Planejar, executar, checar, agir","Produzir, direcionar, corrigir, administrar","Planejar, decidir, comunicar, analisar"],ans:1},
-  {q:"Qual a relação entre GRO e PGR?",opts:["GRO é o processo; PGR é o programa que documenta as ações","PGR é mais amplo que o GRO","GRO trata apenas de exames médicos","PGR substitui o GRO"],ans:0},
-  {q:"Qual NR é a de trabalho em altura?",opts:["NR-15","NR-10","NR-35","NR-30"],ans:2},
-  {q:"O que são EPC?",opts:["Equipamentos de uso individual","Usados apenas por supervisores","Equipamentos de proteção coletiva que protegem todos","Ferramentas de produção"],ans:2},
-  {q:"A NR-10 trata de:",opts:["Trabalho em altura","Segurança com eletricidade","Espaço confinado","Incêndio"],ans:1},
-  {q:"A NR-23 é sobre:",opts:["Produtos químicos","Incêndio e combate ao fogo","Espaços confinados","Ergonomia"],ans:1},
-  {q:"Qual NR trata especificamente do trabalho em altura (acima de 2 metros)?",opts:["NR-06","NR-10","NR-35","NR-12"],ans:2},
-  {q:"O que é um incidente (quase acidente)?",opts:["Ocorrência sem lesão, mas que poderia ter causado","Acidente grave com afastamento","Doença ocupacional","Acidente durante o trajeto"],ans:0},
-  {q:"O que significa a sigla CLT?",opts:["Conselho Livre do Trabalhador","Consolidação das Leis Trabalhistas","Código de Leis Trabalhistas","Confederação Livre do Trabalhador"],ans:1},
-  {q:"A sigla CAT refere-se à?",opts:["Cadastro de Acidente Técnico","Comunicação de Acidente de Trabalho","Controle de Atividades Temporárias","Comissão de Análise Técnica"],ans:1},
-  {q:"O que é perigo?",opts:["Chance de acontecer algo","Fonte que pode causar dano","Resultado de um acidente","Tipo de norma"],ans:1},
-  {q:"O que significa risco?",opts:["Apenas a gravidade do dano","Apenas a causa do problema","Probabilidade + gravidade","Tipo de equipamento"],ans:2},
-  {q:"O que quer dizer GRO?",opts:["Grupo de Risco Operacional","Gerenciamento de Riscos Ocupacionais","Guia de Regras Operacionais","Gestão de Recursos Organizacionais"],ans:1},
-  {q:"O que é um inventário de riscos?",opts:["Lista de funcionários","Controle de equipamentos","Levantamento dos riscos do trabalho","Registro de salários"],ans:2},
-  {q:"O que é um indicador proativo?",opts:["Mede acidentes ocorridos","Mede falhas já existentes","Mede ações de prevenção","Mede custos"],ans:2},
-  {q:"Quando um risco é considerado alto?",opts:["Quando não há perigo","Quando a chance e o dano são baixos","Quando a probabilidade e a gravidade são altas","Quando não há controle"],ans:2},
-  {q:"Qual é um dos objetivos de incluir fatores psicossociais na gestão de segurança?",opts:["Aumentar produtividade sem considerar cansaço","Prevenir doenças mentais ocupacionais e promover bem-estar","Substituir o uso de EPIs","Reduzir salários"],ans:1},
-  {q:"Segundo a NR-23, os extintores devem ser selecionados com base em:",opts:["Cor da parede","Classe de incêndio (A, B, C ou D) e carga de incêndio","Preço mais baixo","Peso do equipamento"],ans:1},
-  {q:"Qual dos indicadores mede o que já aconteceu?",opts:["Indicadores reativos","Indicadores proativos","Indicadores estratégicos","Nenhuma das alternativas"],ans:0},
-  {q:"Qual característica é essencial para um bom indicador?",opts:["Confiável","Complexo","Irrelevante","Inconsciente"],ans:0},
-  {q:"Fiação exposta representa qual tipo de risco?",opts:["Biológico","Químico","Ergonômico","Elétrico"],ans:3},
-  {q:"Qual NR trata de eletricidade?",opts:["NR-10","NR-12","NR-18","NR-22"],ans:0},
-  {q:"Qual a NR considerada a NR 'mãe'?",opts:["NR-01","NR-02","NR-07","NR-19"],ans:0},
-  {q:"Qual é a ordem correta das medidas de controle?",opts:["Substituição, eliminação, EPI, controles administrativos","EPI, controles administrativos, engenharia, substituição","Eliminação, substituição, controles de engenharia, controles administrativos e EPI","Controles de engenharia, controles administrativos, substituição, eliminação"],ans:2},
-  {q:"Qual NR trata de ergonomia e postura?",opts:["NR-15","NR-11","NR-17","NR-22"],ans:2},
-  {q:"Qual a importância do EPI?",opts:["Oferecer proteção contra riscos ocupacionais no ambiente de trabalho","Impedir completamente qualquer risco","Substituir treinamentos","Proteger apenas contra cortes"],ans:0},
-  {q:"O uso do EPI é obrigatório quando?",opts:["O funcionário se sentir seguro","As medidas coletivas não forem suficientes","A fiscalização estiver presente","O equipamento for confortável"],ans:1},
-  {q:"Qual das alternativas representa um risco físico?",opts:["Poeira e fumo","Vírus e bactérias","Ruído e vibração","Postura inadequada"],ans:2},
-  {q:"O que significa EPC?",opts:["Equipamento de proteção coletiva","Equipamento de proteção completa","Equipamento de proteção contra quedas","Estrutura de proteção contra incêndios"],ans:0},
-  {q:"Qual a diferença entre EPI e EPC?",opts:["Não existe diferença","EPI é coletivo e EPC é individual","EPI protege o indivíduo e EPC protege o grupo","Ambos são iguais"],ans:2},
-  {q:"Qual NR trata de transporte de carga?",opts:["NR-11","NR-15","NR-26","NR-18"],ans:0},
-  {q:"O que significa ACT no ciclo PDCA?",opts:["Verificar","Executar","Planejar","Agir"],ans:3},
-  {q:"Perigo imediato é aquele que:",opts:["Pode causar dano rapidamente ou na hora","Aparece depois de anos","Não causa danos","Só existe em escritório"],ans:0},
-  {q:"Indicadores proativos medem:",opts:["Somente acidentes já ocorridos","Gravidade de afastamentos","Ações de prevenção como inspeções e riscos eliminados","Número de demissões"],ans:2},
-  {q:"Qual NR fala sobre proteção contra incêndios?",opts:["NR-23","NR-14","NR-22","NR-21"],ans:0},
-  {q:"Cortes são um risco classificado como:",opts:["Biológico","Físico","Químico","Acidente"],ans:3},
-  {q:"Qual NR estabelece que o empregador deve elaborar o PGR?",opts:["NR-1","NR-5","NR-6","NR-17"],ans:0},
-  {q:"Perigo é a fonte, situação ou ato com potencial de causar dano. Essa afirmação é:",opts:["Verdadeira","Falsa","Parcialmente correta","Não se aplica"],ans:0},
-  {q:"A NR-17 está relacionada à:",opts:["Trabalho com faca","Ergonomia","Eletricidade","Espaços confinados"],ans:1},
-  {q:"O que é OS (Ordem de Serviço)?",opts:["Orientar trabalhadores sobre riscos e procedimentos seguros","Controlar exames médicos","Identificar apenas riscos ambientais","Substituir o PGR"],ans:0},
-  {q:"A NR-18 está relacionada a:",opts:["Construção civil","Uso de EPI","Trabalho em escritório","Transporte de cargas"],ans:0},
-  {q:"Qual NR trata de espaços confinados?",opts:["NR-35","NR-17","NR-33","NR-8"],ans:2}
+  {q:"Durante uma inspeção, uma máquina sem proteção apresenta risco de esmagamento. Essa situação caracteriza:",opts:["Incidente","Perigo","Acidente","Indicador"],ans:1},
+  {q:"Um trabalhador avalia riscos antes de iniciar uma atividade. Essa ação corresponde a:",opts:["Execução","Planejamento","Monitoramento","Correção"],ans:1},
+  {q:"No ciclo PDCA, a análise dos resultados ocorre em:",opts:["Planejar","Executar","Verificar","Agir"],ans:2},
+  {q:"Após identificar falhas, a empresa implementa melhorias. Essa etapa é:",opts:["Planejar","Executar","Verificar","Agir"],ans:3},
+  {q:"Monitorar acidentes já ocorridos representa indicador:",opts:["Proativo","Reativo","Preventivo","Estratégico"],ans:1},
+  {q:"Inspeções preventivas representam indicador:",opts:["Reativo","Corretivo","Proativo","Operacional"],ans:2},
+  {q:"O EPI deve ser utilizado quando:",opts:["O trabalhador quiser","EPC não for suficiente","Houver fiscalização","Sempre opcional"],ans:1},
+  {q:"A escolha do extintor depende de:",opts:["Cor","Marca","Classe do incêndio","Peso"],ans:2},
+  {q:"Sistema contínuo de gestão de riscos documentado é:",opts:["APR","PGR","CAT","EPC"],ans:1},
+  {q:"Análise feita antes de iniciar uma atividade é chamada de:",opts:["OS","APR","GRO","EPC"],ans:1},
+  {q:"Evento sem lesão, mas com potencial de causar dano, é:",opts:["Acidente","Incidente","Doença","Risco"],ans:1},
+  {q:"Avaliação que cruza probabilidade e gravidade do dano é:",opts:["Auditoria","Matriz de risco","Inspeção","Controle"],ans:1},
+  {q:"Na hierarquia de controle de riscos, a medida mais eficaz é:",opts:["EPI","Treinamento","Eliminação","Controle administrativo"],ans:2},
+  {q:"Antes de adotar o EPI contra ruído, a prioridade deve ser:",opts:["Aplicar multa","Controle de engenharia","Treinamento","Demissão"],ans:1},
+  {q:"Fiação elétrica exposta é risco:",opts:["Químico","Biológico","Elétrico","Ergonômico"],ans:2},
+  {q:"Segurança em espaço confinado é tratada pela:",opts:["NR-10","NR-33","NR-35","NR-17"],ans:1},
+  {q:"O gerenciamento de riscos ocupacionais é exigido pela:",opts:["NR-5","NR-6","NR-1","NR-17"],ans:2},
+  {q:"Exames médicos periódicos dos trabalhadores pertencem ao:",opts:["PGR","PCMSO","APR","GRO"],ans:1},
+  {q:"Perigo oculto é aquele que:",opts:["É sempre visível","Não existe","Não é percebido facilmente","Causa dano imediato"],ans:2},
+  {q:"Risco alto ocorre quando:",opts:["Há baixa probabilidade","Há alta gravidade e probabilidade","Não há dano possível","Não há perigo identificado"],ans:1},
+  {q:"Comunicar um risco identificado demonstra:",opts:["Falha do trabalhador","Cultura de segurança","Comportamento reativo","Falta de controle"],ans:1},
+  {q:"A APR deve ser realizada:",opts:["Após o término da atividade","Antes de iniciar a atividade","Durante a atividade","Somente em auditorias"],ans:1},
+  {q:"O capacete é classificado como:",opts:["EPC","EPI","Ferramenta","Sistema de proteção"],ans:1},
+  {q:"Quem é o responsável por fornecer o EPI ao trabalhador?",opts:["O governo","O próprio trabalhador","O empregador","O sindicato"],ans:2},
+  {q:"As Normas Regulamentadoras (NRs) servem para:",opts:["Controlar produção","Garantir segurança e saúde no trabalho","Reduzir custos","Definir salários"],ans:1},
+  {q:"Qual NR trata da CIPA?",opts:["NR-10","NR-5","NR-6","NR-17"],ans:1},
+  {q:"Qual NR regulamenta os EPIs?",opts:["NR-5","NR-6","NR-10","NR-17"],ans:1},
+  {q:"O PCMSO tem como foco principal:",opts:["Gestão de riscos","Saúde dos trabalhadores","Controle de produção","Gestão de equipamentos"],ans:1},
+  {q:"Ruído excessivo é exemplo de risco:",opts:["Biológico","Químico","Físico","Ergonômico"],ans:2},
+  {q:"A matriz de risco avalia:",opts:["Tempo de trabalho","Probabilidade e gravidade","Produção do setor","Salário dos trabalhadores"],ans:1},
+  {q:"A relação correta entre perigo e risco é:",opts:["São conceitos iguais","Perigo é probabilidade","Perigo é a fonte; risco é a chance de dano","Risco é sempre o dano"],ans:2},
+  {q:"Baixo índice de acidentes com muitos riscos identificados indica:",opts:["Falha do sistema","Proatividade na gestão","Ineficiência operacional","Risco alto não controlado"],ans:1},
+  {q:"A etapa de correção no ciclo PDCA corresponde à letra:",opts:["P","D","C","A"],ans:3},
+  {q:"O EPI não resolve o risco na fonte. Isso indica falha na:",opts:["Norma aplicada","Hierarquia de controle","Treinamento dos trabalhadores","Forma de uso do EPI"],ans:1},
+  {q:"O indicador reativo:",opts:["Prevê acidentes","Previne riscos","Analisa o que já aconteceu","Elimina perigos"],ans:2},
+  {q:"Na hierarquia de controle, a prioridade máxima é:",opts:["EPI","Procedimento administrativo","Eliminação do risco","Treinamento"],ans:2},
+  {q:"Corrigir uma situação de risco sem comunicar é:",opts:["Uma boa prática","Ação proativa","Uma falha de procedimento","Uma atitude segura"],ans:2},
+  {q:"Qual opção representa um indicador proativo?",opts:["Registro de acidente","Inspeção de segurança","Emissão de CAT","Relatório de afastamento"],ans:1},
+  {q:"Substituir um produto perigoso por outro mais seguro é uma medida de:",opts:["EPI","Controle de engenharia","Substituição","Controle administrativo"],ans:2},
+  {q:"A relação correta entre PGR e GRO é:",opts:["São iguais","PGR substitui o GRO","PGR documenta o GRO","GRO é o documento"],ans:2},
+  {q:"Um trabalhador realiza atividade em altura sem proteção contra quedas. Isso está relacionado à:",opts:["NR-10","NR-17","NR-35","NR-33"],ans:2},
+  {q:"Um perigo imediato é aquele que:",opts:["Não apresenta risco","Se desenvolve lentamente","Pode causar dano de forma instantânea","Só ocorre após exposição prolongada"],ans:2},
+  {q:"Qual das opções representa um risco biológico?",opts:["Ruído","Poeira mineral","Vírus e bactérias","Vibração"],ans:2},
+  {q:"A principal função da CIPA é:",opts:["Aplicar penalidades","Representar o governo","Prevenir acidentes e doenças no trabalho","Controlar a produção"],ans:2},
+  {q:"Recusar o uso de EPI, sem justificativa técnica, é:",opts:["Permitido","Facultativo","Irregular","Recomendado em alguns casos"],ans:2},
+  {q:"As Normas Regulamentadoras devem ser cumpridas por:",opts:["Apenas empregadores","Apenas trabalhadores","Empregadores e trabalhadores","Apenas fiscais do trabalho"],ans:2},
+  {q:"No ciclo PDCA, a etapa responsável por implementar o plano é:",opts:["Planejar","Executar","Verificar","Agir"],ans:1},
+  {q:"A relação correta entre GRO e PGR é:",opts:["São independentes","PGR substitui o GRO","GRO é o processo e PGR é o documento","PGR é opcional"],ans:2},
+  {q:"Os EPCs têm como objetivo principal:",opts:["Proteger individualmente","Proteger coletivamente","Substituir EPIs","Reduzir custos"],ans:1},
+  {q:"Atividades com eletricidade são regulamentadas pela:",opts:["NR-23","NR-17","NR-10","NR-35"],ans:2},
+  {q:"A prevenção e combate a incêndios é tratada na:",opts:["NR-5","NR-10","NR-23","NR-33"],ans:2},
+  {q:"Um evento sem lesão, mas com potencial de dano, é definido como:",opts:["Acidente","Incidente","Risco","Perigo"],ans:1},
+  {q:"A sigla CLT significa:",opts:["Código Legal do Trabalho","Consolidação das Leis Trabalhistas","Controle Legal Técnico","Comissão Legal do Trabalho"],ans:1},
+  {q:"A CAT é utilizada para:",opts:["Controle interno","Comunicação de Acidente de Trabalho","Auditoria de riscos","Planejamento de segurança"],ans:1},
+  {q:"Perigo pode ser definido como:",opts:["Probabilidade de dano","Fonte com potencial de causar dano","Consequência do acidente","Tipo de risco"],ans:1},
+  {q:"Risco é melhor definido como:",opts:["Dano causado","Probabilidade isolada","Probabilidade mais gravidade","Evento já ocorrido"],ans:2},
+  {q:"O GRO significa:",opts:["Grupo de Risco Operacional","Gerenciamento de Riscos Ocupacionais","Gestão de Recursos Organizacionais","Guia Regulatório Obrigatório"],ans:1},
+  {q:"O inventário de riscos corresponde a:",opts:["Lista de equipamentos","Levantamento estruturado dos riscos do trabalho","Controle financeiro","Registro de acidentes"],ans:1},
+  {q:"Indicadores proativos têm como foco:",opts:["Acidentes já ocorridos","Prevenção de riscos","Controle de custos","Aumento de produção"],ans:1},
+  {q:"Um risco é considerado elevado quando há:",opts:["Ausência de controle apenas","Baixa probabilidade e alta gravidade","Alta probabilidade e alta gravidade","Nenhum dano possível"],ans:2},
+  {q:"Um risco com baixa probabilidade, mas com consequência fatal, deve ser classificado como:",opts:["Baixo","Moderado","Alto","Desprezível"],ans:2},
+  {q:"Assinale a alternativa com erro conceitual:",opts:["Perigo é fonte de dano","Risco envolve probabilidade","Risco é igual a perigo","Risco envolve gravidade"],ans:2},
+  {q:"Um ambiente com uso de EPI, mas sem controle na fonte do risco, indica:",opts:["Controle ideal","Aplicação correta da hierarquia","Falha na priorização das medidas de controle","Excesso de segurança"],ans:2},
+  {q:"Ao considerar apenas acidentes ocorridos, a empresa está focando em:",opts:["Prevenção","Indicadores proativos","Indicadores reativos","Eliminação de riscos"],ans:2},
+  {q:"Substituir um processo perigoso por outro mais seguro é uma medida chamada de:",opts:["Controle administrativo","Mitigação","Substituição","Proteção individual"],ans:2},
+  {q:"A normalização do desvio ocorre quando:",opts:["As normas são devidamente cumpridas","Os riscos são completamente eliminados","Situações inseguras passam a ser aceitas como normais","Há fiscalização constante no setor"],ans:2},
+  {q:"Um trabalhador não comunica um risco por considerá-lo 'comum'. Isso representa:",opts:["Consciência de risco","Cultura preventiva","Falha comportamental e cultural","Ação proativa"],ans:2},
+  {q:"A etapa mais negligenciada, porém crítica no ciclo PDCA, costuma ser:",opts:["Planejar","Executar","Verificar","Agir"],ans:3},
+  {q:"A eficácia do PGR depende diretamente de:",opts:["Documentação apenas","Aplicação prática e monitoramento contínuo","Auditorias externas exclusivamente","Redução de custos operacionais"],ans:1},
+  {q:"A melhor estratégia de controle de risco, segundo a hierarquia, é:",opts:["Uso de EPI","Treinamento","Eliminação do risco","Procedimento administrativo"],ans:2}
 ];
 
-let quiz=[],answers=[],currentQ=0,timerInt=null,secsLeft=3600,student="",selectedTeam="";
+let quiz=[],answers=[],currentQ=0,timerInt=null,secsLeft=300,student="",selectedTeam="";
 
 function selectTeam(btn){
   document.querySelectorAll('.team-btn').forEach(b=>b.classList.remove('selected'));
@@ -416,14 +402,14 @@ function pick(qIdx,optIdx){answers[qIdx]=optIdx;renderQ(qIdx);}
 function goTo(idx){if(idx>=0&&idx<20)renderQ(idx);}
 
 function startTimer(){
-  secsLeft=3600;
+  secsLeft=300;
   timerInt=setInterval(()=>{
     secsLeft--;
     const m=String(Math.floor(secsLeft/60)).padStart(2,'0');
     const s=String(secsLeft%60).padStart(2,'0');
     document.getElementById('timer-display').textContent=m+':'+s;
     const chip=document.getElementById('timer-chip');
-    chip.className=secsLeft<=300?'timer-chip danger':secsLeft<=600?'timer-chip warn':'timer-chip';
+    chip.className=secsLeft<=30?'timer-chip danger':secsLeft<=90?'timer-chip warn':'timer-chip';
     if(secsLeft<=0){clearInterval(timerInt);finishQuiz();}
   },1000);
 }
