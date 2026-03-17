@@ -19,9 +19,21 @@
 .name-select{width:100%;padding:13px 16px;font-size:15px;font-family:'Nunito',sans-serif;font-weight:700;border:2px solid #3a3a6e;border-radius:12px;background:#252545;color:#fff;appearance:none;cursor:pointer;margin-bottom:1.25rem;outline:none;}
 .name-select:focus{border-color:#ffc800;}
 .name-select option{background:#252545;color:#fff;}
+
+/* Team selector */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem;}
+.team-btn{padding:14px 8px;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;background:#252545;color:#aaa;border:2px solid #3a3a6e;border-radius:12px;cursor:pointer;transition:all 0.15s;text-align:center;}
+.team-btn:hover{border-color:#ffc800;color:#fff;background:#2e2e5e;}
+.team-btn.selected{background:rgba(255,200,0,0.18);border-color:#ffc800;color:#ffc800;}
+.team-btn .team-icon{font-size:20px;display:block;margin-bottom:4px;}
+
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .btn-play{width:100%;padding:16px;font-size:17px;font-weight:900;font-family:'Nunito',sans-serif;background:#ffc800;color:#1a1a2e;border:none;border-radius:14px;cursor:pointer;letter-spacing:0.03em;transition:transform 0.1s,filter 0.1s;}
 .btn-play:hover{filter:brightness(1.1);transform:translateY(-2px);}
 .btn-play:active{transform:scale(0.98);}
+.btn-dashboard{width:100%;padding:16px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;background:#252545;color:#fff;border:2px solid #3a3a6e;border-radius:14px;cursor:pointer;transition:all 0.15s;}
+.btn-dashboard:hover{border-color:#ffc800;background:#2e2e5e;}
+
 .quiz-top{background:#1a1a2e;border-radius:16px;padding:14px 16px;margin-bottom:1rem;border:2px solid #2a2a4e;}
 .quiz-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .player-chip{display:flex;align-items:center;gap:10px;}
@@ -60,7 +72,8 @@
 .result-wrap{background:#1a1a2e;border-radius:20px;padding:2rem;border:2px solid #2a2a4e;text-align:center;}
 .trophy{font-size:60px;margin-bottom:8px;}
 .result-title{font-size:24px;font-weight:900;color:#fff;margin-bottom:4px;}
-.result-name-big{font-size:15px;font-weight:700;color:#888;margin-bottom:1.5rem;}
+.result-name-big{font-size:15px;font-weight:700;color:#888;margin-bottom:0.5rem;}
+.result-team-big{font-size:13px;font-weight:800;color:#ffc800;margin-bottom:1.25rem;display:inline-block;background:rgba(255,200,0,0.12);border:1.5px solid rgba(255,200,0,0.3);border-radius:99px;padding:3px 14px;}
 .score-ring-wrap{margin:0 auto 1rem;width:140px;height:140px;position:relative;}
 .score-ring-wrap svg{transform:rotate(-90deg);}
 .score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
@@ -78,9 +91,45 @@
 .ans-item.fail .ans-icon{background:rgba(239,68,68,0.25);color:#ef4444;}
 .ans-qtext{font-size:12px;color:#666;margin-top:3px;font-weight:600;}
 .sheets-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:10px;font-size:13px;font-weight:700;border:2px solid #3a3a6e;background:#252545;color:#aaa;margin-top:1rem;}
+.btn-back{margin-top:1.25rem;width:100%;padding:14px;font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;background:#252545;color:#fff;border:2px solid #3a3a6e;border-radius:12px;cursor:pointer;transition:all 0.15s;}
+.btn-back:hover{border-color:#ffc800;}
+
+/* ── DASHBOARD ── */
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.dash-title{font-size:22px;font-weight:900;color:#fff;}
+.dash-refresh{padding:8px 18px;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;background:#252545;color:#ffc800;border:2px solid #ffc800;border-radius:99px;cursor:pointer;transition:all 0.15s;}
+.dash-refresh:hover{background:rgba(255,200,0,0.15);}
+.dash-refresh.loading{opacity:0.5;pointer-events:none;}
+.summary-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem;}
+.sum-box{background:#1a1a2e;border:2px solid #2a2a4e;border-radius:14px;padding:14px;text-align:center;}
+.sum-val{font-size:26px;font-weight:900;color:#ffc800;}
+.sum-lbl{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;}
+.teams-section{margin-bottom:1.25rem;}
+.section-title{font-size:13px;font-weight:800;color:#aaa;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
+.team-row{background:#1a1a2e;border:2px solid #2a2a4e;border-radius:14px;padding:14px 16px;margin-bottom:8px;}
+.team-row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.team-row-name{font-size:15px;font-weight:900;color:#fff;}
+.team-row-avg{font-size:13px;font-weight:800;color:#ffc800;}
+.team-bar-wrap{height:8px;background:#252545;border-radius:99px;overflow:hidden;}
+.team-bar-fill{height:100%;background:linear-gradient(90deg,#ffc800,#ff8c00);border-radius:99px;transition:width 0.6s ease;}
+.team-count{font-size:11px;color:#666;margin-top:5px;}
+.ranking-section{}
+.rank-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:#1a1a2e;border:2px solid #2a2a4e;margin-bottom:6px;}
+.rank-pos{width:28px;height:28px;border-radius:50%;background:#252545;border:2px solid #3a3a6e;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#aaa;flex-shrink:0;}
+.rank-pos.gold{background:rgba(255,200,0,0.2);border-color:#ffc800;color:#ffc800;}
+.rank-pos.silver{background:rgba(192,192,192,0.15);border-color:#c0c0c0;color:#c0c0c0;}
+.rank-pos.bronze{background:rgba(205,127,50,0.15);border-color:#cd7f32;color:#cd7f32;}
+.rank-info{flex:1;}
+.rank-name{font-size:13px;font-weight:800;color:#fff;}
+.rank-meta{font-size:11px;color:#666;margin-top:2px;}
+.rank-score{font-size:16px;font-weight:900;color:#ffc800;}
+.rank-pct{font-size:11px;color:#666;text-align:right;}
+.dash-empty{text-align:center;padding:2.5rem;color:#555;font-size:14px;font-weight:700;}
+.dash-error{text-align:center;padding:1.5rem;color:#ef4444;font-size:13px;font-weight:700;background:rgba(239,68,68,0.08);border:2px solid rgba(239,68,68,0.2);border-radius:12px;margin-bottom:1rem;}
 </style>
 
 <div id="app">
+  <!-- ENTRY SCREEN -->
   <div id="screen-entry" class="screen active">
     <div class="entry-wrap">
       <div class="entry-badge">🛡️ SEGURANÇA DO TRABALHO</div>
@@ -91,6 +140,7 @@
         <div class="stat-box"><div class="stat-icon">⏱️</div><div class="stat-val">60</div><div class="stat-lbl">Minutos</div></div>
         <div class="stat-box"><div class="stat-icon">⭐</div><div class="stat-val">100</div><div class="stat-lbl">XP máx</div></div>
       </div>
+
       <label class="field-lbl" for="name-select">Selecione seu nome</label>
       <select class="name-select" id="name-select">
         <option value="">— escolha seu nome —</option>
@@ -127,10 +177,25 @@
         <option>VINICIUS DE OLIVEIRA BARBOSA</option>
         <option>YASMIN PONTES SOUZA</option>
       </select>
-      <button class="btn-play" onclick="startQuiz()">🚀 INICIAR QUIZ</button>
+
+      <label class="field-lbl">Selecione sua equipe</label>
+      <div class="team-grid" id="team-grid">
+        <button class="team-btn" data-team="EQUIPE 1" onclick="selectTeam(this)"><span class="team-icon">🔵</span>EQUIPE 1</button>
+        <button class="team-btn" data-team="EQUIPE 2" onclick="selectTeam(this)"><span class="team-icon">🟢</span>EQUIPE 2</button>
+        <button class="team-btn" data-team="EQUIPE 3" onclick="selectTeam(this)"><span class="team-icon">🔴</span>EQUIPE 3</button>
+        <button class="team-btn" data-team="EQUIPE 4" onclick="selectTeam(this)"><span class="team-icon">🟡</span>EQUIPE 4</button>
+        <button class="team-btn" data-team="EQUIPE 5" onclick="selectTeam(this)"><span class="team-icon">🟣</span>EQUIPE 5</button>
+        <button class="team-btn" data-team="EQUIPE 6" onclick="selectTeam(this)"><span class="team-icon">🟠</span>EQUIPE 6</button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-play" onclick="startQuiz()">🚀 INICIAR QUIZ</button>
+        <button class="btn-dashboard" onclick="openDashboard()">📊 DASHBOARD</button>
+      </div>
     </div>
   </div>
 
+  <!-- QUIZ SCREEN -->
   <div id="screen-quiz" class="screen">
     <div class="quiz-top">
       <div class="quiz-top-row">
@@ -162,11 +227,13 @@
     </div>
   </div>
 
+  <!-- RESULT SCREEN -->
   <div id="screen-result" class="screen">
     <div class="result-wrap">
       <div class="trophy" id="trophy-icon">🏆</div>
       <div class="result-title" id="result-title">Parabéns!</div>
       <div class="result-name-big" id="result-name"></div>
+      <div class="result-team-big" id="result-team"></div>
       <div class="score-ring-wrap">
         <svg width="140" height="140" viewBox="0 0 140 140">
           <circle cx="70" cy="70" r="58" fill="none" stroke="#252545" stroke-width="12"/>
@@ -180,7 +247,21 @@
       <div class="status-pill" id="status-pill">—</div>
       <div class="sheets-bar" id="sheets-bar" style="display:none"></div>
       <div class="answers-grid" id="answers-grid"></div>
+      <button class="btn-back" onclick="goHome()">↩ Voltar ao início</button>
     </div>
+  </div>
+
+  <!-- DASHBOARD SCREEN -->
+  <div id="screen-dashboard" class="screen">
+    <div class="dash-header">
+      <div class="dash-title">📊 Dashboard</div>
+      <button class="dash-refresh" id="dash-refresh-btn" onclick="loadDashboard()">🔄 Atualizar</button>
+    </div>
+    <div id="dash-error" class="dash-error" style="display:none"></div>
+    <div id="dash-content">
+      <div class="dash-empty">⏳ Carregando dados...</div>
+    </div>
+    <button class="btn-back" onclick="goHome()">↩ Voltar ao início</button>
   </div>
 </div>
 
@@ -196,10 +277,8 @@ const ALL_Q=[
   {q:"Qual a característica dos indicadores proativos?",opts:["Avaliam consequências; Atuam depois do problema","Atuam antes do acidente; Foco na prevenção","Todas as alternativas estão corretas","Nenhuma alternativa correta"],ans:1},
   {q:"O que significa a letra P na sigla PDCA?",opts:["Prevenir","Planejar","Produzir","Priorizar"],ans:1},
   {q:"O que significa a letra A na sigla PDCA?",opts:["Avaliar","Ajustar","Agir","Analisar"],ans:2},
-  {q:"O que significa a sigla EPI?",opts:["Equipamento de Proteção Individual","Equipamento de Prevenção Industrial","Elemento de Proteção Interna","Equipamento de Produção Individual"],ans:0},
-  {q:"Qual é a principal função do uso de EPI?",opts:["Melhorar a produtividade","Reduzir custos da empresa","Proteger o trabalhador contra riscos","Aumentar o conforto no trabalho"],ans:2},
-  {q:"Qual órgão regula normas de segurança do trabalho no Brasil?",opts:["IBGE","Ministério do Trabalho e Emprego","INSS","Receita Federal"],ans:1},
-  {q:"O que é um acidente de trabalho?",opts:["Qualquer acidente fora da empresa","Evento sem danos ao trabalhador","Ocorrência que causa lesão ou doença relacionada ao trabalho","Apenas acidentes com máquinas"],ans:2},
+  {q:"Qual a sequência correta do ciclo PDCA?",opts:["Planejar, Executar, Verificar, Agir","Agir, Planejar, Executar, Verificar","Verificar, Agir, Planejar, Executar","Executar, Verificar, Agir, Planejar"],ans:0},
+  {q:"O que significa EPI?",opts:["Equipamento de Proteção Individual","Equipamento de Prevenção de Incêndio","Estrutura de Proteção Industrial","Equipamento de Proteção Integrada"],ans:0},
   {q:"O que significa CIPA?",opts:["Comissão Interna de Prevenção de Acidentes","Comitê Industrial de Proteção Ambiental","Centro de Inspeção de Processos Administrativos","Comissão Internacional de Prevenção Ambiental"],ans:0},
   {q:"Qual cor identifica equipamentos de combate a incêndio?",opts:["Azul","Verde","Vermelho","Amarelo"],ans:2},
   {q:"O que é risco ergonômico?",opts:["Exposição a produtos químicos","Problemas causados por postura inadequada ou esforço repetitivo","Risco de explosão","Contato com eletricidade"],ans:1},
@@ -276,13 +355,20 @@ const ALL_Q=[
   {q:"Qual NR trata de espaços confinados?",opts:["NR-35","NR-17","NR-33","NR-8"],ans:2}
 ];
 
-let quiz=[],answers=[],currentQ=0,timerInt=null,secsLeft=3600,student="";
+let quiz=[],answers=[],currentQ=0,timerInt=null,secsLeft=3600,student="",selectedTeam="";
+
+function selectTeam(btn){
+  document.querySelectorAll('.team-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedTeam=btn.dataset.team;
+}
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 
 function startQuiz(){
   const sel=document.getElementById('name-select').value;
   if(!sel){alert('Selecione seu nome para continuar.');return;}
+  if(!selectedTeam){alert('Selecione sua equipe para continuar.');return;}
   student=sel;
   quiz=shuffle(ALL_Q).slice(0,20);
   answers=new Array(20).fill(null);
@@ -362,6 +448,7 @@ function showResults(score){
   document.getElementById('trophy-icon').textContent=score>=18?'🏆':score>=14?'🥈':score>=10?'🥉':'💪';
   document.getElementById('result-title').textContent=ok?'Parabéns, você passou!':'Continue estudando!';
   document.getElementById('result-name').textContent=student;
+  document.getElementById('result-team').textContent='🏷️ '+selectedTeam;
   document.getElementById('score-big').textContent=score;
   const ring=document.getElementById('ring-fill');
   const circ=364.4;
@@ -390,9 +477,125 @@ async function sendSheets(score){
   let det='';
   quiz.forEach((q,i)=>{const r=answers[i]!==null?L[answers[i]]:'NR';det+='Q'+(i+1)+':'+r+'('+L[q.ans]+')['+(answers[i]===q.ans?'OK':'X')+']; ';});
   try{
-    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:student,data:dt,pontuacao:score,total:20,percentual:Math.round((score/20)*100),detalhes:det.trim()})});
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:student,equipe:selectedTeam,data:dt,pontuacao:score,total:20,percentual:Math.round((score/20)*100),detalhes:det.trim()})});
     el.textContent='✅ Resultado salvo no Google Sheets!';
-  }catch(e){el.textContent='⚠️ Falha no envio. Anote: '+student+' — '+score+'/20';}
+  }catch(e){el.textContent='⚠️ Falha no envio. Anote: '+student+' ('+selectedTeam+') — '+score+'/20';}
+}
+
+function goHome(){
+  showScreen('screen-entry');
+}
+
+// ── DASHBOARD ──
+function openDashboard(){
+  showScreen('screen-dashboard');
+  loadDashboard();
+}
+
+async function loadDashboard(){
+  const btn=document.getElementById('dash-refresh-btn');
+  const errEl=document.getElementById('dash-error');
+  const content=document.getElementById('dash-content');
+  btn.classList.add('loading');btn.textContent='⏳ Carregando...';
+  errEl.style.display='none';
+  try{
+    const res=await fetch(SHEETS_URL,{method:'GET',mode:'cors'});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const raw=await res.json();
+    // raw = [[nome, data, pontuacao, total, percentual, equipe, detalhes], ...]
+    // skip header row if it exists (check if first cell is "nome" or non-numeric)
+    let rows=raw;
+    if(rows.length&&isNaN(Number(rows[0][2])))rows=rows.slice(1);
+    renderDashboard(rows,content);
+  }catch(e){
+    errEl.style.display='block';
+    errEl.textContent='⚠️ Não foi possível carregar os dados. Verifique a URL do Google Apps Script e permissões (doGet deve retornar dados publicamente).';
+    content.innerHTML='<div class="dash-empty">Sem dados para exibir.</div>';
+  }
+  btn.classList.remove('loading');btn.textContent='🔄 Atualizar';
+}
+
+function renderDashboard(rows, container){
+  if(!rows||rows.length===0){container.innerHTML='<div class="dash-empty">Nenhum resultado registrado ainda.</div>';return;}
+
+  // Parse rows: [nome, data, pontuacao, total, percentual, equipe, detalhes]
+  const entries=rows.map(r=>({
+    nome:String(r[0]||''),
+    data:String(r[1]||''),
+    pontuacao:Number(r[2])||0,
+    total:Number(r[3])||20,
+    percentual:Number(String(r[4]||'0').replace('%',''))||0,
+    equipe:String(r[5]||'Sem equipe'),
+    detalhes:String(r[6]||'')
+  })).filter(e=>e.nome);
+
+  if(!entries.length){container.innerHTML='<div class="dash-empty">Nenhum resultado válido encontrado.</div>';return;}
+
+  // Summary
+  const total=entries.length;
+  const mediaGeral=Math.round(entries.reduce((s,e)=>s+e.pontuacao,0)/total);
+  const aprovados=entries.filter(e=>e.pontuacao>=10).length;
+
+  // Teams
+  const teamNames=['EQUIPE 1','EQUIPE 2','EQUIPE 3','EQUIPE 4','EQUIPE 5','EQUIPE 6'];
+  const teamData=teamNames.map(name=>{
+    const members=entries.filter(e=>e.equipe===name);
+    const soma=members.reduce((s,e)=>s+e.pontuacao,0);
+    const avg=members.length?Math.round(soma/members.length):0;
+    return {name,members:members.length,soma,avg};
+  }).filter(t=>t.members>0);
+
+  // Top 10 ranking
+  const sorted=[...entries].sort((a,b)=>b.pontuacao-a.pontuacao).slice(0,10);
+
+  // Build HTML
+  let html=`
+  <div class="summary-row">
+    <div class="sum-box"><div class="sum-val">${total}</div><div class="sum-lbl">Participantes</div></div>
+    <div class="sum-box"><div class="sum-val">${mediaGeral}/20</div><div class="sum-lbl">Média geral</div></div>
+    <div class="sum-box"><div class="sum-val">${Math.round((aprovados/total)*100)}%</div><div class="sum-lbl">Aprovados</div></div>
+  </div>`;
+
+  if(teamData.length){
+    const maxSoma=Math.max(...teamData.map(t=>t.soma))||1;
+    html+=`<div class="teams-section"><div class="section-title">🏅 Ranking de Equipes — Total de Acertos</div>`;
+    teamData.sort((a,b)=>b.soma-a.soma).forEach((t,i)=>{
+      const barW=Math.round((t.soma/maxSoma)*100);
+      const medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'';
+      const posColor=i===0?'#ffc800':i===1?'#c0c0c0':i===2?'#cd7f32':'#aaa';
+      html+=`<div class="team-row">
+        <div class="team-row-head">
+          <span class="team-row-name">${medal}${t.name}</span>
+          <span class="team-row-avg" style="color:${posColor}">${t.soma} pts · média ${t.avg}/20</span>
+        </div>
+        <div class="team-bar-wrap"><div class="team-bar-fill" style="width:${barW}%"></div></div>
+        <div class="team-count">${t.members} participante${t.members!==1?'s':''} · ${t.soma} acertos no total</div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
+  html+=`<div class="ranking-section"><div class="section-title">🏆 Ranking Individual (Top 10)</div>`;
+  sorted.forEach((e,i)=>{
+    const posClass=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+    const pct=Math.round((e.pontuacao/e.total)*100);
+    const ok=e.pontuacao>=10;
+    html+=`<div class="rank-item">
+      <div class="rank-pos ${posClass}">${medal||i+1}</div>
+      <div class="rank-info">
+        <div class="rank-name">${e.nome}</div>
+        <div class="rank-meta">${e.equipe} · ${e.data}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="rank-score">${e.pontuacao}/20</div>
+        <div class="rank-pct" style="color:${ok?'#22c55e':'#ef4444'}">${pct}%</div>
+      </div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  container.innerHTML=html;
 }
 
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
