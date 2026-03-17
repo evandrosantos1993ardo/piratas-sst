@@ -1,0 +1,3112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MISSÃO SEGURANÇA – DESAFIO DO TÉCNICO</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --verde: #00e676;
+    --azul: #2979ff;
+    --amarelo: #ffd600;
+    --vermelho: #ff1744;
+    --bg: #0a0e1a;
+    --bg2: #111827;
+    --bg3: #1a2235;
+    --text: #e8f0fe;
+    --accent: #ff6d00;
+    --gold: #ffc400;
+    --silver: #b0bec5;
+    --danger: #f44336;
+    --success: #00c853;
+    --panel: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SCREENS */
+  .screen { display: none; width: 100%; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ===== TELA INICIAL ===== */
+  #screen-menu {
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 30%, #1a2a4a 0%, #0a0e1a 70%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #screen-menu::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,109,0,0.03) 50px, rgba(255,109,0,0.03) 51px),
+      repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,109,0,0.03) 50px, rgba(255,109,0,0.03) 51px);
+    pointer-events: none;
+  }
+
+  .menu-content {
+    text-align: center;
+    z-index: 2;
+    padding: 40px;
+    max-width: 900px;
+  }
+
+  .logo-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+    display: block;
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .game-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 900;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    line-height: 1.1;
+    text-shadow: 0 0 30px rgba(255,109,0,0.5), 0 0 60px rgba(255,109,0,0.2);
+    margin-bottom: 8px;
+  }
+
+  .game-subtitle {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(14px, 2.5vw, 22px);
+    color: var(--gold);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    opacity: 0.9;
+  }
+
+  .menu-desc {
+    font-size: 18px;
+    color: rgba(232,240,254,0.7);
+    margin-bottom: 50px;
+    line-height: 1.6;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #e65100);
+    color: white;
+    border: none;
+    padding: 20px 60px;
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+    box-shadow: 0 0 30px rgba(255,109,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(255,109,0,0.6); }
+  .btn-primary:hover::before { transform: translateX(100%); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 2px solid var(--border);
+    padding: 14px 40px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+    margin: 5px;
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  .floating-icons {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .float-icon {
+    position: absolute;
+    font-size: 40px;
+    opacity: 0.06;
+    animation: floatRandom linear infinite;
+  }
+
+  @keyframes floatRandom {
+    0% { transform: translateY(110vh) rotate(0deg); }
+    100% { transform: translateY(-110vh) rotate(360deg); }
+  }
+
+  /* ===== TELA DE JOGO ===== */
+  #screen-game {
+    flex-direction: column;
+    background: var(--bg);
+  }
+
+  .game-header {
+    background: var(--bg2);
+    border-bottom: 2px solid var(--accent);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  .header-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+
+  .map-indicator {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: var(--gold);
+    background: rgba(255,196,0,0.1);
+    border: 1px solid rgba(255,196,0,0.3);
+    padding: 6px 16px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+  }
+
+  .game-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: 185px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .panel-section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,109,0,0.2);
+  }
+
+  .team-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .team-card.active {
+    border-color: currentColor;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+
+  .team-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: currentColor;
+  }
+
+  .team-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    padding-left: 8px;
+  }
+
+  .team-score {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    padding-left: 8px;
+    color: var(--gold);
+  }
+
+  .team-pos {
+    font-size: 12px;
+    color: rgba(232,240,254,0.5);
+    padding-left: 8px;
+    margin-top: 2px;
+  }
+
+  .team-badges {
+    display: flex;
+    gap: 4px;
+    padding-left: 8px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.1);
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== TABULEIRO MARIO PARTY ===== */
+  .board-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 4px 4px 0;
+    overflow: hidden;
+    background: var(--bg3);
+    background-image:
+      radial-gradient(ellipse 90% 70% at 30% 40%, rgba(0,100,60,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 50% at 80% 70%, rgba(255,109,0,0.06) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.008) 80px, rgba(255,255,255,0.008) 81px),
+      repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(255,255,255,0.008) 80px, rgba(255,255,255,0.008) 81px);
+    position: relative;
+  }
+
+  /* Barra de controles do mapa */
+  .map-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px 6px;
+    flex-shrink: 0;
+  }
+
+  .zone-legend {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  /* Controles de zoom */
+  .zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+  .zoom-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    line-height: 1;
+    padding: 0;
+  }
+  .zoom-btn:hover { background: rgba(255,109,0,0.25); border-color: var(--accent); }
+  .zoom-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(232,240,254,0.5);
+    min-width: 34px;
+    text-align: center;
+  }
+  .zoom-fit-btn {
+    font-size: 10px;
+    padding: 2px 8px;
+    width: auto;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* Viewport escalável do mapa */
+  .board-viewport {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: grab;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+  }
+  .board-viewport:active { cursor: grabbing; }
+  .board-viewport::-webkit-scrollbar { width: 6px; height: 6px; }
+  .board-viewport::-webkit-scrollbar-track { background: transparent; }
+  .board-viewport::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+  /* Wrapper SVG do mapa — escala via transform */
+  .board-wrap {
+    position: relative;
+    display: inline-block;
+    transform-origin: center center;
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  /* O tabuleiro orgânico é todo renderizado em SVG + elementos absolutos */
+  #mapSvg {
+    display: block;
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.6));
+  }
+
+  /* Legenda zona */
+  .zone-legend {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .zone-pill {
+    font-size: 11px;
+    font-family: 'Share Tech Mono', monospace;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    border: 1px solid transparent;
+  }
+  .zone-pill.z-start { background: rgba(0,230,118,0.12); border-color: rgba(0,230,118,0.4); color: #00e676; }
+  .zone-pill.z-mid   { background: rgba(255,152,0,0.12); border-color: rgba(255,152,0,0.4);  color: #ff9800; }
+  .zone-pill.z-end   { background: rgba(244,67,54,0.12); border-color: rgba(244,67,54,0.4);  color: #ef5350; }
+
+  /* ── CASAS CIRCULARES ── */
+  .map-cell {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    user-select: none;
+  }
+  .map-cell:hover { transform: scale(1.12) !important; z-index: 50 !important; }
+
+  .map-cell .cell-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 7px;
+    opacity: 0.5;
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  .map-cell .cell-ico {
+    font-size: 18px;
+    line-height: 1;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));
+  }
+  .map-cell .cell-lbl {
+    font-size: 6.5px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 1px;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  /* Tipos de células */
+  .ct-pergunta  { background: radial-gradient(circle, #1e3a7a, #0d1f4d); border: 3px solid #4285f4; color: #82b1ff; box-shadow: 0 0 12px rgba(66,133,244,0.5); }
+  .ct-acidente  { background: radial-gradient(circle, #6b0f0f, #3d0000); border: 3px solid #ff1744; color: #ff8a80; box-shadow: 0 0 12px rgba(255,23,68,0.5); }
+  .ct-risco     { background: radial-gradient(circle, #7b1010, #3d0000); border: 3px solid #b71c1c; color: #ff5252; box-shadow: 0 0 15px rgba(183,28,28,0.7); animation: riscoAura 1.6s ease-in-out infinite; }
+  .ct-epi       { background: radial-gradient(circle, #0a3d1f, #052810); border: 3px solid #00c853; color: #69f0ae; box-shadow: 0 0 12px rgba(0,200,83,0.5); }
+  .ct-investigacao { background: radial-gradient(circle, #4a3800, #2a2000); border: 3px solid #ffd600; color: #ffd600; box-shadow: 0 0 12px rgba(255,196,0,0.5); }
+  .ct-desafio   { background: radial-gradient(circle, #4a2500, #2a1400); border: 3px solid #ff6d00; color: #ffab40; box-shadow: 0 0 12px rgba(255,109,0,0.5); }
+  .ct-surpresa  { background: radial-gradient(circle, #36084a, #1e0030); border: 3px solid #aa00ff; color: #ea80fc; box-shadow: 0 0 12px rgba(170,0,255,0.5); }
+  .ct-teleporte { background: radial-gradient(circle, #00384a, #001e2a); border: 3px solid #00bcd4; color: #80deea; box-shadow: 0 0 14px rgba(0,188,212,0.6); animation: teleportGlow 2.5s ease-in-out infinite; }
+  .ct-armadilha { background: radial-gradient(circle, #4a1a00, #2a0a00); border: 3px solid #ff5722; color: #ff8a65; box-shadow: 0 0 14px rgba(255,87,34,0.6); animation: trapPulse 1.8s ease-in-out infinite; }
+  .ct-missao    { background: radial-gradient(circle, #4a3500, #2a1d00); border: 3px solid #ffc107; color: #ffe082; box-shadow: 0 0 16px rgba(255,193,7,0.6); animation: missionShine 2s ease-in-out infinite; }
+  .ct-boss      { background: radial-gradient(circle, #2a0040, #12001e); border: 3px solid #dd00ff; color: #e040fb; box-shadow: 0 0 20px rgba(171,0,255,0.8); animation: bossAura 1.5s ease-in-out infinite; }
+  .ct-inicio    { background: radial-gradient(circle, #003d1f, #001f10); border: 4px solid #00e676; color: #00e676; box-shadow: 0 0 25px rgba(0,230,118,0.7); animation: startPulse 2s ease-in-out infinite; }
+  .ct-fim       { background: radial-gradient(circle, #4a3d00, #2a2200); border: 4px solid #ffd600; color: #ffd600; box-shadow: 0 0 30px rgba(255,214,0,0.8); animation: goalShine 1.5s ease-in-out infinite; }
+
+  @keyframes riscoAura    { 0%,100%{box-shadow:0 0 10px rgba(183,28,28,0.5)} 50%{box-shadow:0 0 28px rgba(183,28,28,0.9),0 0 50px rgba(183,28,28,0.3)} }
+  @keyframes teleportGlow { 0%,100%{box-shadow:0 0 8px rgba(0,188,212,0.4)} 50%{box-shadow:0 0 24px rgba(0,188,212,0.9),0 0 45px rgba(0,188,212,0.3)} }
+  @keyframes trapPulse    { 0%,100%{box-shadow:0 0 8px rgba(255,87,34,0.4)} 50%{box-shadow:0 0 22px rgba(255,87,34,0.8)} }
+  @keyframes missionShine { 0%,100%{box-shadow:0 0 12px rgba(255,193,7,0.5)} 50%{box-shadow:0 0 30px rgba(255,193,7,0.9),0 0 55px rgba(255,193,7,0.2)} }
+  @keyframes bossAura     { 0%,100%{box-shadow:0 0 16px rgba(171,0,255,0.6)} 50%{box-shadow:0 0 36px rgba(171,0,255,1),0 0 65px rgba(171,0,255,0.35)} }
+  @keyframes startPulse   { 0%,100%{box-shadow:0 0 20px rgba(0,230,118,0.6)} 50%{box-shadow:0 0 40px rgba(0,230,118,1),0 0 70px rgba(0,230,118,0.3)} }
+  @keyframes goalShine    { 0%,100%{box-shadow:0 0 22px rgba(255,214,0,0.7)} 50%{box-shadow:0 0 45px rgba(255,214,0,1),0 0 80px rgba(255,214,0,0.35)} }
+
+  /* Highlight ao mover peão */
+  .map-cell.highlight { animation: cellPulse 0.75s ease-in-out !important; z-index: 50 !important; }
+  @keyframes cellPulse {
+    0%  { transform: scale(1); }
+    40% { transform: scale(1.25); filter: brightness(1.8); }
+    100%{ transform: scale(1); }
+  }
+  .map-cell.active-cell { outline: 3px solid white; outline-offset: 3px; z-index: 40 !important; }
+
+  /* ── PEÕES ── */
+  .pawn-container {
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    max-width: 30px;
+    z-index: 10;
+  }
+  .pawn {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.9);
+    font-size: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 12;
+  }
+  .pawn:hover { transform: scale(1.3); }
+
+  /* Área de setor label no mapa */
+  .sector-area-label {
+    position: absolute;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.18;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 0;
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 10px;
+    overflow-y: auto;
+  }
+
+  /* DADO */
+  .dice-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .dice-display {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px;
+    background: white;
+    border-radius: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 4px;
+    padding: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.5);
+    transition: transform 0.1s;
+  }
+
+  .dice-display.rolling {
+    animation: diceRoll 0.6s ease-out;
+  }
+
+  @keyframes diceRoll {
+    0% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(180deg) scale(0.8); }
+    50% { transform: rotate(360deg) scale(1.1); }
+    75% { transform: rotate(540deg) scale(0.9); }
+    100% { transform: rotate(720deg) scale(1); }
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #1a1a2e;
+    margin: auto;
+    transition: all 0.2s;
+  }
+
+  .dot.hidden { opacity: 0; }
+
+  .btn-roll {
+    background: linear-gradient(135deg, var(--accent), #e65100);
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255,109,0,0.3);
+  }
+
+  .btn-roll:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,109,0,0.5); }
+  .btn-roll:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* CURRENT TEAM */
+  .current-team-display {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .current-turn-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(232,240,254,0.5);
+    margin-bottom: 8px;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  .current-team-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* CRONÔMETRO */
+  .timer-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    display: none;
+  }
+
+  .timer-section.active { display: block; }
+
+  .timer-display {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 48px;
+    text-align: center;
+    color: var(--success);
+    line-height: 1;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+  }
+
+  .timer-display.danger { color: var(--danger); animation: blink 0.5s ease-in-out infinite; }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .timer-bar-track {
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .timer-bar {
+    height: 100%;
+    background: var(--success);
+    border-radius: 4px;
+    transition: width 1s linear, background 0.3s;
+  }
+
+  .timer-bar.danger { background: var(--danger); }
+
+  /* LOG */
+  .game-log {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    flex: 1;
+    min-height: 120px;
+    overflow-y: auto;
+  }
+
+  .log-entry {
+    font-size: 12px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(232,240,254,0.7);
+    line-height: 1.4;
+  }
+
+  .log-entry:first-child { color: var(--text); }
+  .log-entry span { font-weight: 700; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--bg2);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 35px;
+    max-width: 680px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes modalIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-type-badge {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 3px;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .modal-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.3;
+  }
+
+  .modal-body {
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(232,240,254,0.85);
+    margin-bottom: 25px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .option-btn {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    text-align: left;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+
+  .option-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); transform: translateX(4px); }
+  .option-btn.correct { border-color: var(--success); background: rgba(0,200,83,0.1); color: var(--success); }
+  .option-btn.wrong { border-color: var(--danger); background: rgba(244,67,54,0.1); color: var(--danger); }
+  .option-btn:disabled { cursor: default; }
+
+  .option-letter {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--accent);
+    margin-right: 8px;
+  }
+
+  .result-box {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: none;
+  }
+
+  .result-box.show { display: block; }
+  .result-box.correct-result { background: rgba(0,200,83,0.15); border: 2px solid var(--success); }
+  .result-box.wrong-result { background: rgba(244,67,54,0.15); border: 2px solid var(--danger); }
+
+  .result-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+
+  .result-points {
+    font-size: 36px;
+    font-weight: 900;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .btn-action {
+    padding: 12px 28px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+  }
+
+  .btn-confirm { background: var(--success); color: white; border-color: var(--success); }
+  .btn-confirm:hover { box-shadow: 0 0 20px rgba(0,200,83,0.4); }
+  .btn-next { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-next:hover { box-shadow: 0 0 20px rgba(255,109,0,0.4); }
+  .btn-close { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-close:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* ===== RANKING ===== */
+  #screen-ranking {
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 30%, #1a2a4a 0%, #0a0e1a 70%);
+    padding: 40px;
+  }
+
+  .ranking-container {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .ranking-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(30px, 5vw, 60px);
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(255,196,0,0.5);
+    margin-bottom: 10px;
+    animation: rankingPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes rankingPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .ranking-subtitle {
+    font-size: 18px;
+    color: rgba(232,240,254,0.6);
+    margin-bottom: 50px;
+    letter-spacing: 2px;
+  }
+
+  .ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+  }
+
+  .ranking-item {
+    background: var(--bg2);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    animation: slideIn 0.5s ease-out backwards;
+  }
+
+  .ranking-item:nth-child(1) { border-color: var(--gold); box-shadow: 0 0 30px rgba(255,196,0,0.2); animation-delay: 0.1s; }
+  .ranking-item:nth-child(2) { border-color: var(--silver); animation-delay: 0.2s; }
+  .ranking-item:nth-child(3) { border-color: #cd7f32; animation-delay: 0.3s; }
+  .ranking-item:nth-child(4) { animation-delay: 0.4s; }
+
+  @keyframes slideIn {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .rank-medal {
+    font-size: 40px;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  .rank-team-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    flex: 1;
+    text-align: left;
+  }
+
+  .rank-score {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 32px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .rank-stats {
+    text-align: right;
+    font-size: 13px;
+    color: rgba(232,240,254,0.5);
+    line-height: 1.6;
+  }
+
+  .victory-animation {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    animation: confettiFall linear infinite;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* MAP SELECTION */
+  #screen-mapselect {
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 30%, #1a2a4a 0%, #0a0e1a 70%);
+    padding: 40px;
+  }
+
+  .maps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+    margin-top: 30px;
+  }
+
+  .map-card {
+    background: var(--bg2);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 25px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+  }
+
+  .map-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(255,109,0,0.2);
+  }
+
+  .map-card-icon { font-size: 50px; margin-bottom: 12px; display: block; }
+  .map-card-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+
+  .map-card-desc { font-size: 13px; color: rgba(232,240,254,0.6); line-height: 1.4; }
+  .map-card-diff { font-size: 11px; margin-top: 10px; font-family: 'Share Tech Mono', monospace; }
+
+  .diff-easy { color: var(--verde); }
+  .diff-medium { color: var(--amarelo); }
+  .diff-hard { color: var(--vermelho); }
+
+  /* Notification */
+  .notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: var(--bg2);
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 2000;
+    animation: notifIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-width: 350px;
+  }
+
+  @keyframes notifIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .status-bar {
+    background: rgba(0,0,0,0.4);
+    border-top: 1px solid var(--border);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(232,240,254,0.4);
+    font-family: 'Share Tech Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .skip-turn-notice {
+    font-size: 12px;
+    color: var(--danger);
+    text-align: center;
+    padding: 8px;
+    background: rgba(244,67,54,0.1);
+    border-radius: 4px;
+    border: 1px solid rgba(244,67,54,0.3);
+    display: none;
+  }
+  .skip-turn-notice.active { display: block; }
+
+  .btn-skip-turn {
+    background: linear-gradient(135deg, #b71c1c, #7f0000);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 6px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(183,28,28,0.4);
+    display: none;
+  }
+  .btn-skip-turn.active { display: block; }
+  .btn-skip-turn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(183,28,28,0.6); }
+
+  /* Responsive */
+  @media (max-width: 1200px) {
+    .left-panel { width: 160px; }
+    .right-panel { width: 210px; }
+    .team-score { font-size: 18px; }
+  }
+
+  @media (max-width: 900px) {
+    .maps-grid { grid-template-columns: repeat(2, 1fr); }
+    .left-panel { width: 140px; padding: 8px; }
+    .right-panel { width: 180px; padding: 8px; }
+  }
+
+  /* TEAM NAME EDITOR SCREEN */
+  #screen-teamnames {
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 30%, #1a2a4a 0%, #0a0e1a 70%);
+    padding: 40px;
+  }
+
+  .teamnames-container {
+    text-align: center;
+    max-width: 560px;
+    width: 100%;
+  }
+
+  .teamnames-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 30px 0 35px;
+  }
+
+  .teamname-field {
+    background: var(--bg2);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: border-color 0.3s;
+  }
+
+  .teamname-field:focus-within {
+    border-color: currentColor;
+  }
+
+  .teamname-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .teamname-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .teamname-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    text-align: center;
+  }
+
+  .teamname-input:focus {
+    border-color: rgba(255,255,255,0.4);
+    box-shadow: 0 0 12px rgba(255,255,255,0.08);
+  }
+
+  /* MODAL TIMER */
+  .modal-timer-bar {
+    display: none;
+    margin: 0 0 20px;
+  }
+  .modal-timer-bar.active { display: block; }
+  .modal-timer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: rgba(232,240,254,0.5);
+  }
+  .modal-timer-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--success);
+    transition: color 0.3s;
+  }
+  .modal-timer-value.danger { color: var(--danger); animation: blink 0.5s ease-in-out infinite; }
+  .modal-timer-track {
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .modal-timer-fill {
+    height: 100%;
+    background: var(--success);
+    border-radius: 3px;
+    transition: width 1s linear, background 0.3s;
+  }
+  .modal-timer-fill.danger { background: var(--danger); }
+
+
+</style>
+</head>
+<body>
+
+<!-- FLOATING ICONS BACKGROUND -->
+<div class="floating-icons" id="floatingIcons"></div>
+
+<!-- VICTORY CONFETTI -->
+<div class="victory-animation" id="victoryAnim"></div>
+
+<!-- ============ TELA MENU ============ -->
+<div class="screen active" id="screen-menu">
+  <div class="menu-content">
+    <span class="logo-icon">⚠️</span>
+    <div class="game-title">Missão Segurança</div>
+    <div class="game-subtitle">Desafio do Técnico</div>
+    <p class="menu-desc">
+      Jogo educacional para Técnicos em Segurança do Trabalho<br>
+      6 equipes · 6 mapas · 100+ perguntas técnicas · Cronômetro
+    </p>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:15px;">
+      <button class="btn-primary" onclick="showTeamNames()">🎮 Iniciar Jogo</button>
+      <button class="btn-secondary" onclick="showRules()">📋 Regras do Jogo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TELA NOMES DAS EQUIPES ============ -->
+<div class="screen" id="screen-teamnames">
+  <div class="teamnames-container">
+    <span class="logo-icon" style="font-size:60px;">👥</span>
+    <div class="game-title" style="font-size:30px;margin-bottom:8px;">Nome das Equipes</div>
+    <p style="color:rgba(232,240,254,0.6);font-size:16px;">Personalize os nomes antes de começar</p>
+    <div class="teamnames-grid">
+      <div class="teamname-field" style="color:#00e676;">
+        <div class="teamname-label">
+          <div class="teamname-dot" style="background:#00e676;"></div>
+          Equipe 1
+        </div>
+        <input class="teamname-input" id="nameInput0" type="text" maxlength="16" placeholder="VERDE" value="Verde" style="color:#00e676;" />
+      </div>
+      <div class="teamname-field" style="color:#2979ff;">
+        <div class="teamname-label">
+          <div class="teamname-dot" style="background:#2979ff;"></div>
+          Equipe 2
+        </div>
+        <input class="teamname-input" id="nameInput1" type="text" maxlength="16" placeholder="AZUL" value="Azul" style="color:#2979ff;" />
+      </div>
+      <div class="teamname-field" style="color:#ffd600;">
+        <div class="teamname-label">
+          <div class="teamname-dot" style="background:#ffd600;"></div>
+          Equipe 3
+        </div>
+        <input class="teamname-input" id="nameInput2" type="text" maxlength="16" placeholder="AMARELO" value="Amarelo" style="color:#ffd600;" />
+      </div>
+      <div class="teamname-field" style="color:#ff1744;">
+        <div class="teamname-label">
+          <div class="teamname-dot" style="background:#ff1744;"></div>
+          Equipe 4
+        </div>
+        <input class="teamname-input" id="nameInput3" type="text" maxlength="16" placeholder="VERMELHO" value="Vermelho" style="color:#ff1744;" />
+      </div>
+      <div class="teamname-field" style="color:#ab47bc;">
+        <div class="teamname-label">
+          <div class="teamname-dot" style="background:#ab47bc;"></div>
+          Equipe 5
+        </div>
+        <input class="teamname-input" id="nameInput4" type="text" maxlength="16" placeholder="ROXO" value="Roxo" style="color:#ab47bc;" />
+      </div>
+      <div class="teamname-field" style="color:#ff6d00;">
+        <div class="teamname-label">
+          <div class="teamname-dot" style="background:#ff6d00;"></div>
+          Equipe 6
+        </div>
+        <input class="teamname-input" id="nameInput5" type="text" maxlength="16" placeholder="LARANJA" value="Laranja" style="color:#ff6d00;" />
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+      <button class="btn-primary" onclick="applyTeamNames()">✅ Confirmar e Escolher Mapa</button>
+      <button class="btn-secondary" onclick="showScreen('screen-menu')">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TELA SELEÇÃO DE MAPA ============ -->
+<div class="screen" id="screen-mapselect">
+  <div style="text-align:center;max-width:900px;margin:0 auto;width:100%;">
+    <div class="game-title" style="font-size:32px;margin-bottom:8px;">Escolha o Mapa</div>
+    <p style="color:rgba(232,240,254,0.6);font-size:16px;margin-bottom:5px;">Cada mapa tem cenário e perguntas específicas</p>
+    <div class="maps-grid">
+      <div class="map-card" onclick="startGame(0)">
+        <span class="map-card-icon">🏭</span>
+        <div class="map-card-name">Mapa 1 – Indústria Metalúrgica</div>
+        <div class="map-card-desc">Fundição, prensas, caldeiras, riscos de corte e queimadura</div>
+        <div class="map-card-diff diff-easy">★☆☆ FÁCIL</div>
+      </div>
+      <div class="map-card" onclick="startGame(1)">
+        <span class="map-card-icon">🏗️</span>
+        <div class="map-card-name">Mapa 2 – Construção Civil</div>
+        <div class="map-card-desc">Andaimes, escavações, trabalho em altura, NR-18</div>
+        <div class="map-card-diff diff-easy">★★☆ MÉDIO</div>
+      </div>
+      <div class="map-card" onclick="startGame(2)">
+        <span class="map-card-icon">🚛</span>
+        <div class="map-card-name">Mapa 3 – Transporte Rodoviário</div>
+        <div class="map-card-desc">Cargas perigosas, jornada, ergonomia do motorista</div>
+        <div class="map-card-diff diff-easy">★★☆ MÉDIO</div>
+      </div>
+      <div class="map-card" onclick="startGame(3)">
+        <span class="map-card-icon">🏥</span>
+        <div class="map-card-name">Mapa 4 – Hospital</div>
+        <div class="map-card-desc">Biossegurança, NR-32, resíduos hospitalares, radiação</div>
+        <div class="map-card-diff diff-medium">★★☆ MÉDIO</div>
+      </div>
+      <div class="map-card" onclick="startGame(4)">
+        <span class="map-card-icon">📦</span>
+        <div class="map-card-name">Mapa 5 – Armazém Logístico</div>
+        <div class="map-card-desc">Empilhadeiras, NR-11, NR-12, armazenagem de materiais</div>
+        <div class="map-card-diff diff-medium">★★★ DIFÍCIL</div>
+      </div>
+      <div class="map-card" onclick="startGame(5)">
+        <span class="map-card-icon">⚙️</span>
+        <div class="map-card-name">Mapa 6 – Plataforma Industrial</div>
+        <div class="map-card-desc">Espaço confinado, NR-33, NR-35, processos complexos</div>
+        <div class="map-card-diff diff-hard">★★★ EXPERT</div>
+      </div>
+    </div>
+    <button class="btn-secondary" style="margin-top:20px;" onclick="showScreen('screen-menu')">← Voltar</button>
+  </div>
+</div>
+
+<!-- ============ TELA DE JOGO ============ -->
+<div class="screen" id="screen-game">
+  <div class="game-header">
+    <div class="header-title">⚠️ MISSÃO SEGURANÇA</div>
+    <div class="map-indicator" id="mapIndicator">MAPA 1 – INDÚSTRIA METALÚRGICA</div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-secondary" style="padding:8px 16px;font-size:13px;" onclick="showMapSelect()">🗺 Mapas</button>
+      <button class="btn-secondary" style="padding:8px 16px;font-size:13px;" onclick="confirmRestart()">🔄 Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="game-body">
+    <!-- LEFT: SCORES -->
+    <div class="left-panel">
+      <div>
+        <div class="panel-section-title">🏆 Placar</div>
+        <div id="teamCards" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+
+    <!-- CENTER: BOARD -->
+    <div class="board-container">
+      <div class="map-toolbar">
+        <div class="zone-legend">
+          <span class="zone-pill z-start">🟢 Casas 0–19</span>
+          <span class="zone-pill z-mid">🟠 Casas 20–49</span>
+          <span class="zone-pill z-end">🔴 Casas 50–69</span>
+        </div>
+        <div class="zoom-controls">
+          <button class="zoom-btn" onclick="adjustZoom(-0.1)" title="Diminuir">−</button>
+          <span class="zoom-label" id="zoomLabel">100%</span>
+          <button class="zoom-btn" onclick="adjustZoom(+0.1)" title="Aumentar">+</button>
+          <button class="zoom-btn zoom-fit-btn" onclick="fitBoard()" title="Ajustar à tela">⊡ FIT</button>
+        </div>
+      </div>
+      <div class="board-viewport" id="boardViewport">
+        <div class="board-wrap" id="boardWrap">
+          <!-- SVG do mapa + casas absolutas injetadas por JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: CONTROLS -->
+    <div class="right-panel">
+      <!-- CURRENT TEAM -->
+      <div class="current-team-display">
+        <div class="current-turn-label">⚡ Vez de jogar</div>
+        <div class="current-team-name" id="currentTeamDisplay">EQUIPE VERDE</div>
+      </div>
+
+      <!-- SKIP NOTICE -->
+      <div class="skip-turn-notice" id="skipNotice">⛔ Esta equipe perde a vez!</div>
+      <button class="btn-skip-turn" id="btnSkipTurn" onclick="executarPularVez()">⏭️ CONFIRMAR PERDA DE VEZ</button>
+
+      <!-- DICE -->
+      <div class="dice-section">
+        <div class="panel-section-title">🎲 Dado</div>
+        <div class="dice-display" id="diceDisplay">
+          <div class="dot hidden"></div><div class="dot hidden"></div><div class="dot hidden"></div>
+          <div class="dot hidden"></div><div class="dot hidden"></div><div class="dot hidden"></div>
+          <div class="dot hidden"></div><div class="dot hidden"></div><div class="dot hidden"></div>
+        </div>
+        <button class="btn-roll" id="btnRoll" onclick="rollDice()">🎲 LANÇAR DADO</button>
+      </div>
+
+      <!-- TIMER -->
+      <div class="timer-section" id="timerSection">
+        <div class="panel-section-title">⏱ Cronômetro</div>
+        <div class="timer-display" id="timerDisplay">30</div>
+        <div class="timer-bar-track">
+          <div class="timer-bar" id="timerBar"></div>
+        </div>
+      </div>
+
+      <!-- LOG -->
+      <div>
+        <div class="panel-section-title">📋 Log de Eventos</div>
+        <div class="game-log" id="gameLog">
+          <div class="log-entry">Jogo iniciado! Boa sorte a todas as equipes! 🎮</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span id="statusRound">Rodada 1</span>
+    <span>MISSÃO SEGURANÇA v2.0</span>
+    <span id="statusPositions"></span>
+  </div>
+</div>
+
+<!-- ============ TELA RANKING ============ -->
+<div class="screen" id="screen-ranking">
+  <div class="ranking-container">
+    <div class="ranking-title">🏆 RANKING FINAL</div>
+    <div class="ranking-subtitle">Parabéns a todos os participantes!</div>
+    <div class="ranking-list" id="rankingList"></div>
+    <div style="display:flex;gap:15px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="showMapSelect()">🎮 Jogar Novamente</button>
+      <button class="btn-secondary" onclick="showScreen('screen-menu')">🏠 Menu Principal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <div class="modal-type-badge" id="modalBadge">PERGUNTA</div>
+    <div class="modal-timer-bar" id="modalTimerBar">
+      <div class="modal-timer-header">
+        <span>⏱ TEMPO</span>
+        <span class="modal-timer-value" id="modalTimerValue">30</span>
+      </div>
+      <div class="modal-timer-track">
+        <div class="modal-timer-fill" id="modalTimerFill" style="width:100%"></div>
+      </div>
+    </div>
+    <div class="modal-title" id="modalTitle">Título</div>
+    <div class="modal-body" id="modalBody">Conteúdo</div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="result-box" id="resultBox">
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-points" id="resultPoints"></div>
+      <div id="resultExplanation" style="margin-top:10px;font-size:14px;color:rgba(232,240,254,0.7);"></div>
+    </div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DADOS DO JOGO
+// ============================================================
+
+const MAPS = [
+  { name: 'Indústria Metalúrgica', icon: '🏭', color: '#ff6d00', bg: 'rgba(255,109,0,0.15)' },
+  { name: 'Construção Civil', icon: '🏗️', color: '#2979ff', bg: 'rgba(41,121,255,0.15)' },
+  { name: 'Transporte Rodoviário', icon: '🚛', color: '#ffd600', bg: 'rgba(255,214,0,0.15)' },
+  { name: 'Hospital', icon: '🏥', color: '#00e676', bg: 'rgba(0,230,118,0.15)' },
+  { name: 'Armazém Logístico', icon: '📦', color: '#ab47bc', bg: 'rgba(171,71,188,0.15)' },
+  { name: 'Plataforma Industrial', icon: '⚙️', color: '#ff1744', bg: 'rgba(255,23,68,0.15)' }
+];
+
+const TEAMS = [
+  { name: 'Verde',    color: '#00e676', pawnColor: '#00e676', initial: 'V' },
+  { name: 'Azul',     color: '#2979ff', pawnColor: '#2979ff', initial: 'A' },
+  { name: 'Amarelo',  color: '#ffd600', pawnColor: '#ffd600', initial: 'M' },
+  { name: 'Vermelho', color: '#ff1744', pawnColor: '#ff1744', initial: 'R' },
+  { name: 'Roxo',     color: '#ab47bc', pawnColor: '#ab47bc', initial: 'X' },
+  { name: 'Laranja',  color: '#ff6d00', pawnColor: '#ff6d00', initial: 'L' }
+];
+
+// TIPOS DE CASAS — 70 casas (0=START, 69=GOAL), trilha linear sem desvios
+const CELL_TYPES = [
+  // PORTARIA (0–9)
+  'S', 'p', 'e', 'p', 'a', 'p', 's', 'p', 'e', 'p',
+  // ESTOQUE (10–19)
+  'a', 'p', 'T', 'p', 's', 'p', 'e', 'p', 'p', 'a',
+  // PRODUÇÃO (20–29)
+  'p', 'd', 'p', 'e', 'p', 'r', 'p', 'p', 'X', 'p',
+  // SOLDAGEM (30–39)
+  'a', 'p', 's', 'p', 'M', 'p', 'e', 'p', 'i', 'p',
+  // MANUTENÇÃO (40–49)
+  'r', 'p', 'a', 'p', 'd', 'p', 'p', 'e', 'p', 'X',
+  // ÁREA QUÍMICA (50–59)
+  'p', 'r', 'p', 'a', 'p', 'B', 'p', 'i', 'p', 's',
+  // EMERGÊNCIA / SAÍDA (60–69)
+  'p', 'a', 'r', 'p', 'd', 'p', 'e', 'i', 'p', 'F'
+];
+
+const CELL_ZONES = { start:[0,19], mid:[20,49], end:[50,69] };
+
+const TELEPORTS = {
+  12: { dest: 22, msg: '⚡ TELEPORTE! Atalho pela linha de produção! Casa 12 → 22' },
+};
+
+const TRAPS = {
+  28: { volta: 8,  msg: '🕳️ ARMADILHA! Inspeção reprovada! Volta 8 casas!' },
+  49: { volta: 10, msg: '🕳️ ARMADILHA! Acidente de percurso! Volta 10 casas!' },
+};
+
+const SECTORS = [
+  { range: [0,  9],  name: 'PORTARIA',     icon: '🏢', color: '#00e676' },
+  { range: [10, 19], name: 'ESTOQUE',      icon: '📦', color: '#29b6f6' },
+  { range: [20, 29], name: 'PRODUÇÃO',     icon: '⚙️', color: '#ffd600' },
+  { range: [30, 39], name: 'SOLDAGEM',     icon: '🔥', color: '#ff9800' },
+  { range: [40, 49], name: 'MANUTENÇÃO',   icon: '🔧', color: '#ef5350' },
+  { range: [50, 59], name: 'ÁREA QUÍMICA', icon: '☣️', color: '#e040fb' },
+  { range: [60, 69], name: 'EMERGÊNCIA',   icon: '🚨', color: '#b71c1c' },
+];
+
+const PERGUNTAS = [
+  { pergunta: 'O que estabelece a NR-01 em relação ao PGR (Programa de Gerenciamento de Riscos)?', opcoes: ['Apenas medidas de EPI', 'Identifica, avalia e controla riscos com hierarquia de controle', 'Define apenas trabalho em altura', 'Trata só de ergonomia'], correta: 1, explicacao: 'A NR-01 determina que o PGR deve identificar perigos, avaliar riscos e implementar controles seguindo a hierarquia: eliminação, substituição, controles de engenharia, administrativos e EPI.', nr: 'NR-01' },
+  { pergunta: 'Qual a diferença entre perigo e risco segundo a NR-01?', opcoes: ['São sinônimos: ambos indicam probabilidade de dano', 'Risco é a fonte potencial de dano; perigo é a combinação de probabilidade e gravidade', 'Perigo refere-se apenas a riscos físicos e mecânicos visíveis', 'Perigo é a fonte de dano potencial; risco é a probabilidade x gravidade do dano'], correta: 3, explicacao: 'Perigo é a fonte com potencial de causar dano. Risco é a combinação da probabilidade de ocorrência e a gravidade do dano.', nr: 'NR-01' },
+  { pergunta: 'Qual o número mínimo de representantes dos trabalhadores na CIPA para uma empresa com 2.000 funcionários?', opcoes: ['3', '7', '5', '9'], correta: 1, explicacao: 'Segundo o Quadro I da NR-05, empresas do Grupo C-1 com 2.000 trabalhadores devem ter 7 representantes titulares dos empregados na CIPA.', nr: 'NR-05' },
+  { pergunta: 'Qual é o mandato dos membros eleitos da CIPA?', opcoes: ['1 ano', '6 meses', '2 anos', '3 anos'], correta: 0, explicacao: 'O mandato dos membros eleitos da CIPA é de 1 (um) ano, permitida uma reeleição.', nr: 'NR-05' },
+  { pergunta: 'O que é Certificado de Aprovação (CA) do EPI?', opcoes: ['Documento emitido pelo MTE atestando a eficácia do EPI', 'Certificado de qualidade ambiental', 'Aprovação da empresa para uso', 'Certificado de treinamento'], correta: 0, explicacao: 'O CA é emitido pelo Ministério do Trabalho e Emprego, atestando que o EPI atende aos requisitos técnicos de proteção.', nr: 'NR-06' },
+  { pergunta: 'Qual a responsabilidade do empregado em relação ao EPI segundo a NR-06?', opcoes: ['Usar, guardar e conservar o EPI e comunicar avarias', 'Pode recusar o uso se considerar desconfortável', 'Usar o EPI somente quando quiser', 'Usar o EPI apenas para atividades de risco alto'], correta: 0, explicacao: 'A NR-06 obriga o empregado a usar, guardar, conservar o EPI e comunicar ao empregador qualquer alteração que o torne impróprio.', nr: 'NR-06' },
+  { pergunta: 'O que é zona de risco elétrico segundo a NR-10?', opcoes: ['Área onde há apenas fios expostos', 'Espaço ao redor de parte condutora energizada onde há risco de choque', 'Área de acesso restrito a visitantes', 'Zona de medição de tensão'], correta: 1, explicacao: 'Zona de risco é o espaço ao redor de parte condutora exposta energizada onde há risco de choque elétrico, definido conforme a tensão.', nr: 'NR-10' },
+  { pergunta: 'O que é o Bloqueio e Etiquetagem (Lock Out / Tag Out) na NR-10?', opcoes: ['Procedimento de desligamento e sinalização para impedir reenergização acidental', 'Sistema de alarme sonoro para alertar sobre equipamentos energizados em manutenção', 'Método de medição de corrente e tensão em instalações industriais durante operação', 'Protocolo de combate a incêndio em subestações de alta tensão'], correta: 0, explicacao: 'Lock Out/Tag Out é o procedimento que garante que máquinas e equipamentos sejam desligados e não possam ser ligados acidentalmente durante manutenção.', nr: 'NR-10' },
+  { pergunta: 'Segundo a NR-11, qual a capacidade máxima de carga de um operador de empilhadeira para operar com segurança?', opcoes: ['20% acima da capacidade', 'A capacidade pode ser excedida com supervisor presente', 'Não há limite definido', 'A capacidade nominal marcada na plaqueta do equipamento'], correta: 3, explicacao: 'A NR-11 determina que a capacidade nominal do equipamento deve ser respeitada e a carga nunca deve exceder o limite marcado na plaqueta.', nr: 'NR-11' },
+  { pergunta: 'Na NR-11, o que deve conter obrigatoriamente no plano de carga de um guindaste?', opcoes: ['Apenas o peso total da carga e nome do operador responsável', 'Somente a capacidade nominal do equipamento e data da operação', 'Raio de operação, peso da carga, capacidade do equipamento e condições do terreno', 'Apenas o raio de operação e a identificação do guindaste'], correta: 2, explicacao: 'O plano de carga deve contemplar raio de operação, peso da carga, capacidade do guindaste, condições do terreno e outros fatores que afetam a segurança.', nr: 'NR-11' },
+  { pergunta: 'O que é Dispositivo de Intertravamento segundo a NR-12?', opcoes: ['Dispositivo que alerta para perigo', 'Dispositivo que impede operação da máquina com proteção removida', 'Sistema de frenagem de emergência', 'Sensor de temperatura'], correta: 1, explicacao: 'Dispositivo de intertravamento impede que a máquina opere quando a proteção é removida, garantindo que só funcione com todas as proteções no lugar.', nr: 'NR-12' },
+  { pergunta: 'Segundo a NR-12, o que é a zona de perigo de uma máquina?', opcoes: ['Área de operação normal onde o operador permanece durante o ciclo produtivo', 'Zona exclusiva de manutenção, demarcada com fitas zebradas', 'Qualquer espaço onde trabalhador possa ser exposto a riscos de lesão', 'Local destinado ao armazenamento de óleos e fluidos hidráulicos do equipamento'], correta: 2, explicacao: 'Zona de perigo é qualquer zona dentro ou ao redor de uma máquina onde um trabalhador pode ser exposto a risco de lesão ou dano à saúde.', nr: 'NR-12' },
+  { pergunta: 'Qual o peso máximo recomendado pela NR-17 para transporte manual de cargas por homens adultos?', opcoes: ['25 kg', '20 kg', '40 kg', '60 kg'], correta: 0, explicacao: 'A NR-17 recomenda que o peso máximo de transporte manual de cargas por um trabalhador adulto do sexo masculino seja de 60 kg em situações esporádicas e indica estudos para cargas habituais.', nr: 'NR-17' },
+  { pergunta: 'O que avalia a NR-17 (Ergonomia) em um posto de trabalho?', opcoes: ['Apenas equipamentos de informática e altura das cadeiras de escritório', 'Somente a postura sentada e o nível de iluminação artificial do ambiente', 'Levantamento, transporte, mobiliário, equipamentos, condições ambientais e organização do trabalho', 'Unicamente aspectos de iluminação, temperatura e umidade relativa do ar'], correta: 2, explicacao: 'A NR-17 estabelece parâmetros para levantar, transportar e descarregar materiais, mobiliário, equipamentos, condições ambientais e organização do trabalho.', nr: 'NR-17' },
+  { pergunta: 'A NR-20 trata da segurança em quais situações?', opcoes: ['Explosivos industriais', 'Trabalho em altura', 'Espaços confinados', 'Inflamáveis e combustíveis líquidos e gases combustíveis'], correta: 3, explicacao: 'A NR-20 estabelece requisitos mínimos de segurança para gestão de fases de inflamáveis e combustíveis líquidos e gases combustíveis.', nr: 'NR-20' },
+  { pergunta: 'Segundo a NR-20, o que é um local classificado?', opcoes: ['Área com certificação ISO', 'Área onde pode haver atmosfera explosiva por inflamáveis ou gases', 'Local de armazenamento de explosivos', 'Área de acesso restrito'], correta: 1, explicacao: 'Local classificado é aquele onde pode haver presença ou risco de formação de atmosfera explosiva por substâncias inflamáveis.', nr: 'NR-20' },
+  { pergunta: 'Segundo a NR-23, qual a distância máxima a ser percorrida para alcançar um extintor em locais de risco de incêndio médio?', opcoes: ['20 metros', '10 metros', '15 metros', '25 metros'], correta: 0, explicacao: 'Para risco médio de incêndio, a distância máxima a percorrer até o extintor é de 20 metros, conforme determinado pela NR-23.', nr: 'NR-23' },
+  { pergunta: 'Quais as classes de incêndio existentes e seus materiais?', opcoes: ['A=metais, B=líquidos, C=gases', 'A=papel, B=óleos, C=madeira', 'A=plásticos, B=gases, C=roupas', 'A=sólidos, B=líquidos e graxas, C=elétricos, D=metais combustíveis'], correta: 3, explicacao: 'Classe A: materiais sólidos; B: líquidos e graxas; C: equipamentos energizados; D: metais pirofóricos. Alguns sistemas incluem Classe K para cozinha.', nr: 'NR-23' },
+  { pergunta: 'O que determina a NR-26 sobre a sinalização de segurança no trabalho?', opcoes: ['Apenas os sinais de rota de evacuação e saída de emergência dos edifícios', 'Somente as faixas zebradas amarelas de demarcação de piso industrial', 'Apenas as placas de proibição e as sinalizações de obrigatoriedade de uso de EPI', 'Cores, formas, símbolos para identificar riscos, equipamentos e áreas'], correta: 3, explicacao: 'A NR-26 regulamenta a sinalização de segurança, incluindo cores, formas geométricas, símbolos e sinais para identificar riscos, delimitações e equipamentos.', nr: 'NR-26' },
+  { pergunta: 'Na NR-26, qual cor indica perigo/advertência e o que identifica?', opcoes: ['Azul – obrigatoriedade', 'Amarelo – atenção e risco de colisão', 'Vermelho – proibição e incêndio', 'Verde – segurança'], correta: 1, explicacao: 'O amarelo é a cor de segurança que indica atenção, risco de colisão e advertência. Vermelho indica proibição e combate a incêndio; verde indica segurança.', nr: 'NR-26' },
+  { pergunta: 'O que é espaço confinado segundo a NR-33?', opcoes: ['Qualquer ambiente fechado sem janelas, incluindo salas e depósitos normais', 'Área não projetada para ocupação contínua, com meios limitados de entrada e saída', 'Toda área subterrânea ou semienterrada, independente de ventilação', 'Local sem ventilação natural que exige uso de máscara de proteção respiratória'], correta: 1, explicacao: 'Espaço confinado é qualquer área ou ambiente não projetado para ocupação contínua humana, com meios limitados de entrada e saída e ventilação inadequada.', nr: 'NR-33' },
+  { pergunta: 'Quem é o vigia de espaço confinado segundo a NR-33?', opcoes: ['Qualquer trabalhador disponível no turno, indicado pelo encarregado da área', 'O supervisor de segurança que elabora a Permissão de Entrada e Trabalho (PET)', 'Trabalhador treinado que permanece fora monitorando e comunicando com os que estão dentro', 'Bombeiro de plantão da brigada de emergência da empresa'], correta: 2, explicacao: 'O vigia é o trabalhador treinado que permanece no lado externo monitorando a atividade, mantendo comunicação com os trabalhadores no interior e acionando socorro se necessário.', nr: 'NR-33' },
+  { pergunta: 'Segundo a NR-35, o que é considerado trabalho em altura?', opcoes: ['Qualquer trabalho acima do térreo', 'Trabalho em escadas acima de 1 metro', 'Apenas trabalho em telhados', 'Trabalho executado acima de 2 metros do nível inferior, com risco de queda'], correta: 3, explicacao: 'A NR-35 define trabalho em altura como qualquer atividade executada acima de 2,00 m do nível inferior, onde haja risco de queda.', nr: 'NR-35' },
+  { pergunta: 'O que é a APR (Análise Preliminar de Risco) segundo a NR-35?', opcoes: ['Relatório mensal de acidentes encaminhado ao SESMT e à CIPA', 'Formulário de solicitação e controle de EPIs para trabalho em altura', 'Mapa anual de riscos elaborado pela CIPA para o programa de prevenção', 'Metodologia de antecipação de riscos antes do início da atividade'], correta: 3, explicacao: 'A APR é uma técnica de identificação e avaliação sistemática de riscos que deve ser realizada antes de qualquer atividade, especialmente trabalho em altura.', nr: 'NR-35' },
+  { pergunta: 'O PGR substitui qual programa anterior na nova NR-01?', opcoes: ['PCMSO – Programa de Controle Médico de Saúde Ocupacional (NR-07)', 'PCMAT – Programa de Condições e Meio Ambiente de Trabalho (NR-18)', 'PPRA – Programa de Prevenção de Riscos Ambientais', 'PPCI – Plano de Prevenção e Proteção Contra Incêndio das empresas'], correta: 2, explicacao: 'O PGR (Programa de Gerenciamento de Riscos) substituiu o PPRA como principal instrumento de prevenção, consolidando a gestão de todos os riscos ocupacionais.', nr: 'PGR' },
+  { pergunta: 'O PGR deve contemplar quais tipos de riscos segundo a NR-01?', opcoes: ['Físicos, químicos, biológicos, ergonômicos e de acidente', 'Apenas riscos físicos', 'Somente riscos químicos e biológicos', 'Apenas acidentes e ergonomia'], correta: 0, explicacao: 'O PGR deve contemplar todos os fatores de risco: físicos, químicos, biológicos, ergonômicos e os fatores de risco de acidentes (mecânicos e outros).', nr: 'PGR' },
+  { pergunta: 'Qual o objetivo principal da APR (Análise Preliminar de Risco)?', opcoes: ['Registrar formalmente os acidentes ocorridos para fins previdenciários', 'Formalizar a contratação de seguros de responsabilidade civil do empregador', 'Definir periodicidade de treinamentos mensais obrigatórios da equipe', 'Identificar riscos antes de iniciar a atividade para prevenir acidentes'], correta: 3, explicacao: 'A APR tem como objetivo identificar antecipadamente os riscos de uma atividade, avaliar sua severidade e probabilidade, e definir medidas preventivas antes do início do trabalho.', nr: 'APR' },
+  { pergunta: 'Quem deve participar da elaboração do Mapa de Risco segundo a NR-05?', opcoes: ['Trabalhadores do setor, com apoio do SESMT e aprovação da CIPA', 'Apenas o SESMT, sem necessidade de ouvir os trabalhadores do setor', 'Somente a gerência, que tem visão global dos riscos da empresa', 'Empresa de consultoria externa contratada exclusivamente para isso'], correta: 0, explicacao: 'O Mapa de Risco é elaborado pelos trabalhadores do setor, com assessoria do SESMT (quando houver) e aprovação da CIPA.', nr: 'NR-05' },
+  { pergunta: 'O que a cor vermelha de grande dimensão representa no Mapa de Risco?', opcoes: ['Risco físico de baixa intensidade', 'Risco químico máximo', 'Risco de grande intensidade de qualquer tipo (varia conforme legenda)', 'Risco biológico médio'], correta: 2, explicacao: 'No Mapa de Risco, a dimensão do círculo indica a intensidade (pequeno=baixo, médio=médio, grande=alto) e a cor indica o tipo de risco, conforme legenda padronizada.', nr: 'NR-05' },
+  { pergunta: 'O que é a Árvore de Causas na investigação de acidentes?', opcoes: ['Método de treinamento em sala de aula para novos trabalhadores', 'Software de gestão de incidentes utilizado pelo SESMT', 'Metodologia que mapeia causas encadeadas até a causa raiz do acidente', 'Relatório mensal de segurança exigido pelo Ministério do Trabalho'], correta: 2, explicacao: 'A Árvore de Causas é uma metodologia investigativa que parte do acidente (efeito) e vai identificando causas encadeadas até encontrar as causas raízes do evento.', nr: 'Investigação' },
+  { pergunta: 'O que são causas imediatas e causas básicas de um acidente?', opcoes: ['São conceitos sinônimos dentro da metodologia de análise de acidentes', 'Básicas são atos inseguros visíveis; imediatas são os fatores sistêmicos ocultos', 'Imediatas são atos e condições inseguros; básicas são fatores pessoais e de trabalho que os geram', 'Causas imediatas são exclusivamente do trabalhador; básicas, da empresa'], correta: 2, explicacao: 'Causas imediatas: atos inseguros e condições inseguras visíveis. Causas básicas (raízes): fatores pessoais e do trabalho que originam as causas imediatas.', nr: 'Investigação' },
+  { pergunta: 'Qual extintor deve ser usado em incêndio Classe C (equipamentos elétricos energizados)?', opcoes: ['Água pressurizada, por ser o agente extintor mais eficaz e acessível', 'CO2 ou Pó Químico Seco (PQS)', 'Espuma mecânica, que cobre o equipamento e abafa as chamas', 'Água nebulizada em baixa pressão para não danificar os componentes'], correta: 1, explicacao: 'Para incêndio Classe C (equipamentos elétricos energizados), deve-se usar CO2 ou Pó Químico Seco, que são não condutores elétricos.', nr: 'NR-23' },
+  { pergunta: 'Qual EPI deve ser utilizado em trabalhos com risco de queda de objetos na cabeça?', opcoes: ['Capacete de segurança', 'Óculos de segurança', 'Protetor auricular', 'Luva de segurança'], correta: 0, explicacao: 'O capacete de segurança protege a cabeça contra impactos, quedas de objetos e projeções de partículas, sendo obrigatório em obras e indústrias.', nr: 'NR-06' },
+  { pergunta: 'O que é EPC (Equipamento de Proteção Coletiva)?', opcoes: ['EPI de uso coletivo compartilhado por todos os trabalhadores do turno', 'Equipamento compartilhado entre trabalhadores de um mesmo setor', 'Proteção individual fornecida exclusivamente a supervisores e encarregados', 'Dispositivo que protege toda a área, eliminando ou minimizando riscos coletivamente'], correta: 3, explicacao: 'EPC são dispositivos ou sistemas que protegem coletivamente os trabalhadores expostos a riscos, tendo prioridade sobre o EPI na hierarquia de controle.', nr: 'NR-06' },
+  { pergunta: 'Qual é a hierarquia de controle de riscos preconizada pela NR-01?', opcoes: ['EPI primeiro, depois treinamento', 'Treinamento, EPI, sinalização', 'Eliminação, substituição, controles de engenharia, administrativos e EPI', 'Investigação, controle, monitoramento'], correta: 2, explicacao: 'A hierarquia é: 1)Eliminação, 2)Substituição, 3)Controles de engenharia (isolamento, ventilação), 4)Controles administrativos (procedimentos), 5)EPI.', nr: 'NR-01' },
+  { pergunta: 'O que é NHO (Norma de Higiene Ocupacional) e quem a emite?', opcoes: ['Norma do MTE equivalente às NRs, voltada para ambiente de trabalho', 'Norma ABNT de segurança industrial para certificação de equipamentos', 'Documento técnico emitido pela FUNDACENTRO para avaliação de agentes ocupacionais', 'Lei federal de proteção à saúde do trabalhador publicada pelo Congresso'], correta: 2, explicacao: 'NHO é documento emitido pela FUNDACENTRO que estabelece métodos e critérios técnicos para avaliação da exposição ocupacional a agentes físicos e químicos.', nr: 'Higiene Ocupacional' },
+  { pergunta: 'O que significa LTCAT (Laudo Técnico das Condições Ambientais do Trabalho)?', opcoes: ['Laudo pericial que avalia exposição a agentes nocivos para fins previdenciários', 'Licença de trabalho em altura emitida pelo SESMT conforme a NR-35', 'Licença de transporte de cargas perigosas emitida pela ANTT', 'Laudo de conformidade técnica de EPIs emitido pelo fabricante'], correta: 0, explicacao: 'O LTCAT é um laudo pericial elaborado por médico ou engenheiro do trabalho que comprova a exposição a agentes nocivos para fins de aposentadoria especial.', nr: 'Saúde Ocupacional' },
+  { pergunta: 'Segundo a NR-07, o PCMSO tem como objetivo principal:', opcoes: ['Fiscalizar o uso de EPI', 'Definir EPIs obrigatórios', 'Promover e preservar a saúde dos trabalhadores através de exames médicos', 'Treinar trabalhadores em primeiros socorros'], correta: 2, explicacao: 'O PCMSO (Programa de Controle Médico de Saúde Ocupacional) tem objetivo de promover e preservar a saúde dos trabalhadores através de avaliações médicas periódicas.', nr: 'NR-07' },
+  { pergunta: 'O que é SESMT (Serviço Especializado em Engenharia de Segurança e em Medicina do Trabalho)?', opcoes: ['Sindicato dos engenheiros de segurança do trabalho filiado à central sindical', 'Órgão do Ministério do Trabalho responsável pela fiscalização das NRs', 'Serviço interno obrigatório de prevenção para empresas com determinado número de funcionários', 'Departamento de RH responsável pela contratação de profissionais de saúde'], correta: 2, explicacao: 'O SESMT é um serviço especializado de prevenção interno, obrigatório para empresas acima de determinado porte, formado por profissionais de segurança e saúde do trabalho.', nr: 'NR-04' },
+  { pergunta: 'Na NR-33, quem pode autorizar a entrada em espaço confinado?', opcoes: ['Qualquer supervisor de turno presente na área no momento da entrada', 'O trabalhador com maior experiência em espaços confinados da equipe', 'O supervisor de entrada, após emitir Permissão de Entrada e Trabalho (PET)', 'O vigia de plantão após confirmar ausência de gases com detector portátil'], correta: 2, explicacao: 'Apenas o supervisor de entrada, devidamente treinado, pode autorizar a entrada no espaço confinado após verificar todas as condições e emitir a PET.', nr: 'NR-33' },
+  { pergunta: 'O que é a Permissão de Entrada e Trabalho (PET) da NR-33?', opcoes: ['Documento que autoriza entrada em espaço confinado após avaliação de riscos e medidas de controle', 'Formulário de RH que autoriza hora extra para trabalhos especiais noturnos', 'Licença emitida pelo SESMT para atividades em áreas de risco químico elevado', 'Autorização da CIPA para realização de atividades de alto risco na empresa'], correta: 0, explicacao: 'A PET é o documento que formaliza a autorização para entrada e trabalho em espaço confinado, após verificação e implementação de todas as medidas de segurança.', nr: 'NR-33' },
+  { pergunta: 'Segundo a NR-35, o que é obrigatório antes de qualquer trabalho em altura?', opcoes: ['Apenas a utilização do cinto de segurança tipo paraquedista com talabarte', 'Avaliação das condições meteorológicas e do local, APR, autorização e uso de EPI/EPC adequados', 'Somente comunicar ao supervisor imediato e assinar o livro de ocorrências', 'Verificar unicamente o horário permitido para trabalho em altura no turno'], correta: 1, explicacao: 'Antes do trabalho em altura é obrigatório: avaliação do local e condições, elaboração da APR, implementação de EPC, uso de EPI e obtenção de autorização formal.', nr: 'NR-35' },
+  { pergunta: 'Qual o prazo para comunicação de acidente de trabalho (CAT) ao INSS?', opcoes: ['Em até 7 dias úteis após o acidente ou ciência da doença ocupacional', 'Em até 15 dias corridos, contados da data do acidente ou do afastamento', 'Até o 1º dia útil seguinte à ocorrência', 'Em até 30 dias, conforme prazo geral de documentação previdenciária'], correta: 2, explicacao: 'A CAT deve ser emitida até o 1º dia útil seguinte à ocorrência do acidente, e em caso de óbito, comunicada imediatamente.', nr: 'Legislação' },
+  { pergunta: 'O que são riscos ergonômicos segundo a classificação dos fatores de risco?', opcoes: ['Apenas os riscos de calor e frio extremo que afetam o conforto térmico', 'Somente atividades realizadas em trabalho em altura acima de 2 metros', 'Exclusivamente ruído acima de 85 dB(A) e vibração de corpo inteiro', 'Levantamento de peso, ritmo excessivo, monotonia, postura inadequada, jornada prolongada'], correta: 3, explicacao: 'Riscos ergonômicos incluem: esforço físico, levantamento de peso, postura inadequada, ritmo excessivo, trabalho noturno, monotonia e repetitividade.', nr: 'NR-17' },
+  { pergunta: 'O que é NL (Nível de Exposição ao Ruído) e qual o limite de exposição para 8 horas?', opcoes: ['75 dB(A) – limite recomendado pela ACGIH para proteção da audição', '90 dB(A) – limite máximo absoluto para qualquer duração de exposição', '85 dB(A) – limite de tolerância para jornada de 8 horas (NR-15)', '95 dB(A) – limite aplicável quando se usa protetor auricular com NRRsf adequado'], correta: 2, explicacao: 'O NR-15 estabelece 85 dB(A) como limite de tolerância para exposição ao ruído em jornada de 8 horas diárias. Acima disso é necessário controle.', nr: 'NR-15' },
+  { pergunta: 'Segundo a NR-12, o que é parada de emergência?', opcoes: ['Sistema de alarme apenas sonoro', 'Dispositivo que para imediatamente a máquina em situação de perigo, sem criar novos riscos', 'Botão de reinício do equipamento', 'Procedimento de manutenção'], correta: 1, explicacao: 'Parada de emergência é um dispositivo que, acionado, para o equipamento imediatamente de forma segura, sem criar riscos adicionais.', nr: 'NR-12' },
+  { pergunta: 'Qual a periodicidade mínima de inspeção de extintores segundo a NR-23?', opcoes: ['A cada 5 anos, conforme a ABNT NBR 12693 para revisão técnica completa', 'A cada 2 anos, independentemente do tipo ou condição do agente extintor', 'Semestralmente, com verificação de lacre, pressão e prazo de validade', 'Anualmente, com inspeção visual mensal complementar'], correta: 3, explicacao: 'Os extintores devem ser inspecionados visualmente mensalmente e revisados tecnicamente a cada ano (ou conforme fabricante).', nr: 'NR-23' },
+  { pergunta: 'O que é o conceito de periculosidade segundo a CLT/NR?', opcoes: ['Toda atividade profissional que apresente qualquer nível de risco ao trabalhador', 'Exposição contínua a inflamáveis, explosivos, eletricidade, segurança pessoal ou roubos', 'Condição equivalente à insalubridade, porém com adicional diferenciado de 20%', 'Trabalho realizado exclusivamente acima de 2 metros de altura conforme NR-35'], correta: 1, explicacao: 'Periculosidade é a condição de trabalho com exposição a inflamáveis, explosivos, energia elétrica, segurança pessoal ou roubos, gerando adicional de 30% sobre o salário.', nr: 'NR-16' },
+  { pergunta: 'Quais os grupos de riscos biológicos segundo a NR-32?', opcoes: ['Apenas vírus e bactérias patogênicas presentes em ambientes hospitalares', 'Somente agentes dos grupos 3 e 4, com potencial de causar epidemias', 'Apenas organismos geneticamente modificados utilizados em biotecnologia', 'Vírus, bactérias, parasitos, fungos e príons, classificados em 4 grupos por risco'], correta: 3, explicacao: 'Os agentes biológicos são classificados em 4 grupos conforme potencial de causar doença, transmissibilidade e disponibilidade de tratamento.', nr: 'NR-32' },
+  { pergunta: 'O que é a técnica FMEA (Failure Mode and Effect Analysis) na segurança?', opcoes: ['Análise de modos de falha e seus efeitos, identificando riscos em equipamentos e processos', 'Treinamento periódico obrigatório de empregados para manuseio de equipamentos', 'Formulário padrão de inspeção de segurança para máquinas e equipamentos', 'Programa de manutenção preventiva com periodicidade definida por fabricante'], correta: 0, explicacao: 'FMEA é uma técnica analítica que identifica possíveis modos de falha em um sistema, avalia seus efeitos e prioriza ações preventivas.', nr: 'Gestão de Riscos' },
+  { pergunta: 'Segundo a NR-11, quais os requisitos para um operador de empilhadeira?', opcoes: ['Qualquer trabalhador habilitado pela empresa', 'Apenas carteira de motorista', 'Ter 18 anos completos, treinamento específico e ser designado formalmente pelo empregador', 'Somente ser maior de 21 anos'], correta: 2, explicacao: 'O operador de empilhadeira deve ter 18 anos, curso de operador de empilhadeira reconhecido, aptidão médica e designação formal do empregador.', nr: 'NR-11' },
+  { pergunta: 'O que é trabalho insalubre segundo a NR-15?', opcoes: ['Atividade acima dos limites de tolerância fixados para agentes físicos, químicos ou biológicos', 'Todo trabalho considerado perigoso pela NR-16, com risco de vida imediato', 'Trabalho em turnos noturnos ou em regime de revezamento de 12 por 36 horas', 'Trabalho que envolve operação de máquinas pesadas ou equipamentos motorizados'], correta: 0, explicacao: 'Trabalho insalubre é aquele realizado em condições de exposição a agentes físicos, químicos ou biológicos acima dos limites de tolerância estabelecidos na NR-15.', nr: 'NR-15' },
+  { pergunta: 'Qual a diferença entre insalubridade e periculosidade?', opcoes: ['Insalubridade: dano gradual à saúde (10-40%); Periculosidade: exposição a risco de vida (30%)', 'São condições equivalentes: ambas geram adicional de 30% sobre o salário base', 'Periculosidade tem adicional maior (40%) enquanto insalubridade gera apenas 10%', 'Insalubridade refere-se apenas a ruído; periculosidade engloba agentes químicos'], correta: 0, explicacao: 'Insalubridade gera dano progressivo à saúde (adicional de 10%, 20% ou 40%). Periculosidade implica risco de vida (adicional de 30%). Não acumulam entre si.', nr: 'NR-15/16' },
+  { pergunta: 'O que é o Índice WBGT (Wet Bulb Globe Temperature)?', opcoes: ['Medida de qualidade do ar interior em ppm, usada na avaliação de gases tóxicos', 'Instrumento de medição de ruído ocupacional calibrado em dB(A) ponderados', 'Índice de qualidade da água industrial para processos de resfriamento', 'Índice que avalia estresse térmico considerando temperatura, umidade e radiação'], correta: 3, explicacao: 'O WBGT é um índice de estresse térmico que considera temperatura do termômetro de bulbo úmido, temperatura de globo e temperatura de bulbo seco.', nr: 'NR-15' },
+  { pergunta: 'Segundo a NR-20, o que é Área Classificada Zona 0?', opcoes: ['Área completamente segura, sem qualquer risco de formação de atmosfera explosiva', 'Área com risco apenas ocasional e de curta duração de atmosfera explosiva', 'Área onde há risco de explosão somente em situações anormais de emergência', 'Área onde há atmosfera explosiva continuamente ou por longos períodos'], correta: 3, explicacao: 'Zona 0 é a área classificada onde a atmosfera explosiva está presente continuamente ou por longos períodos, representando o maior nível de risco.', nr: 'NR-20' },
+  { pergunta: 'O que é a ACGIH e qual sua relevância para a higiene ocupacional?', opcoes: ['Agência brasileira vinculada ao MTE que elabora e revisa as Normas Regulamentadoras', 'Conferência Americana de Higienistas Industriais Governamentais, que publica TLVs como referência mundial', 'Órgão da Organização Mundial da Saúde (ONU) responsável por saúde ocupacional', 'Sindicato americano de engenheiros que regulamenta segurança em construção civil'], correta: 1, explicacao: 'ACGIH é uma organização americana que publica os TLVs (Threshold Limit Values), valores limites de exposição amplamente utilizados como referência internacional.', nr: 'Higiene Ocupacional' },
+  { pergunta: 'O que é APR diferente de HAZOP?', opcoes: ['APR é análise qualitativa prévia mais simples; HAZOP é estudo sistemático estruturado de desvios em processo', 'São exatamente a mesma técnica de análise, com nomenclaturas diferentes por setor', 'HAZOP é mais simples e rápido que a APR, usado apenas para análise de incidentes', 'APR é aplicável exclusivamente para atividades em altura, conforme a NR-35'], correta: 0, explicacao: 'APR é técnica qualitativa de identificação de riscos antes da atividade. HAZOP é técnica sistemática mais complexa, usada para análise de processos usando palavras-guia.', nr: 'Gestão de Riscos' },
+  { pergunta: 'Segundo a NR-23, o que é sistema de chuveiro de emergência (Deluge)?', opcoes: ['Sistema de sprinklers que aciona toda uma área com água imediatamente ao detectar fogo', 'Chuveiro individual instalado nos vestiários para descontaminação de trabalhadores', 'Chuveiro portátil para emergências químicas com mangueira de 15 metros de alcance', 'Sistema de lavagem ocular de emergência fixado próximo a pontos de risco químico'], correta: 0, explicacao: 'Sistema Deluge é um sistema de extinção por chuveiros abertos que inundam toda a área protegida simultaneamente quando acionado, para controlar incêndios de alta intensidade.', nr: 'NR-23' },
+  { pergunta: 'Na NR-06, o que o empregador deve fazer quando o EPI se torna inadequado?', opcoes: ['Continuar usando o EPI até o esgotamento do estoque atual antes de fazer novo pedido', 'Encaminhar o EPI para reparo técnico autorizado antes de considerar a substituição', 'Substituir imediatamente por um EPI adequado e em boas condições', 'Aguardar a próxima compra programada conforme orçamento do mês seguinte'], correta: 2, explicacao: '', nr: 'NR-06' },
+  { pergunta: 'Qual o objetivo do DDS (Diálogo Diário de Segurança)?', opcoes: ['Documento que substitui formalmente os treinamentos obrigatórios das NRs', 'Reunião mensal obrigatória da CIPA para análise de acidentes do período', 'Conversa rápida diária para conscientizar trabalhadores sobre riscos e comportamentos seguros', 'Relatório diário de ocorrências enviado ao SESMT no início do turno'], correta: 2, explicacao: 'O DDS é uma conversa rápida (5-15 min) realizada diariamente antes do início das atividades para conscientizar trabalhadores sobre riscos específicos e reforçar cultura de segurança.', nr: 'Boas Práticas' },
+  { pergunta: 'O que é acidente do trabalho segundo a Lei 8213/91?', opcoes: ['Acidente que ocorre pelo exercício do trabalho a serviço da empresa, causando lesão corporal ou perturbação funcional', 'Apenas lesão física com afastamento superior a 15 dias registrada na CAT', 'Exclusivamente acidente de trânsito ocorrido durante o deslocamento ao trabalho', 'Somente doença ocupacional comprovada por laudo médico com nexo causal'], correta: 0, explicacao: 'Acidente do trabalho é o que ocorre pelo exercício do trabalho a serviço da empresa ou pelo exercício do trabalho dos segurados, provocando lesão corporal ou perturbação funcional.', nr: 'Legislação' },
+  { pergunta: 'O que é doença ocupacional e como difere do acidente de trabalho?', opcoes: ['São situações idênticas perante a legislação previdenciária e trabalhista vigente', 'Doença ocupacional é adquirida gradualmente pelo trabalho; acidente é evento súbito', 'O acidente é sempre mais grave e gera maior indenização que a doença ocupacional', 'Doença ocupacional não gera direito a benefícios previdenciários ou estabilidade'], correta: 1, explicacao: 'Doença ocupacional é adquirida ou desencadeada em razão da atividade laboral (gradual). Acidente é evento súbito. Ambos geram direitos previdenciários.', nr: 'Legislação' },
+  { pergunta: 'Segundo a NR-01, quais são os 5 tipos de riscos ocupacionais?', opcoes: ['Físico, químico e biológico apenas, conforme classificação da OIT', 'Físico, químico, biológico, ergonômico e acidente (mecânico)', 'Ambiental, social, ergonômico, tecnológico e operacional', 'Biológico, psicossocial, físico, radiológico e de transporte'], correta: 1, explicacao: 'A NR-01 classifica os riscos em: Físicos (ruído, calor, vibração), Químicos (gases, vapores, poeiras), Biológicos (vírus, bactérias), Ergonômicos e Riscos de Acidente.', nr: 'NR-01' },
+  { pergunta: 'O que é o conceito de Segurança Comportamental (BBS)?', opcoes: ['Treinamento técnico obrigatório definido em NR para atividades de alto risco', 'Abordagem focada em observar, analisar e modificar comportamentos dos trabalhadores para prevenir acidentes', 'Sistema de punição progressiva para trabalhadores que descumprem normas internas', 'Norma regulamentadora específica sobre comportamento seguro em canteiros de obras'], correta: 1, explicacao: 'BBS (Behavior-Based Safety) é uma abordagem que analisa o comportamento dos trabalhadores, reforçando comportamentos seguros e identificando causas de comportamentos de risco.', nr: 'Gestão de SST' },
+  { pergunta: 'Na investigação de acidentes, o que é o método dos "5 Porquês"?', opcoes: ['Técnica de questionamento dos 5 principais aspectos técnicos e humanos do acidente', 'Método que pergunta "por quê" repetidamente até identificar a causa raiz', 'Formulário investigativo com 5 seções padronizadas exigido pelo Ministério do Trabalho', 'Checklist de verificação com 5 itens obrigatórios após qualquer acidente com afastamento'], correta: 1, explicacao: 'Os "5 Porquês" é uma técnica de análise de causa raiz que consiste em perguntar "por quê?" repetidas vezes (tipicamente 5 vezes) até chegar à causa fundamental do problema.', nr: 'Investigação' },
+  { pergunta: 'Segundo a NR-18, qual o EPI obrigatório para trabalho em andaimes na construção civil?', opcoes: ['Capacete, cinto de segurança tipo paraquedista com talabarte duplo, calçado de segurança e outros conforme risco', 'Apenas luvas de raspa e capacete de aba total na cor branca', 'Apenas cinto de segurança simples com um único ponto de ancoragem', 'Óculos de segurança e protetor auricular tipo plug descartável'], correta: 0, explicacao: 'Para trabalho em andaimes na construção civil são obrigatórios: capacete, cinto de segurança tipo paraquedista, talabarte duplo, calçado de segurança e EPIs específicos ao risco.', nr: 'NR-18' },
+  { pergunta: 'Qual é o princípio do Triângulo do Fogo e como se extingue um incêndio?', opcoes: ['Fogo, fumaça e calor: extingue-se resfriando a fumaça com agentes químicos', 'Combustível, comburente e calor; extingue-se retirando um dos elementos', 'Chama, oxigênio e produto de combustão: isola-se o oxigênio com areia', 'Combustão, expansão e ignição: interrompe-se a cadeia com resfriamento total'], correta: 1, explicacao: 'O Triângulo do Fogo tem três elementos: combustível (material que queima), comburente (oxigênio) e calor (energia de ativação). Para extinguir, remove-se qualquer um deles.', nr: 'Combate a Incêndio' },
+  { pergunta: 'O que é fibra de amianto/asbesto e por que é proibida?', opcoes: ['Material de construção comum, amplamente utilizado em telhas e caixas d\\\'água', 'Substância química industrial de uso controlado em processos específicos', 'Material radioativo de baixa emissão, regulamentado pela CNEN', 'Mineral fibroso altamente cancerígeno (mesotelioma e asbestose), proibido no Brasil desde 2017'], correta: 3, explicacao: 'Amianto é mineral fibroso cancerígeno que causa asbestose, mesotelioma e câncer de pulmão. O STF declarou inconstitucional seu uso em 2017.', nr: 'Saúde Ocupacional' },
+  { pergunta: 'O que é o Nexo Técnico Epidemiológico Previdenciário (NTEP)?', opcoes: ['Instrumento do INSS que vincula doenças a atividades econômicas usando estatística epidemiológica', 'Relatório médico mensal enviado pelo empregador ao INSS sobre saúde dos trabalhadores', 'Norma técnica do Ministério da Saúde para avaliação de doenças infectocontagiosas', 'Prontuário eletrônico centralizado do trabalhador mantido pelo eSocial'], correta: 0, explicacao: 'O NTEP é um instrumento do INSS que estabelece relação entre o código da doença (CID) e a atividade econômica (CNAE), caracterizando automaticamente o nexo causal.', nr: 'Previdenciário' },
+  { pergunta: 'Segundo a NR-26, quais cores identificam tubulações de gases tóxicos e inflamáveis?', opcoes: ['Vermelho para ambos os tipos, diferenciados apenas pelo tamanho da seta direcional', 'Apenas preto e branco, com codificação alfanumérica para distinguir os produtos', 'Verde para todos os gases industriais, independente da classificação de perigo', 'Gases tóxicos: amarelo-laranja; inflamáveis: vermelho ou amarelo (conforme norma)'], correta: 3, explicacao: 'A NR-26 e a ABNT NBR 6493 definem cores para tubulações industriais. Materiais inflamáveis geralmente em vermelho; tóxicos em amarelo-laranja. Sempre verificar planta e legenda.', nr: 'NR-26' },
+  { pergunta: 'O que é o GHS (Sistema Globalmente Harmonizado) e qual sua aplicação?', opcoes: ['Sistema internacional de classificação e rotulagem de produtos químicos com pictogramas padronizados', 'Sistema de GPS industrial para rastreamento de cargas perigosas no transporte', 'Software de gestão integrada de segurança do trabalho certificado pela ISO 45001', 'Norma ISO 14001 adaptada para classificação ambiental de resíduos industriais'], correta: 0, explicacao: 'GHS é o sistema global harmonizado de classificação e comunicação de perigos de produtos químicos, adotado no Brasil pela NR-26, com pictogramas, palavras de advertência e FDS padronizados.', nr: 'NR-26' },
+  { pergunta: 'Segundo a NR-09 (PPRA/PGR), o que é monitoramento da exposição ocupacional?', opcoes: ['Inspeção visual diária do posto de trabalho registrada no livro de ocorrências', 'Observação sistemática do comportamento do trabalhador durante as atividades', 'Avaliação quantitativa da exposição dos trabalhadores a agentes ambientais por medições e comparação com limites', 'Verificação mensal dos EPIs com registro na ficha de entrega individual'], correta: 2, explicacao: 'Monitoramento é a avaliação sistemática da exposição dos trabalhadores por meio de medições periódicas de agentes ambientais (ruído, gases, poeiras) e comparação com limites de tolerância.', nr: 'NR-09' },
+  { pergunta: 'O que é a técnica What-If (E se...) de análise de riscos?', opcoes: ['Pergunta específica feita apenas durante a investigação formal de acidentes', 'Análise retrospectiva de incidentes e quase-acidentes documentados anteriormente', 'Formulário de inspeção de segurança com perguntas padronizadas pelo SESMT', 'Técnica estruturada que formula perguntas "e se..." para identificar cenários de falha e seus riscos'], correta: 3, explicacao: 'What-If é uma técnica de análise de riscos onde uma equipe formula perguntas hipotéticas ("E se...") para identificar desvios, falhas e cenários de acidente em sistemas ou processos.', nr: 'Gestão de Riscos' },
+  { pergunta: 'Na NR-35, o que é proteção coletiva contra quedas (EPC)?', opcoes: ['Apenas capacetes de segurança obrigatórios para todos os trabalhadores em altura', 'Guarda-corpos, redes de segurança, plataformas e sistemas que protegem toda a área de trabalho', 'Cintos de segurança tipo paraquedista usados por todos simultaneamente na área', 'Sinalização de perigo com fitas zebradas e cones ao redor da área de risco'], correta: 1, explicacao: 'EPC contra quedas inclui: guarda-corpos, redes de proteção, plataformas de trabalho, andaimes e outros sistemas que protegem coletivamente todos que trabalham ou transitam pela área.', nr: 'NR-35' },
+  { pergunta: 'Qual a diferença entre talabarte simples e talabarte duplo (Y)?', opcoes: ['São completamente idênticos em função; a diferença é apenas estética e de peso', 'Talabarte simples tem um ramal; duplo (Y) tem dois ramais para mobilidade sem interromper proteção', 'O talabarte duplo é mais pesado e usado exclusivamente para alturas acima de 5m', 'O simples é utilizado para alturas de até 2m; o duplo para alturas superiores'], correta: 1, explicacao: 'Talabarte simples tem um ramal e deixa o trabalhador desprotegido durante a troca de ponto de ancoragem. O duplo (Y) tem dois ramais, permitindo manter um sempre conectado.', nr: 'NR-35' },
+  { pergunta: 'O que é sinalização de segurança do tipo "proibição" segundo a NR-26?', opcoes: ['Placa retangular com fundo verde e pictograma branco indicando área segura', 'Placa circular com fundo branco, borda e barra diagonal vermelha', 'Placa triangular amarela com exclamação preta sinalizando risco de atenção', 'Placa quadrada azul com pictograma branco indicando obrigatoriedade de EPI'], correta: 1, explicacao: 'Sinais de proibição são circulares com fundo branco, pictograma preto, borda e barra diagonal vermelhas. Ex: "Proibido fumar", "Proibido entrada de pessoas não autorizadas".', nr: 'NR-26' },
+  { pergunta: 'Segundo a NR-33, quais são os 3 tipos de atmosferas perigosas em espaços confinados?', opcoes: ['Explosiva/inflamável, tóxica e deficiente em oxigênio (abaixo de 19,5%)', 'Atmosfera quente (>38°C), fria (<10°C) e com excesso de umidade relativa', 'Presença de gases, vapores e poeiras suspensas em concentrações variadas', 'Alta temperatura, alta pressão e níveis elevados de radiação ionizante'], correta: 0, explicacao: 'As atmosferas perigosas em espaços confinados são: 1) Deficiente em O2 (<19,5%), 2) Enriquecida em O2 (>23,5%), 3) Inflamável/explosiva, 4) Tóxica (acima dos limites).', nr: 'NR-33' },
+  { pergunta: 'O que é Comunicação de Acidente de Trabalho (CAT) e quem pode emitir?', opcoes: ['Documento emitido exclusivamente pelo empregador, sob pena de multa administrativa', 'Formulário obrigatório preenchido somente pelo INSS após perícia médica', 'Relatório técnico elaborado unicamente pelo médico do trabalho da empresa', 'O empregador, trabalhador, dependentes, sindicato, médico ou autoridade pública'], correta: 3, explicacao: 'A CAT pode ser emitida pelo empregador (obrigatoriamente), mas também pelo próprio acidentado, dependentes, sindicato, médico ou qualquer autoridade pública.', nr: 'Legislação' },
+  { pergunta: 'Na NR-12, o que é proteção por distância (proteção por localização)?', opcoes: ['Cerca física ao redor da máquina', 'Proteção eletrônica de distância', 'Sistema de sensor de presença', 'Método onde a dimensão/posição da máquina torna as zonas perigosas inacessíveis'], correta: 3, explicacao: 'Proteção por localização é o método no qual a máquina está posicionada ou suas dimensões são tais que as zonas perigosas ficam além do alcance dos trabalhadores.', nr: 'NR-12' },
+  { pergunta: 'O que é FISPQ (Ficha de Informações de Segurança de Produtos Químicos)?', opcoes: ['Ficha de inspeção periódica de equipamentos e máquinas industriais', 'Formulário de compra e controle de estoque de produtos químicos', 'Licença de uso emitida pela ANVISA para produtos químicos regulados', 'Documento com informações de identificação, perigos, composição, medidas de controle e emergência de produto químico'], correta: 3, explicacao: 'FISPQ (equivalente ao SDS/MSDS internacional) é o documento obrigatório que contém informações sobre perigos, composição, propriedades, EPIs necessários e medidas de emergência de cada produto químico.', nr: 'NR-26' },
+  { pergunta: 'Segundo a NR-15, qual a temperatura limite para trabalho em ambiente quente sem pausas obrigatórias (IBUTG)?', opcoes: ['26°C IBUTG – limite único para todas as atividades conforme NR-15', '24°C IBUTG – valor máximo recomendado pela NR-17 para escritórios', 'Depende da taxa metabólica da atividade', '30°C IBUTG – limite exclusivo para trabalhos pesados em ambientes externos'], correta: 2, explicacao: 'O limite de IBUTG varia conforme a taxa metabólica (tipo de trabalho: leve, moderado ou pesado). Não há valor único; a NR-15 tem tabelas que cruzam IBUTG com regime de trabalho.', nr: 'NR-15' }
+];
+
+// ACIDENTES
+const ACIDENTES = [
+  { titulo: '⚠️ ACIDENTE: Queda de Andaime', desc: 'Um trabalhador estava executando reboco em andaime sem guarda-corpo. O andaime cedeu e ele caiu de 4 metros de altura, sofrendo fratura na perna.', penalidade: 'volta2', pontos: -100, texto_penal: 'Equipe perde 100 pontos e volta 2 casas!' },
+  { titulo: '⚠️ ACIDENTE: Choque Elétrico', desc: 'Eletricista realizou manutenção em painel sem desligar a energia e sem usar EPIs adequados. Sofreu choque elétrico com queimaduras graves.', penalidade: 'perde_turno', pontos: -80, texto_penal: 'Equipe perde 80 pontos e perde o próximo turno!' },
+  { titulo: '⚠️ ACIDENTE: Incêndio no Depósito', desc: 'Trabalhador fumou próximo a produtos inflamáveis sem sinalização de "Proibido Fumar". Incêndio de grandes proporções causou danos e ferimentos.', penalidade: 'volta1', pontos: -100, texto_penal: 'Equipe perde 100 pontos e volta 1 casa!' },
+  { titulo: '⚠️ ACIDENTE: Soterramento em Vala', desc: 'Trabalhadores escavavam vala sem escoramento. As paredes desmoronaram, soterrandos dois operários que não conseguiam sair.', penalidade: 'perde_turno', pontos: -150, texto_penal: 'Equipe perde 150 pontos e perde o próximo turno!' },
+  { titulo: '⚠️ ACIDENTE: Amputação em Prensa', desc: 'Operador colocou a mão na zona de perigo da prensa enquanto o ciclo ainda estava em andamento. A máquina não tinha dispositivo de intertravamento.', penalidade: 'volta2', pontos: -120, texto_penal: 'Equipe perde 120 pontos e volta 2 casas!' },
+  { titulo: '⚠️ ACIDENTE: Intoxicação por Gás', desc: 'Trabalhador entrou em espaço confinado (tanque) sem medição de atmosfera e sem equipamento de proteção. Ficou inconsciente por deficiência de oxigênio.', penalidade: 'perde_turno', pontos: -100, texto_penal: 'Equipe perde 100 pontos e perde o próximo turno!' },
+  { titulo: '⚠️ ACIDENTE: Tombamento de Empilhadeira', desc: 'Operador tentou elevar carga acima da capacidade nominal em piso irregular. A empilhadeira tombou, causando danos ao material e ferimentos no operador.', penalidade: 'volta1', pontos: -80, texto_penal: 'Equipe perde 80 pontos e volta 1 casa!' },
+  { titulo: '⚠️ ACIDENTE: Queimadura Química', desc: 'Trabalhador manipulou produto químico corrosivo sem luvas e sem óculos de proteção. Respingos causaram queimaduras nos olhos e nas mãos.', penalidade: 'volta2', pontos: -100, texto_penal: 'Equipe perde 100 pontos e volta 2 casas!' },
+  { titulo: '⚠️ ACIDENTE: Queda de Nível Superior', desc: 'Trabalhador transitou por área sem guarda-corpo no pavimento superior de uma indústria. Caiu do mezanino de 3 metros de altura.', penalidade: 'perde_turno', pontos: -120, texto_penal: 'Equipe perde 120 pontos e perde o próximo turno!' },
+  { titulo: '⚠️ ACIDENTE: Explosão de Caldeira', desc: 'Caldeira operou acima da pressão máxima de trabalho admissível (PMTA) por falta de válvula de segurança. A explosão causou danos estruturais e ferimentos graves.', penalidade: 'volta3', pontos: -150, texto_penal: 'Equipe perde 150 pontos e volta 3 casas!' },
+  { titulo: '⚠️ ACIDENTE: Atropelamento por Empilhadeira', desc: 'Pedestre cruzou corredor de circulação de empilhadeiras sem sinalização. O operador não conseguiu frear a tempo e atropelou o trabalhador.', penalidade: 'volta2', pontos: -100, texto_penal: 'Equipe perde 100 pontos e volta 2 casas!' },
+  { titulo: '⚠️ ACIDENTE: Doença Ocupacional – DORT', desc: 'Após 5 anos de trabalho repetitivo sem pausas adequadas e posto ergonomicamente inadequado, trabalhador desenvolveu LER/DORT grave nas mãos e punhos.', penalidade: 'perde_turno', pontos: -80, texto_penal: 'Equipe perde 80 pontos e perde o próximo turno!' },
+  { titulo: '⚠️ ACIDENTE: Perda Auditiva', desc: 'Trabalhador exposto a ruído acima de 85 dB(A) por anos sem protetor auricular. Desenvolveu PAIR (Perda Auditiva Induzida por Ruído) irreversível.', penalidade: 'volta1', pontos: -100, texto_penal: 'Equipe perde 100 pontos e volta 1 casa!' },
+  { titulo: '⚠️ ACIDENTE: Queda de Ferramenta', desc: 'Trabalhador em altura deixou cair martelo que atingiu trabalhador abaixo. A área não estava sinalizada nem isolada.', penalidade: 'volta1', pontos: -80, texto_penal: 'Equipe perde 80 pontos e volta 1 casa!' },
+  { titulo: '⚠️ ACIDENTE: Ergonomia – Sobrecarga', desc: 'Trabalhador levantou sozinho carga de 60 kg sem auxílio mecânico. Sofreu hérnia de disco cervical que o afastou por 6 meses.', penalidade: 'perde_turno', pontos: -100, texto_penal: 'Equipe perde 100 pontos e perde o próximo turno!' },
+];
+
+// DESAFIOS TÉCNICOS
+const DESAFIOS = [
+  { titulo: '🔧 DESAFIO: Plano de Emergência', desc: 'Sua equipe trabalha em uma fábrica. Ocorre vazamento de gás inflamável. Descreva os 5 primeiros passos de emergência que devem ser tomados.', dica: 'Pense em: Alarme, evacuação, isolamento, comunicação, serviços de emergência.' },
+  { titulo: '🔧 DESAFIO: Investigação de Acidente', desc: 'Trabalhador sofreu queda de altura durante trabalho em telhado. Cite pelo menos 4 causas prováveis e 3 medidas preventivas para evitar reincidência.', dica: 'Causas: falta de EPI, falta de EPC, falta de treinamento, condição do telhado...' },
+  { titulo: '🔧 DESAFIO: Seleção de EPI', desc: 'Trabalhador realizará soldagem elétrica em área com risco de queda. Cite todos os EPIs necessários para esta atividade.', dica: 'Pense na proteção para: olhos, rosto, mãos, corpo, pés, cabeça, queda...' },
+  { titulo: '🔧 DESAFIO: Mapa de Risco', desc: 'Em uma marcenaria, identifique e classifique pelo menos 5 riscos existentes por tipo (físico, químico, biológico, ergonômico, acidente).', dica: 'Ruído das máquinas, poeira de madeira, postura, cortes, etc.' },
+  { titulo: '🔧 DESAFIO: CIPA na Prática', desc: 'Você é membro eleito da CIPA. Descreva 4 ações concretas que a CIPA deve realizar no próximo mês para melhorar a segurança.', dica: 'Inspeção, DDS, análise de acidentes, treinamentos, mapas de risco...' },
+  { titulo: '🔧 DESAFIO: Espaço Confinado', desc: 'Sua equipe precisará entrar em um tanque de resíduo químico. Descreva as 6 etapas obrigatórias antes de autorizar a entrada conforme NR-33.', dica: 'PET, medição de atmosfera, ventilação, EPI, vigia, resgate...' },
+  { titulo: '🔧 DESAFIO: Trabalho em Altura', desc: 'Um trabalhador precisará trocar telhas em uma cobertura a 5 metros de altura. Descreva o plano de trabalho seguro completo conforme NR-35.', dica: 'APR, EPC, EPI, treinamento, permissão de trabalho, procedimento...' },
+  { titulo: '🔧 DESAFIO: Combate a Incêndio', desc: 'Ocorre incêndio em arquivo de papel próximo a painel elétrico energizado. Qual extintor usar em cada parte do incêndio? Justifique.', dica: 'Arquivo = Classe A (água/pó); Painel elétrico = Classe C (CO2)...' },
+  { titulo: '🔧 DESAFIO: Análise de Risco Químico', desc: 'Trabalhador manipula solvente sem FISPQ disponível. O que o técnico de segurança deve fazer imediatamente? Cite 5 ações.', dica: 'Parar a atividade, obter FISPQ, avaliar EPIs adequados, treinar, sinalizar...' },
+  { titulo: '🔧 DESAFIO: Ergonomia de Posto de Trabalho', desc: 'Trabalhadores de escritório se queixam de dores nas costas e pescoço. Cite 5 ajustes ergonômicos que devem ser feitos no posto de trabalho.', dica: 'Altura da cadeira, monitor, teclado, iluminação, pausas...' },
+  { titulo: '🔧 DESAFIO: Programa de Prevenção', desc: 'Como Técnico em Segurança, você precisa elaborar o PGR da empresa. Quais são as 5 etapas principais do PGR conforme a NR-01?', dica: 'Identificação de perigos, avaliação de riscos, controles, monitoramento, revisão...' },
+  { titulo: '🔧 DESAFIO: Gestão de EPIs', desc: 'A empresa tem 200 trabalhadores com diferentes EPIs. Descreva como deve ser o sistema de gestão de EPIs (compra, distribuição, controle, substituição).', dica: 'CA válido, ficha de entrega, treinamento, vistoria periódica, substituição...' },
+];
+
+// SURPRESAS
+const SURPRESAS = [
+  { tipo: 'bonus', titulo: '🌟 BÔNUS DE SEGURANÇA!', desc: 'A equipe identificou proativamente um risco grave e evitou um acidente! Comportamento exemplar!', pontos: 150, efeito: 'avanca2' },
+  { tipo: 'bonus', titulo: '🏆 DESTAQUE DO TÉCNICO!', desc: 'O técnico de segurança da equipe recebeu reconhecimento por implementar melhorias significativas!', pontos: 100, efeito: 'nada' },
+  { tipo: 'penalidade', titulo: '🔴 AUTUAÇÃO DO MTE!', desc: 'Fiscalização do Ministério do Trabalho encontrou irregularidades na documentação de segurança!', pontos: -100, efeito: 'volta1' },
+  { tipo: 'bonus', titulo: '💡 INOVAÇÃO EM SEGURANÇA!', desc: 'Equipe implantou novo sistema de bloqueio que eliminou riscos elétricos!', pontos: 120, efeito: 'avanca1' },
+  { tipo: 'penalidade', titulo: '⚠️ INCIDENTE SEM LESÃO!', desc: 'Ocorreu um quase-acidente. A equipe não reportou o incidente conforme procedimento.', pontos: -80, efeito: 'nada' },
+  { tipo: 'bonus', titulo: '✅ AUDITORIA APROVADA!', desc: 'A empresa passou na auditoria de segurança com zero não-conformidades!', pontos: 200, efeito: 'avanca2' },
+  { tipo: 'penalidade', titulo: '🚫 DOCUMENTAÇÃO IRREGULAR!', desc: 'Os programas de saúde e segurança estavam desatualizados há mais de 1 ano.', pontos: -120, efeito: 'volta2' },
+  { tipo: 'bonus', titulo: '🎯 META ZERO ACIDENTE!', desc: 'A equipe atingiu 365 dias sem acidentes! Receba o bônus de desempenho!', pontos: 250, efeito: 'avanca3' },
+  { tipo: 'penalidade', titulo: '🔥 EPI VENCIDO!', desc: 'Trabalhadores foram encontrados usando EPIs com Certificado de Aprovação vencido!', pontos: -100, efeito: 'volta1' },
+  { tipo: 'bonus', titulo: '📚 TREINAMENTO CONCLUÍDO!', desc: 'Toda a equipe concluiu o treinamento de NR-35 com aproveitamento máximo!', pontos: 150, efeito: 'nada' },
+];
+
+// ============================================================
+// ESTADO DO JOGO
+// ============================================================
+let gameState = {
+  currentMap: 0,
+  currentTeam: 0,
+  round: 1,
+  teams: [],
+  waitingForAnswer: false,
+  timerInterval: null,
+  timerValue: 30,
+  timerMax: 30,
+  rolling: false,
+  totalCells: 70
+};
+
+function initTeams() {
+  gameState.teams = TEAMS.map((t, i) => ({
+    ...t,
+    score: 0,
+    position: 0,
+    skipsLeft: 0,
+    correct: 0,
+    challenges: 0,
+    accidents: 0
+  }));
+}
+
+// ============================================================
+// NAVEGAÇÃO
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showTeamNames() {
+  // Reset inputs to current team names
+  gameState.teams.forEach ? null : initTeams();
+  const names = TEAMS.map(t => t.name);
+  names.forEach((n, i) => {
+    const inp = document.getElementById(`nameInput${i}`);
+    if (inp) inp.value = n;
+  });
+  showScreen('screen-teamnames');
+}
+
+function applyTeamNames() {
+  TEAMS.forEach((t, i) => {
+    const inp = document.getElementById(`nameInput${i}`);
+    if (inp && inp.value.trim()) {
+      const newName = inp.value.trim();
+      t.name = newName;
+      t.initial = newName.charAt(0).toUpperCase();
+    }
+  });
+  showMapSelect();
+}
+
+function showMapSelect() {
+  showScreen('screen-mapselect');
+}
+
+function showRules() {
+  showModal({
+    badge: '📋 REGRAS', badgeColor: '#2979ff',
+    title: 'Como Jogar',
+    body: `<strong>OBJETIVO:</strong> Chegar ao final do tabuleiro com mais pontos.<br><br>
+<strong>CASAS:</strong><br>
+🔵 Pergunta: acerte e ganhe +100pts, erre: -50pts<br>
+🔴 Acidente: perde pontos e/ou casas<br>
+🟡 Investigação: +150pts se acertar<br>
+🟠 Desafio: +150pts se acertar<br>
+🟢 EPI Correto: avança 3 casas<br>
+❌ Risco Grave: perde a rodada<br>
+⭐ Surpresa: evento aleatório<br><br>
+<strong>CRONÔMETRO:</strong><br>
+Pergunta: 30s | Desafio: 45s | Investigação: 60s<br><br>
+<strong>ORDEM:</strong> Verde → Azul → Amarelo → Vermelho → Roxo → Laranja`,
+    actions: [{ label: 'Entendido!', class: 'btn-next', action: 'closeModal()' }]
+  });
+}
+
+// ============================================================
+// INICIAR JOGO
+// ============================================================
+function startGame(mapIndex) {
+  gameState.currentMap = mapIndex;
+  gameState.currentTeam = 0;
+  gameState.round = 1;
+  initTeams();
+  
+  showScreen('screen-game');
+  buildBoard();
+  updateUI();
+  
+  const map = MAPS[mapIndex];
+  document.getElementById('mapIndicator').textContent = `MAPA ${mapIndex+1} – ${map.name.toUpperCase()}`;
+  addLog(`🗺️ Iniciando no <span style="color:${map.color}">${map.icon} ${map.name}</span>! Boa sorte a todos!`);
+
+  // Ajusta zoom automaticamente ao tamanho da tela
+  requestAnimationFrame(() => fitBoard());
+}
+
+// ============================================================
+// TABULEIRO — Serpentina linear 70 casas, 6 faixas, SEM desvios
+// ============================================================
+//
+//  FAIXA 1 →   0  1  2  3  4  5  6  7  8  9  10  11
+//                                                   ↓ arco
+//  FAIXA 2 ←  23 22 21 20 19 18 17 16 15 14  13  12
+//              ↓ arco
+//  FAIXA 3 →  24 25 26 27 28 29 30 31 32 33  34  35
+//                                                   ↓ arco
+//  FAIXA 4 ←  47 46 45 44 43 42 41 40 39 38  37  36
+//              ↓ arco
+//  FAIXA 5 →  48 49 50 51 52 53 54 55 56 57  58  59
+//                                                   ↓ arco
+//  FAIXA 6 ←  69 68 67 66 65 64 63 62 61 60
+//
+//  6 faixas × 12 casas (última com 10) = 70 casas
+//  Cada faixa é uma linha horizontal pura — zero cruzamentos
+// ============================================================
+
+const MAP_W = 1500, MAP_H = 660;
+const LX = 60, RX = 1440;
+const COLS = 12;
+const STEP = (RX - LX) / (COLS - 1);
+const YF = [80, 190, 300, 405, 500, 590];
+
+const xR70 = (col) => LX + col * STEP;  // esq→dir
+const xL70 = (col) => RX - col * STEP;  // dir→esq
+
+const CELL_POS = (() => {
+  const pos = [];
+  const lanes = [
+    { n:12, dir:'r', y:YF[0] },
+    { n:12, dir:'l', y:YF[1] },
+    { n:12, dir:'r', y:YF[2] },
+    { n:12, dir:'l', y:YF[3] },
+    { n:12, dir:'r', y:YF[4] },
+    { n:10, dir:'l', y:YF[5] },
+  ];
+  lanes.forEach(({ n, dir, y }) => {
+    for (let c = 0; c < n; c++)
+      pos.push([dir === 'r' ? xR70(c) : xL70(c), y]);
+  });
+  return pos;
+})();
+
+const FORKS = [];
+
+function buildMainRoute() {
+  return Array.from({ length: 70 }, (_, i) => i);
+}
+
+function getNextPos(pos) {
+  return pos < 69 ? pos + 1 : 69;
+}
+
+function getCellSize(type) {
+  if (type === 'S' || type === 'F') return 62;
+  if (type === 'B' || type === 'M') return 56;
+  if (['T','X','r'].includes(type)) return 52;
+  return 48;
+}
+
+function getCellClass(type) {
+  const m = { S:'inicio',F:'fim',p:'pergunta',a:'acidente',r:'risco',e:'epi',
+               i:'investigacao',d:'desafio',s:'surpresa',T:'teleporte',
+               X:'armadilha',M:'missao',B:'boss' };
+  return 'ct-' + (m[type] || 'pergunta');
+}
+
+function getCellIcon(type) {
+  const m = { S:'🚩',F:'🏆',p:'❓',a:'🚨',r:'☠️',e:'🛡️',i:'🔍',
+               d:'🎯',s:'⭐',T:'⚡',X:'🕳️',M:'🎯',B:'💀' };
+  return m[type] || '❓';
+}
+
+function getCellLabel(type) {
+  const m = { S:'START',F:'GOAL',p:'PERGUNTA',a:'ACIDENTE',r:'⚠ RISCO',
+               e:'EPI',i:'INVESTIGAÇÃO',d:'DESAFIO',s:'BÔNUS',
+               T:'TELEPORTE',X:'ARMADILHA',M:'MISSÃO',B:'BOSS' };
+  return m[type] || 'PERGUNTA';
+}
+
+function getCellZone(pos) {
+  if (pos <= 19) return 'start';
+  if (pos <= 49) return 'mid';
+  return 'end';
+}
+
+function getSector(pos) {
+  return SECTORS.find(s => pos >= s.range[0] && pos <= s.range[1]) || SECTORS[0];
+}
+
+function buildBoard() {
+  const wrap = document.getElementById('boardWrap');
+  wrap.innerHTML = '';
+  wrap.style.cssText = `position:relative;width:${MAP_W}px;height:${MAP_H}px;`;
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('width', MAP_W); svg.setAttribute('height', MAP_H);
+  svg.setAttribute('viewBox', `0 0 ${MAP_W} ${MAP_H}`);
+  svg.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:0;';
+  wrap.appendChild(svg);
+
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const mkG = (id, x1,y1,x2,y2, stops) => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+    g.setAttribute('id',id); g.setAttribute('gradientUnits','userSpaceOnUse');
+    g.setAttribute('x1',x1); g.setAttribute('y1',y1);
+    g.setAttribute('x2',x2); g.setAttribute('y2',y2);
+    stops.forEach(([o,c]) => {
+      const s = document.createElementNS('http://www.w3.org/2000/svg','stop');
+      s.setAttribute('offset',o); s.setAttribute('stop-color',c); g.appendChild(s);
+    });
+    defs.appendChild(g);
+  };
+  mkG('gL1',LX,YF[0],RX,YF[0],[['0%','rgba(0,230,118,0.9)'],  ['100%','rgba(0,200,220,0.9)']]);
+  mkG('gL2',RX,YF[1],LX,YF[1],[['0%','rgba(0,200,220,0.9)'],  ['100%','rgba(255,214,0,0.9)']]);
+  mkG('gL3',LX,YF[2],RX,YF[2],[['0%','rgba(255,214,0,0.9)'],  ['100%','rgba(255,140,0,0.9)']]);
+  mkG('gL4',RX,YF[3],LX,YF[3],[['0%','rgba(255,140,0,0.9)'],  ['100%','rgba(255,50,50,0.9)']]);
+  mkG('gL5',LX,YF[4],RX,YF[4],[['0%','rgba(255,50,50,0.9)'],  ['100%','rgba(200,0,200,0.9)']]);
+  mkG('gL6',RX,YF[5],LX,YF[5],[['0%','rgba(200,0,200,0.9)'],  ['100%','rgba(255,214,0,1.0)']]);
+  svg.appendChild(defs);
+
+  // Faixas de fundo
+  const lanesBg = [
+    { i:0, fill:'rgba(0,180,80,0.07)',  stroke:'rgba(0,230,118,0.20)',  label:'🏢 PORTARIA  ·  📦 ESTOQUE',           h:82 },
+    { i:1, fill:'rgba(0,120,200,0.07)', stroke:'rgba(0,200,220,0.20)',  label:'⚙️ PRODUÇÃO',                           h:82 },
+    { i:2, fill:'rgba(180,100,0,0.07)', stroke:'rgba(255,160,0,0.20)',  label:'🔥 SOLDAGEM',                           h:82 },
+    { i:3, fill:'rgba(160,40,0,0.07)',  stroke:'rgba(255,80,30,0.20)',  label:'🔧 MANUTENÇÃO',                         h:78 },
+    { i:4, fill:'rgba(120,0,140,0.07)', stroke:'rgba(200,0,200,0.20)',  label:'☣️ ÁREA QUÍMICA',                       h:78 },
+    { i:5, fill:'rgba(140,0,0,0.09)',   stroke:'rgba(255,50,50,0.25)',  label:'⚠️ EMERGÊNCIA  ·  ✅ SAÍDA SEGURA',    h:72 },
+  ];
+  lanesBg.forEach(({ i, fill, stroke, label, h }) => {
+    const y = YF[i];
+    const r = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    r.setAttribute('x',16); r.setAttribute('y', y - h/2);
+    r.setAttribute('width', MAP_W-32); r.setAttribute('height', h);
+    r.setAttribute('rx',16); r.setAttribute('fill',fill);
+    r.setAttribute('stroke',stroke); r.setAttribute('stroke-width','1.5');
+    svg.appendChild(r);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', MAP_W/2); t.setAttribute('y', y - h/2 + 13);
+    t.setAttribute('font-family','Share Tech Mono,monospace'); t.setAttribute('font-size','9');
+    t.setAttribute('letter-spacing','2'); t.setAttribute('fill','rgba(255,255,255,0.13)');
+    t.setAttribute('text-anchor','middle'); t.textContent = label;
+    svg.appendChild(t);
+  });
+
+  // Trilhas (sombra + borda + cor)
+  const drawTrack = (idxArr, gradId) => {
+    const pts = idxArr.map(i => CELL_POS[i].join(',')).join(' ');
+    [
+      { stroke:'rgba(0,0,0,0.62)',        w:28 },
+      { stroke:'rgba(255,255,255,0.14)',  w:22 },
+    ].forEach(({ stroke, w }) => {
+      const l = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+      l.setAttribute('points',pts); l.setAttribute('fill','none');
+      l.setAttribute('stroke',stroke); l.setAttribute('stroke-width',w);
+      l.setAttribute('stroke-linecap','round'); l.setAttribute('stroke-linejoin','round');
+      svg.appendChild(l);
+    });
+    const l = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    l.setAttribute('points',pts); l.setAttribute('fill','none');
+    l.setAttribute('stroke',`url(#${gradId})`); l.setAttribute('stroke-width',14);
+    l.setAttribute('stroke-linecap','round'); l.setAttribute('stroke-linejoin','round');
+    svg.appendChild(l);
+  };
+  drawTrack(Array.from({length:12},(_,i)=>i),    'gL1');
+  drawTrack(Array.from({length:12},(_,i)=>i+12), 'gL2');
+  drawTrack(Array.from({length:12},(_,i)=>i+24), 'gL3');
+  drawTrack(Array.from({length:12},(_,i)=>i+36), 'gL4');
+  drawTrack(Array.from({length:12},(_,i)=>i+48), 'gL5');
+  drawTrack(Array.from({length:10},(_,i)=>i+60), 'gL6');
+
+  // Arcos de virada
+  const mkArc = (x, ya, yb, side) => {
+    const R = 42, ox = side === 'r' ? x + R : x - R;
+    const d = `M ${x} ${ya} Q ${ox} ${ya} ${ox} ${(ya+yb)/2} Q ${ox} ${yb} ${x} ${yb}`;
+    [
+      { c:'rgba(0,0,0,0.62)',       w:28 },
+      { c:'rgba(255,255,255,0.18)', w:14 },
+    ].forEach(({ c, w }) => {
+      const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('d',d); p.setAttribute('fill','none');
+      p.setAttribute('stroke',c); p.setAttribute('stroke-width',w);
+      p.setAttribute('stroke-linecap','round');
+      svg.appendChild(p);
+    });
+  };
+  mkArc(RX, YF[0], YF[1], 'r');
+  mkArc(LX, YF[1], YF[2], 'l');
+  mkArc(RX, YF[2], YF[3], 'r');
+  mkArc(LX, YF[3], YF[4], 'l');
+  mkArc(RX, YF[4], YF[5], 'r');
+
+  // Setas de direção
+  const arrow = (x, y, dir) => {
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',x); t.setAttribute('y',y+5);
+    t.setAttribute('font-size','13'); t.setAttribute('text-anchor','middle');
+    t.setAttribute('fill','rgba(255,255,255,0.20)');
+    t.textContent = dir === 'r' ? '▶' : '◀';
+    svg.appendChild(t);
+  };
+  [
+    { li:0, dir:'r' }, { li:1, dir:'l' }, { li:2, dir:'r' },
+    { li:3, dir:'l' }, { li:4, dir:'r' }, { li:5, dir:'l' },
+  ].forEach(({ li, dir }) => {
+    [3,6,9].forEach(c => arrow(dir==='r'?xR70(c):xL70(c), YF[li]-36, dir));
+  });
+
+  // Numeração de faixas (label do setor no meio)
+  const sectorMid = [
+    [4,   YF[0]+28], [4,   YF[1]+28],
+    [4,   YF[2]+28], [4,   YF[3]+28],
+    [4,   YF[4]+28], [4,   YF[5]+26],
+  ];
+  const sectorColors = ['#00e676','#29b6f6','#ff9800','#ef5350','#e040fb','#f44336'];
+  const sectorLabels = ['Portaria / Estoque','Produção','Soldagem','Manutenção','Área Química','Emergência / Saída'];
+  sectorMid.forEach(([col, y], i) => {
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    const xp = i % 2 === 0 ? xR70(0) - 0 : xL70(0) + 0;
+    t.setAttribute('x', MAP_W/2); t.setAttribute('y', y);
+    t.setAttribute('font-family','Share Tech Mono,monospace'); t.setAttribute('font-size','8');
+    t.setAttribute('letter-spacing','1'); t.setAttribute('fill', sectorColors[i]);
+    t.setAttribute('text-anchor','middle'); t.setAttribute('opacity','0.30');
+    t.textContent = sectorLabels[i].toUpperCase();
+    svg.appendChild(t);
+  });
+
+  // Casas HTML
+  for (let pos = 0; pos < 70; pos++) {
+    const [cx, cy] = CELL_POS[pos];
+    const type = CELL_TYPES[pos] || 'p';
+    const size = getCellSize(type);
+    const el = document.createElement('div');
+    el.className = `map-cell ${getCellClass(type)}`;
+    el.id = `cell-${pos}`;
+    el.title = `Casa ${pos} · ${getCellLabel(type)} · ${getSector(pos).name}`;
+    el.style.cssText = `width:${size}px;height:${size}px;left:${cx-size/2}px;top:${cy-size/2}px;z-index:${20+(type==='S'||type==='F'?10:0)};`;
+    if (type === 'S') {
+      el.innerHTML = `<div class="cell-num" style="top:5px;font-size:8px;opacity:0.9">0</div><div class="cell-ico" style="font-size:22px">🚩</div><div class="cell-lbl" style="font-size:7px;color:#00e676;font-weight:900">START</div><div class="pawn-container" id="pawns-${pos}"></div>`;
+    } else if (type === 'F') {
+      el.innerHTML = `<div class="cell-num" style="top:5px;font-size:8px;opacity:0.9">69</div><div class="cell-ico" style="font-size:22px">🏆</div><div class="cell-lbl" style="font-size:7px;color:#ffd600;font-weight:900">GOAL</div><div class="pawn-container" id="pawns-${pos}"></div>`;
+    } else {
+      el.innerHTML = `<div class="cell-num">${pos}</div><div class="cell-ico">${getCellIcon(type)}</div><div class="cell-lbl">${getCellLabel(type)}</div><div class="pawn-container" id="pawns-${pos}"></div>`;
+    }
+    wrap.appendChild(el);
+  }
+
+  renderAllPawns();
+}
+
+
+function renderAllPawns() {
+  document.querySelectorAll('.pawn-container').forEach(c => c.innerHTML = '');
+  gameState.teams.forEach((team) => {
+    const container = document.getElementById(`pawns-${team.position}`);
+    if (container) {
+      const pawn = document.createElement('div');
+      pawn.className = 'pawn';
+      pawn.style.background = team.color;
+      pawn.textContent = team.initial;
+      container.appendChild(pawn);
+    }
+  });
+}
+
+// ============================================================
+// UPDATE UI
+// ============================================================
+function updateUI() {
+  // Team cards
+  const container = document.getElementById('teamCards');
+  container.innerHTML = '';
+  
+  gameState.teams.forEach((team, idx) => {
+    const card = document.createElement('div');
+    card.className = `team-card${idx === gameState.currentTeam ? ' active' : ''}`;
+    card.style.color = team.color;
+    const skipBadge = team.skipsLeft > 0
+      ? `<span class="badge" style="background:rgba(244,67,54,0.25);color:#ff5252;">⛔ ${team.skipsLeft}x perde vez</span>`
+      : '';
+    card.innerHTML = `
+      <div class="team-name">⬛ ${team.name}</div>
+      <div class="team-score">${team.score} pts</div>
+      <div class="team-pos">Casa ${team.position}/69</div>
+      <div class="team-badges">
+        <span class="badge">✅ ${team.correct}</span>
+        <span class="badge">🔧 ${team.challenges}</span>
+        ${skipBadge}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Current team
+  const ct = gameState.teams[gameState.currentTeam];
+  const el = document.getElementById('currentTeamDisplay');
+  el.textContent = `EQUIPE ${ct.name.toUpperCase()}`;
+  el.style.color = ct.color;
+
+  // Skip notice + botão pular vez
+  const skipNotice  = document.getElementById('skipNotice');
+  const btnSkip     = document.getElementById('btnSkipTurn');
+  const btnRoll     = document.getElementById('btnRoll');
+
+  if (ct.skipsLeft > 0) {
+    skipNotice.classList.add('active');
+    skipNotice.textContent = `⛔ Esta equipe perde a vez! (${ct.skipsLeft} restante${ct.skipsLeft > 1 ? 's' : ''})`;
+    btnSkip.classList.add('active');
+    btnRoll.disabled = true;
+    btnRoll.style.opacity = '0.25';
+  } else {
+    skipNotice.classList.remove('active');
+    btnSkip.classList.remove('active');
+    btnRoll.disabled = false;
+    btnRoll.style.opacity = '';
+  }
+  
+  // Status bar
+  document.getElementById('statusRound').textContent = `Rodada ${gameState.round}`;
+  const positions = gameState.teams.map(t => `${t.initial}:${t.position}`).join(' | ');
+  document.getElementById('statusPositions').textContent = positions;
+}
+
+// Executado quando professor clica "CONFIRMAR PERDA DE VEZ"
+function executarPularVez() {
+  const ct = gameState.teams[gameState.currentTeam];
+  if (ct.skipsLeft <= 0) return;
+  ct.skipsLeft--;
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> ⛔ perdeu a vez (punição)`);
+  nextTeam();
+}
+
+function addLog(msg) {
+  const log = document.getElementById('gameLog');
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = msg;
+  log.insertBefore(entry, log.firstChild);
+  // Limitar a 20 entradas
+  while (log.children.length > 20) log.removeChild(log.lastChild);
+}
+
+// ============================================================
+// DADO
+// ============================================================
+function rollDice() {
+  if (gameState.rolling || gameState.waitingForAnswer) return;
+  
+  const ct = gameState.teams[gameState.currentTeam];
+  
+  // Segurança extra: se por algum motivo o botão foi clicado com skip ativo, ignorar
+  if (ct.skipsLeft > 0) return;
+  
+  gameState.rolling = true;
+  document.getElementById('btnRoll').disabled = true;
+  
+  const diceEl = document.getElementById('diceDisplay');
+  diceEl.classList.add('rolling');
+  
+  let rollCount = 0;
+  const rollInterval = setInterval(() => {
+    const tempVal = Math.floor(Math.random() * 6) + 1;
+    renderDice(tempVal);
+    rollCount++;
+    if (rollCount >= 8) {
+      clearInterval(rollInterval);
+      const finalVal = Math.floor(Math.random() * 6) + 1;
+      renderDice(finalVal);
+      diceEl.classList.remove('rolling');
+      // rolling só vira false DEPOIS que movePawn terminar (feito dentro de movePawn)
+      setTimeout(() => movePawn(finalVal), 300);
+    }
+  }, 80);
+}
+
+function renderDice(value) {
+  const dots = document.querySelectorAll('.dot');
+  const patterns = {
+    1: [false,false,false, false,true,false, false,false,false],
+    2: [true,false,false, false,false,false, false,false,true],
+    3: [true,false,false, false,true,false, false,false,true],
+    4: [true,false,true, false,false,false, true,false,true],
+    5: [true,false,true, false,true,false, true,false,true],
+    6: [true,false,true, true,false,true, true,false,true]
+  };
+  const pattern = patterns[value];
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('hidden', !pattern[i]);
+  });
+}
+
+// ============================================================
+// MOVIMENTO
+// ============================================================
+function movePawn(steps) {
+  const ct = gameState.teams[gameState.currentTeam];
+  const oldPos = ct.position;
+  let newPos = Math.min(oldPos + steps, 69);
+  
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> tirou 🎲 <strong>${steps}</strong> e vai para casa <strong>${newPos}</strong>`);
+  
+  // Animação de movimento
+  animateMove(ct, oldPos, newPos, () => {
+    gameState.rolling = false;   // ← libera apenas após animação concluída
+    ct.position = newPos;
+    renderAllPawns();
+    
+    if (newPos >= 69) {
+      finishGame();
+      return;
+    }
+    
+    // Highlight célula
+    const cell = document.getElementById(`cell-${newPos}`);
+    if (cell) cell.classList.add('highlight');
+    setTimeout(() => { if (cell) cell.classList.remove('highlight'); }, 800);
+    
+    // Processar evento da casa
+    setTimeout(() => processCell(newPos), 600);
+  });
+}
+
+function animateMove(team, from, to, callback) {
+  let current = from;
+
+  // Remove active-cell marker from start
+  const startCell = document.getElementById(`cell-${from}`);
+  if (startCell) startCell.classList.remove('active-cell');
+
+  const step = () => {
+    if (current < to) {
+      // Remove pawn from current pos
+      const oldContainer = document.getElementById(`pawns-${current}`);
+      if (oldContainer) {
+        oldContainer.querySelectorAll('.pawn').forEach(p => {
+          if (p.textContent === team.initial) p.remove();
+        });
+      }
+
+      // Flash the passed-through cell
+      const passCell = document.getElementById(`cell-${current}`);
+      if (passCell) {
+        passCell.classList.add('highlight');
+        setTimeout(() => passCell.classList.remove('highlight'), 200);
+      }
+
+      current++;
+
+      // Add pawn to new pos
+      const newContainer = document.getElementById(`pawns-${current}`);
+      if (newContainer) {
+        const pawn = document.createElement('div');
+        pawn.className = 'pawn';
+        pawn.style.background = team.color;
+        pawn.textContent = team.initial;
+        newContainer.appendChild(pawn);
+      }
+
+      if (current < to) {
+        setTimeout(step, 130);
+      } else {
+        // Mark final cell as active
+        const finalCell = document.getElementById(`cell-${current}`);
+        if (finalCell) {
+          finalCell.classList.add('active-cell');
+          setTimeout(() => finalCell.classList.remove('active-cell'), 2000);
+        }
+        callback();
+      }
+    } else {
+      callback();
+    }
+  };
+  step();
+}
+
+// ============================================================
+// PROCESSAR CASA
+// ============================================================
+function processCell(pos) {
+  const type = CELL_TYPES[pos];
+  switch(type) {
+    case 'p': showPergunta(); break;
+    case 'a': showAcidente(); break;
+    case 'r': showRiscoGrave(); break;
+    case 'e': showEpiCorreto(); break;
+    case 'i': showInvestigacao(); break;
+    case 'd': showDesafio(); break;
+    case 's': showSurpresa(); break;
+    case 'T': showTeleporte(pos); break;
+    case 'X': showArmadilha(pos); break;
+    case 'M': showMissao(); break;
+    case 'B': showBoss(); break;
+    case 'S': nextTeam(); break;
+    case 'F': finishGame(); break;
+    default:  showPergunta();
+  }
+}
+
+// ============================================================
+// PERGUNTAS
+// ============================================================
+function shuffleQuestion(q) {
+  // Embaralha as opções e rastreia qual é a correta após o shuffle
+  const indices = [0, 1, 2, 3];
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return {
+    opcoes: indices.map(i => q.opcoes[i]),
+    correta: indices.indexOf(q.correta),
+    pergunta: q.pergunta,
+    explicacao: q.explicacao,
+    nr: q.nr
+  };
+}
+
+function showPergunta() {
+  const raw = PERGUNTAS[Math.floor(Math.random() * PERGUNTAS.length)];
+  const q = shuffleQuestion(raw);
+  startTimer(30, () => timeoutPenalty());
+
+  const optionsHtml = q.opcoes.map((op, i) =>
+    `<button class="option-btn" onclick="answerPergunta(${i}, ${q.correta}, this, '${escStr(q.explicacao)}')" data-idx="${i}">
+      <span class="option-letter">${'ABCD'[i]})</span>${op}
+    </button>`
+  ).join('');
+
+  showModal({
+    badge: `📚 ${q.nr}`, badgeColor: '#2979ff',
+    title: q.pergunta,
+    body: '',
+    html: optionsHtml,
+    actions: []
+  });
+  gameState.waitingForAnswer = true;
+}
+
+function answerPergunta(chosen, correct, btn, explicacao) {
+  if (!gameState.waitingForAnswer) return;
+  stopTimer();
+  gameState.waitingForAnswer = false;
+  
+  const ct = gameState.teams[gameState.currentTeam];
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('correct');
+    else if (parseInt(b.dataset.idx) === chosen) b.classList.add('wrong');
+  });
+  
+  const isCorrect = chosen === correct;
+  
+  if (isCorrect) {
+    ct.score += 100;
+    ct.correct++;
+    ct.position = Math.min(ct.position + 2, 69);
+    showResult(true, '+100 pts', 'Avançou 2 casas!', explicacao);
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> ✅ acertou! +100pts, avançou 2 casas`);
+  } else {
+    ct.score = Math.max(0, ct.score - 50);
+    ct.position = Math.max(0, ct.position - 1);
+    showResult(false, '-50 pts', 'Voltou 1 casa.', explicacao);
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> ❌ errou! -50pts, voltou 1 casa`);
+  }
+  
+  renderAllPawns();
+  updateUI();
+  
+  setTimeout(() => {
+    setModalActions([{ label: '➡️ Próxima Equipe', class: 'btn-next', action: 'closeAndNext()' }]);
+  }, 300);
+}
+
+function escStr(s) { return (s||'').replace(/'/g, "\\'").replace(/"/g, '&quot;').substring(0, 200); }
+
+// ============================================================
+// ACIDENTE
+// ============================================================
+function showAcidente() {
+  const ac = ACIDENTES[Math.floor(Math.random() * ACIDENTES.length)];
+  const ct = gameState.teams[gameState.currentTeam];
+  
+  ct.score = Math.max(0, ct.score + ac.pontos);
+  ct.accidents++;
+  
+  // Aplicar penalidade
+  applyPenalty(ac.penalidade, ct);
+  renderAllPawns();
+  updateUI();
+  
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 🚨 ACIDENTE! ${ac.pontos} pts. ${ac.texto_penal}`);
+  
+  showModal({
+    badge: '🚨 ACIDENTE', badgeColor: '#ff1744',
+    title: ac.titulo,
+    body: ac.desc + `<br><br><strong style="color:#ff1744">PENALIDADE: ${ac.texto_penal}</strong>`,
+    actions: [{ label: '➡️ Continuar', class: 'btn-next', action: 'closeAndNext()' }]
+  });
+}
+
+function applyPenalty(penalidade, team) {
+  switch(penalidade) {
+    case 'volta1': team.position = Math.max(0, team.position - 1); break;
+    case 'volta2': team.position = Math.max(0, team.position - 2); break;
+    case 'volta3': team.position = Math.max(0, team.position - 3); break;
+    case 'perde_turno': team.skipsLeft = (team.skipsLeft || 0) + 1; break;
+  }
+}
+
+// ============================================================
+// RISCO GRAVE
+// ============================================================
+function showRiscoGrave() {
+  const ct = gameState.teams[gameState.currentTeam];
+  ct.skipsLeft = (ct.skipsLeft || 0) + 1;
+  
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> ☠️ RISCO GRAVE! Perde a próxima rodada.`);
+  updateUI();
+  
+  showModal({
+    badge: '☠️ RISCO GRAVE', badgeColor: '#f44336',
+    title: 'Risco Grave Identificado!',
+    body: 'A equipe está em área de risco grave e imediato. Todos os trabalhos são paralisados imediatamente conforme NR-01.<br><br><strong style="color:#f44336">⛔ A equipe perde a próxima rodada!</strong>',
+    actions: [{ label: '➡️ Continuar', class: 'btn-next', action: 'closeAndNext()' }]
+  });
+}
+
+// ============================================================
+// EPI CORRETO
+// ============================================================
+function showEpiCorreto() {
+  const ct = gameState.teams[gameState.currentTeam];
+  ct.position = Math.min(ct.position + 3, 69);
+  ct.score += 50;
+  
+  renderAllPawns();
+  updateUI();
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> ⛑️ EPI CORRETO! +50pts, avançou 3 casas!`);
+  
+  showModal({
+    badge: '⛑️ EPI CORRETO', badgeColor: '#00e676',
+    title: 'EPI Utilizado Corretamente!',
+    body: 'A equipe identificou os EPIs adequados e os utilizou corretamente para a atividade de risco. Comportamento exemplar em segurança!<br><br><strong style="color:#00e676">✅ +50 pontos e avança 3 casas!</strong>',
+    actions: [{ label: '➡️ Continuar', class: 'btn-next', action: 'closeAndNext()' }]
+  });
+}
+
+// ============================================================
+// INVESTIGAÇÃO
+// ============================================================
+function showInvestigacao() {
+  const ac = ACIDENTES[Math.floor(Math.random() * ACIDENTES.length)];
+  startTimer(60, () => timeoutPenalty());
+  gameState.waitingForAnswer = true;
+  
+  showModal({
+    badge: '🔍 INVESTIGAÇÃO', badgeColor: '#ffd600',
+    title: 'Investigação de Acidente',
+    body: `<strong>CENÁRIO:</strong><br>${ac.desc}<br><br>
+<strong>RESPONDA ORALMENTE:</strong><br>
+1️⃣ Qual foi a CAUSA RAIZ do acidente?<br>
+2️⃣ Qual MEDIDA DE CONTROLE deveria ter sido aplicada?<br>
+3️⃣ Como EVITAR que este acidente se repita?<br><br>
+<em style="color:rgba(232,240,254,0.6)">O professor avaliará a resposta oral da equipe.</em>`,
+    actions: [
+      { label: '✅ Acertou (+150pts)', class: 'btn-confirm', action: 'resolveInvestigacao(true)' },
+      { label: '❌ Errou (-50pts)', class: 'btn-close', action: 'resolveInvestigacao(false)' }
+    ]
+  });
+}
+
+function resolveInvestigacao(acertou) {
+  stopTimer();
+  gameState.waitingForAnswer = false;
+  const ct = gameState.teams[gameState.currentTeam];
+  
+  if (acertou) {
+    ct.score += 150;
+    ct.challenges++;
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 🔍 Investigação correta! +150pts`);
+    showResult(true, '+150 pts', 'Investigação concluída com sucesso!', 'Identificar causa raiz e medidas preventivas é fundamental para evitar reincidência de acidentes.');
+  } else {
+    ct.score = Math.max(0, ct.score - 50);
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 🔍 Investigação incorreta. -50pts`);
+    showResult(false, '-50 pts', 'Investigação incompleta.', 'Lembre-se: use a Árvore de Causas ou método dos 5 Porquês para identificar causas raízes!');
+  }
+  
+  updateUI();
+  setTimeout(() => {
+    setModalActions([{ label: '➡️ Próxima Equipe', class: 'btn-next', action: 'closeAndNext()' }]);
+  }, 300);
+}
+
+// ============================================================
+// DESAFIO TÉCNICO
+// ============================================================
+function showDesafio() {
+  const d = DESAFIOS[Math.floor(Math.random() * DESAFIOS.length)];
+  startTimer(45, () => timeoutPenalty());
+  gameState.waitingForAnswer = true;
+  
+  showModal({
+    badge: '🔧 DESAFIO TÉCNICO', badgeColor: '#ff6d00',
+    title: d.titulo,
+    body: `${d.desc}<br><br>
+<em style="color:rgba(232,240,254,0.6)">💡 Dica: ${d.dica}</em><br><br>
+<em style="color:rgba(232,240,254,0.5)">Responda oralmente. O professor avaliará.</em>`,
+    actions: [
+      { label: '✅ Venceu (+150pts)', class: 'btn-confirm', action: 'resolveDesafio(true)' },
+      { label: '❌ Não conseguiu', class: 'btn-close', action: 'resolveDesafio(false)' }
+    ]
+  });
+}
+
+function resolveDesafio(acertou) {
+  stopTimer();
+  gameState.waitingForAnswer = false;
+  const ct = gameState.teams[gameState.currentTeam];
+  
+  if (acertou) {
+    ct.score += 150;
+    ct.challenges++;
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 🔧 Desafio vencido! +150pts`);
+    showResult(true, '+150 pts', 'Desafio técnico concluído!', '');
+  } else {
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 🔧 Desafio não concluído.`);
+    showResult(false, '0 pts', 'Desafio não concluído.', '');
+  }
+  
+  updateUI();
+  setTimeout(() => {
+    setModalActions([{ label: '➡️ Próxima Equipe', class: 'btn-next', action: 'closeAndNext()' }]);
+  }, 300);
+}
+
+// ============================================================
+// SURPRESA
+// ============================================================
+function showSurpresa() {
+  const s = SURPRESAS[Math.floor(Math.random() * SURPRESAS.length)];
+  const ct = gameState.teams[gameState.currentTeam];
+  
+  ct.score = Math.max(0, ct.score + s.pontos);
+  
+  // Aplicar efeito
+  switch(s.efeito) {
+    case 'avanca1': ct.position = Math.min(ct.position + 1, 59); break;
+    case 'avanca2': ct.position = Math.min(ct.position + 2, 69); break;
+    case 'avanca3': ct.position = Math.min(ct.position + 3, 69); break;
+    case 'volta1': ct.position = Math.max(0, ct.position - 1); break;
+    case 'volta2': ct.position = Math.max(0, ct.position - 2); break;
+  }
+  
+  renderAllPawns();
+  updateUI();
+  
+  const color = s.tipo === 'bonus' ? '#00e676' : '#ff1744';
+  const sign = s.pontos > 0 ? '+' : '';
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> ⭐ Surpresa! ${sign}${s.pontos}pts`);
+  
+  showModal({
+    badge: '⭐ SURPRESA', badgeColor: '#ab47bc',
+    title: s.titulo,
+    body: `${s.desc}<br><br><strong style="color:${color}">${sign}${s.pontos} pontos${s.efeito !== 'nada' ? ' + efeito no tabuleiro!' : '!'}</strong>`,
+    actions: [{ label: '➡️ Continuar', class: 'btn-next', action: 'closeAndNext()' }]
+  });
+}
+
+// ============================================================
+// ⚡ TELEPORTE
+// ============================================================
+function showTeleporte(pos) {
+  const tp = TELEPORTS[pos];
+  if (!tp) { nextTeam(); return; }
+  const ct = gameState.teams[gameState.currentTeam];
+
+  // Efeito visual: pisca células de origem e destino
+  _flashCell(pos, '#00bcd4');
+  setTimeout(() => _flashCell(tp.dest, '#00bcd4'), 400);
+
+  setTimeout(() => {
+    ct.position = tp.dest;
+    renderAllPawns();
+    updateUI();
+  }, 350);
+
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> ⚡ TELEPORTE! Casa ${pos} → ${tp.dest}`);
+
+  showModal({
+    badge: '⚡ TELEPORTE', badgeColor: '#00bcd4',
+    title: 'Atalho pela Linha de Produção!',
+    body: `${tp.msg}<br><br>
+<strong style="color:#00bcd4">A equipe pulou da casa <em>${pos}</em> direto para a casa <em>${tp.dest}</em>!</strong><br><br>
+<em style="color:rgba(232,240,254,0.55)">Conhecimento das rotas de evacuação é fundamental na segurança do trabalho.</em>`,
+    actions: [{ label: '➡️ Continuar', class: 'btn-next', action: 'closeAndNext()' }]
+  });
+}
+
+// ============================================================
+// 🕳️ ARMADILHA
+// ============================================================
+function showArmadilha(pos) {
+  const trap = TRAPS[pos];
+  if (!trap) { nextTeam(); return; }
+  const ct = gameState.teams[gameState.currentTeam];
+  const destino = Math.max(0, ct.position - trap.volta);
+
+  ct.score = Math.max(0, ct.score - 100);
+  ct.position = destino;
+  renderAllPawns();
+  updateUI();
+
+  _flashCell(pos, '#ff5722');
+
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 🕳️ ARMADILHA! Volta ${trap.volta} casas! -100pts`);
+
+  showModal({
+    badge: '🕳️ ARMADILHA', badgeColor: '#ff5722',
+    title: 'Inspeção Reprovada — Retrocesso!',
+    body: `${trap.msg}<br><br>
+<strong style="color:#ff5722">⛔ Equipe perde 100 pontos e volta ${trap.volta} casas (casa ${destino})!</strong><br><br>
+<em style="color:rgba(232,240,254,0.55)">Manter procedimentos atualizados e documentação em ordem evita penalidades em auditorias.</em>`,
+    actions: [{ label: '➡️ Continuar', class: 'btn-next', action: 'closeAndNext()' }]
+  });
+}
+
+// ============================================================
+// 🎯 MISSÃO ESPECIAL
+// ============================================================
+const MISSOES = [
+  { titulo: '🎯 MISSÃO: Plano de Evacuação', desc: 'A fábrica precisa de um plano de evacuação atualizado. A equipe deve descrever as 5 etapas principais de um plano de emergência eficaz.', dica: 'Alarme → Parada de máquinas → Evacuação → Ponto de encontro → Contagem' },
+  { titulo: '🎯 MISSÃO: Inventário de EPIs', desc: 'O técnico de segurança precisa realizar o inventário de EPIs. Descreva quais EPIs são obrigatórios em uma área de solda e qual a validade do CA de cada um.', dica: 'Máscara de solda, avental, luvas, botina, protetor auricular — verificar CA válido.' },
+  { titulo: '🎯 MISSÃO: DDS Relâmpago', desc: 'A equipe deve apresentar um DDS (Diálogo Diário de Segurança) de 2 minutos sobre o risco mais relevante identificado no setor de caldeiras.', dica: 'Cite o risco, a causa, a consequência e a medida de controle aplicada.' },
+  { titulo: '🎯 MISSÃO: APR Express', desc: 'Realize uma APR (Análise Preliminar de Riscos) para a tarefa de substituição de uma lâmpada em altura de 4 metros. Cite riscos e controles.', dica: 'Risco de queda, choque elétrico — usar EPI adequado, desligar energia, usar escada certificada.' },
+];
+
+function showMissao() {
+  const m = MISSOES[Math.floor(Math.random() * MISSOES.length)];
+  startTimer(45, () => timeoutPenalty());
+  gameState.waitingForAnswer = true;
+
+  showModal({
+    badge: '🎯 MISSÃO ESPECIAL', badgeColor: '#ffc107',
+    title: m.titulo,
+    body: `${m.desc}<br><br>
+<em style="color:rgba(232,240,254,0.6)">💡 Guia: ${m.dica}</em><br><br>
+<em style="color:rgba(232,240,254,0.5)">⏱ 45 segundos · Resposta oral · Professor avalia</em>`,
+    actions: [
+      { label: '🏆 MISSÃO CUMPRIDA! (+200pts)', class: 'btn-confirm', action: 'resolveMissao(true)' },
+      { label: '❌ Não conseguiu', class: 'btn-close', action: 'resolveMissao(false)' }
+    ]
+  });
+}
+
+function resolveMissao(acertou) {
+  stopTimer();
+  gameState.waitingForAnswer = false;
+  const ct = gameState.teams[gameState.currentTeam];
+
+  if (acertou) {
+    ct.score += 200;
+    ct.challenges++;
+    ct.position = Math.min(ct.position + 3, 69);
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 🎯 MISSÃO CUMPRIDA! +200pts, +3 casas`);
+    showResult(true, '+200 pts', 'Missão cumprida! +3 casas de bônus!', 'Excelente! Aplicar conhecimentos técnicos em situações práticas é o objetivo do técnico em SST.');
+  } else {
+    ct.score = Math.max(0, ct.score - 50);
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 🎯 Missão falhou. -50pts`);
+    showResult(false, '-50 pts', 'Missão não concluída.', 'Estude mais sobre os procedimentos! A missão exige aplicação prática dos conhecimentos técnicos.');
+  }
+
+  renderAllPawns();
+  updateUI();
+  setTimeout(() => {
+    setModalActions([{ label: '➡️ Próxima Equipe', class: 'btn-next', action: 'closeAndNext()' }]);
+  }, 300);
+}
+
+// ============================================================
+// 💀 BOSS SAFETY
+// ============================================================
+const BOSS_CHALLENGES = [
+  {
+    titulo: '💀 BOSS: O Inspetor do Ministério!',
+    desc: 'Um fiscal do Ministério do Trabalho chegou à empresa SEM AVISO. Ele quer verificar 5 pontos críticos. A equipe tem 60 segundos para listar quais documentos de SST devem estar disponíveis para apresentação imediata.',
+    dica: 'PGR, PCMSO, CAT (quando houver), fichas de EPI, laudos de insalubridade/periculosidade, atas da CIPA, treinamentos NR...',
+    bonus: 300
+  },
+  {
+    titulo: '💀 BOSS: Acidente Grave — Investigação Completa!',
+    desc: 'Ocorreu um acidente grave com hospitalização. A equipe deve descrever TODOS os passos obrigatórios nas próximas 24 horas: o que o técnico de segurança, a empresa e o RH devem fazer.',
+    dica: 'CAT em 24h, preservar o local, investigar causas, notificar sindicato, CIPA, comunicar ao eSocial...',
+    bonus: 300
+  },
+  {
+    titulo: '💀 BOSS: Identificação de Risco Máximo!',
+    desc: 'A equipe recebe o planta baixa de um setor químico. Deve identificar: 1) Os 5 maiores riscos presentes 2) A hierarquia de controles para cada risco 3) Quais NRs se aplicam.',
+    dica: 'Riscos: explosão, incêndio, intoxicação, queimadura, espaço confinado — NRs 20, 23, 26, 33, 35...',
+    bonus: 300
+  },
+];
+
+function showBoss() {
+  const b = BOSS_CHALLENGES[Math.floor(Math.random() * BOSS_CHALLENGES.length)];
+  startTimer(60, () => timeoutPenalty());
+  gameState.waitingForAnswer = true;
+
+  showModal({
+    badge: '💀 BOSS SAFETY', badgeColor: '#e040fb',
+    title: b.titulo,
+    body: `<strong style="color:#e040fb">⚠️ DESAFIO MÁXIMO — BOSS SAFETY!</strong><br><br>
+${b.desc}<br><br>
+<em style="color:rgba(232,240,254,0.6)">🧠 Dica estratégica: ${b.dica}</em><br><br>
+<em style="color:rgba(232,240,254,0.5)">⏱ 60 segundos · Resposta completa exigida · Vale ${b.bonus} pontos</em>`,
+    actions: [
+      { label: `💀 BOSS DERROTADO! (+${b.bonus}pts)`, class: 'btn-confirm', action: `resolveBoss(true, ${b.bonus})` },
+      { label: '❌ Não conseguiu', class: 'btn-close', action: 'resolveBoss(false, 0)' }
+    ]
+  });
+}
+
+function resolveBoss(acertou, bonus) {
+  stopTimer();
+  gameState.waitingForAnswer = false;
+  const ct = gameState.teams[gameState.currentTeam];
+
+  if (acertou) {
+    ct.score += bonus;
+    ct.challenges++;
+    ct.position = Math.min(ct.position + 4, 59);
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 💀 BOSS DERROTADO! +${bonus}pts, +4 casas!`);
+    showResult(true, `+${bonus} pts`, `BOSS DERROTADO! +4 casas de bônus!`, 'Conhecimento técnico completo! Esta equipe domina a Segurança do Trabalho.');
+  } else {
+    ct.score = Math.max(0, ct.score - 80);
+    ct.skipsLeft = (ct.skipsLeft || 0) + 1;
+    addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> 💀 Derrotado pelo Boss. -80pts, perde turno`);
+    showResult(false, '-80 pts', 'O Boss venceu desta vez. -80pts + perde turno.', 'Estude os documentos obrigatórios do PGR e os procedimentos de emergência!');
+  }
+
+  renderAllPawns();
+  updateUI();
+  setTimeout(() => {
+    setModalActions([{ label: '➡️ Próxima Equipe', class: 'btn-next', action: 'closeAndNext()' }]);
+  }, 300);
+}
+
+// Helper: pisca uma célula com cor específica
+function _flashCell(pos, color) {
+  const cell = document.getElementById(`cell-${pos}`);
+  if (!cell) return;
+  cell.style.boxShadow = `0 0 30px ${color}, 0 0 60px ${color}55`;
+  cell.style.transform = 'scale(1.15)';
+  setTimeout(() => {
+    cell.style.boxShadow = '';
+    cell.style.transform = '';
+  }, 700);
+}
+
+// ============================================================
+// TIMEOUT
+// ============================================================
+function timeoutPenalty() {
+  gameState.waitingForAnswer = false;
+  const ct = gameState.teams[gameState.currentTeam];
+  ct.score = Math.max(0, ct.score - 80);
+  ct.skipsLeft = (ct.skipsLeft || 0) + 1;
+  
+  updateUI();
+  addLog(`<span style="color:${ct.color}">Equipe ${ct.name}</span> ⏱️ TEMPO ESGOTADO! -80pts, perde turno`);
+  
+  showResult(false, '-80 pts', 'Tempo esgotado! Perde o próximo turno.', '');
+  
+  // Desabilitar botões de opção
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  
+  setTimeout(() => {
+    setModalActions([{ label: '➡️ Próxima Equipe', class: 'btn-next', action: 'closeAndNext()' }]);
+  }, 300);
+}
+
+// ============================================================
+// CRONÔMETRO
+// ============================================================
+function startTimer(seconds, onTimeout) {
+  stopTimer();
+  gameState.timerValue = seconds;
+  gameState.timerMax = seconds;
+  
+  const timerSection = document.getElementById('timerSection');
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerBar = document.getElementById('timerBar');
+  const modalTimerBar = document.getElementById('modalTimerBar');
+  const modalTimerValue = document.getElementById('modalTimerValue');
+  const modalTimerFill = document.getElementById('modalTimerFill');
+  
+  timerSection.classList.add('active');
+  timerDisplay.classList.remove('danger');
+  timerBar.classList.remove('danger');
+  modalTimerBar.classList.add('active');
+  modalTimerValue.classList.remove('danger');
+  modalTimerFill.classList.remove('danger');
+  
+  const updateTimer = () => {
+    timerDisplay.textContent = gameState.timerValue;
+    modalTimerValue.textContent = gameState.timerValue;
+    const pct = (gameState.timerValue / gameState.timerMax) * 100;
+    timerBar.style.width = pct + '%';
+    modalTimerFill.style.width = pct + '%';
+    
+    if (gameState.timerValue <= 10) {
+      timerDisplay.classList.add('danger');
+      timerBar.classList.add('danger');
+      modalTimerValue.classList.add('danger');
+      modalTimerFill.classList.add('danger');
+    }
+    
+    if (gameState.timerValue <= 0) {
+      stopTimer();
+      timerSection.classList.remove('active');
+      modalTimerBar.classList.remove('active');
+      if (onTimeout) onTimeout();
+      return;
+    }
+    
+    gameState.timerValue--;
+    gameState.timerInterval = setTimeout(updateTimer, 1000);
+  };
+  
+  updateTimer();
+}
+
+function stopTimer() {
+  if (gameState.timerInterval) {
+    clearTimeout(gameState.timerInterval);
+    gameState.timerInterval = null;
+  }
+  document.getElementById('timerSection').classList.remove('active');
+  document.getElementById('modalTimerBar').classList.remove('active');
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function showModal({ badge, badgeColor, title, body, html, actions }) {
+  const overlay = document.getElementById('modalOverlay');
+  
+  document.getElementById('modalBadge').textContent = badge;
+  document.getElementById('modalBadge').style.background = badgeColor + '33';
+  document.getElementById('modalBadge').style.color = badgeColor;
+  document.getElementById('modalBadge').style.border = `1px solid ${badgeColor}55`;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body || '';
+  
+  const optGrid = document.getElementById('optionsGrid');
+  optGrid.innerHTML = html || '';
+  
+  document.getElementById('resultBox').className = 'result-box';
+  
+  setModalActions(actions || []);
+  overlay.classList.add('active');
+}
+
+function setModalActions(actions) {
+  const container = document.getElementById('modalActions');
+  container.innerHTML = '';
+  actions.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = `btn-action ${a.class}`;
+    btn.textContent = a.label;
+    btn.onclick = new Function(a.action);
+    container.appendChild(btn);
+  });
+}
+
+function showResult(correct, points, msg, explanation) {
+  const box = document.getElementById('resultBox');
+  box.className = `result-box show ${correct ? 'correct-result' : 'wrong-result'}`;
+  document.getElementById('resultTitle').textContent = correct ? '✅ CORRETO!' : '❌ ERRADO!';
+  document.getElementById('resultTitle').style.color = correct ? 'var(--success)' : 'var(--danger)';
+  document.getElementById('resultPoints').textContent = points;
+  document.getElementById('resultPoints').style.color = correct ? 'var(--success)' : 'var(--danger)';
+  document.getElementById('resultExplanation').textContent = explanation || msg;
+}
+
+function closeModal() {
+  stopTimer();
+  gameState.waitingForAnswer = false;
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+function closeAndNext() {
+  closeModal();
+  nextTeam();
+}
+
+// ============================================================
+// PRÓXIMA EQUIPE
+// ============================================================
+function nextTeam() {
+  gameState.currentTeam = (gameState.currentTeam + 1) % 6;
+  
+  if (gameState.currentTeam === 0) {
+    gameState.round++;
+  }
+  
+  updateUI();
+  
+  const ct = gameState.teams[gameState.currentTeam];
+
+  if (ct.skipsLeft > 0) {
+    // Equipe com punição: notifica e agenda auto-avanço após 2s para não travar
+    showNotification(`<strong style="color:${ct.color}">Equipe ${ct.name}</strong> ⛔ perde a vez!`);
+    addLog(`⛔ Equipe <span style="color:${ct.color}">${ct.name}</span> perde a vez (punição)`);
+    // NÃO avança automático — o professor confirma clicando o botão vermelho
+  } else {
+    showNotification(`Vez da <strong style="color:${ct.color}">Equipe ${ct.name}</strong>!`);
+    addLog(`--- Rodada ${gameState.round} · Equipe <span style="color:${ct.color}">${ct.name}</span> ---`);
+  }
+}
+
+function showNotification(msg) {
+  const old = document.querySelector('.notification');
+  if (old) old.remove();
+  
+  const notif = document.createElement('div');
+  notif.className = 'notification';
+  notif.innerHTML = msg;
+  document.body.appendChild(notif);
+  
+  setTimeout(() => {
+    notif.style.opacity = '0';
+    notif.style.transform = 'translateX(100%)';
+    notif.style.transition = 'all 0.4s';
+    setTimeout(() => notif.remove(), 400);
+  }, 2500);
+}
+
+// ============================================================
+// FIM DE JOGO
+// ============================================================
+function finishGame() {
+  closeModal();
+  stopTimer();
+  showRanking();
+}
+
+function showRanking() {
+  const sorted = [...gameState.teams].sort((a, b) => b.score - a.score);
+  const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣'];
+  
+  const list = document.getElementById('rankingList');
+  list.innerHTML = '';
+  
+  sorted.forEach((team, i) => {
+    const item = document.createElement('div');
+    item.className = 'ranking-item';
+    item.innerHTML = `
+      <div class="rank-medal">${medals[i]}</div>
+      <div class="rank-team-name" style="color:${team.color}">⬛ ${team.name}</div>
+      <div class="rank-score">${team.score}</div>
+      <div class="rank-stats">
+        ✅ ${team.correct} acertos<br>
+        🔧 ${team.challenges} desafios<br>
+        Casa ${team.position}/69
+      </div>
+    `;
+    list.appendChild(item);
+  });
+  
+  showScreen('screen-ranking');
+  createConfetti();
+}
+
+function createConfetti() {
+  const container = document.getElementById('victoryAnim');
+  container.innerHTML = '';
+  const colors = ['#ff6d00', '#ffd600', '#00e676', '#2979ff', '#ff1744', '#ab47bc'];
+  
+  for (let i = 0; i < 60; i++) {
+    const conf = document.createElement('div');
+    conf.className = 'confetti';
+    conf.style.left = Math.random() * 100 + 'vw';
+    conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+    conf.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    conf.style.animationDelay = Math.random() * 3 + 's';
+    conf.style.width = (Math.random() * 12 + 6) + 'px';
+    conf.style.height = (Math.random() * 12 + 6) + 'px';
+    container.appendChild(conf);
+  }
+  
+  setTimeout(() => { container.innerHTML = ''; }, 8000);
+}
+
+// ============================================================
+// REINICIAR
+// ============================================================
+function confirmRestart() {
+  showModal({
+    badge: '🔄 REINICIAR', badgeColor: '#ff6d00',
+    title: 'Reiniciar o Jogo?',
+    body: 'Todo o progresso será perdido. Deseja reiniciar?',
+    actions: [
+      { label: '✅ Sim, Reiniciar', class: 'btn-confirm', action: 'restartGame()' },
+      { label: '❌ Cancelar', class: 'btn-close', action: 'closeModal()' }
+    ]
+  });
+}
+
+function restartGame() {
+  closeModal();
+  startGame(gameState.currentMap);
+}
+
+// ============================================================
+// ÍCONES FLUTUANTES
+// ============================================================
+function createFloatingIcons() {
+  const icons = ['⛑️','🔥','⚠️','🧯','🦺','🔧','📋','🚧','⚡','☠️'];
+  const container = document.getElementById('floatingIcons');
+  
+  icons.forEach((icon, i) => {
+    const el = document.createElement('div');
+    el.className = 'float-icon';
+    el.textContent = icon;
+    el.style.left = (10 + i * 9) + '%';
+    el.style.animationDuration = (8 + i * 2) + 's';
+    el.style.animationDelay = -(i * 1.5) + 's';
+    container.appendChild(el);
+  });
+}
+
+// ============================================================
+// ZOOM / PAN DO MAPA
+// ============================================================
+let mapZoom = 1.0;
+const ZOOM_MIN = 0.35;
+const ZOOM_MAX = 1.6;
+const ZOOM_STEP = 0.1;
+
+function applyZoom(z) {
+  mapZoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z));
+  const wrap = document.getElementById('boardWrap');
+  if (wrap) wrap.style.transform = `scale(${mapZoom})`;
+  const lbl = document.getElementById('zoomLabel');
+  if (lbl) lbl.textContent = Math.round(mapZoom * 100) + '%';
+}
+
+function adjustZoom(delta) {
+  applyZoom(mapZoom + delta);
+}
+
+function fitBoard() {
+  const viewport = document.getElementById('boardViewport');
+  const wrap     = document.getElementById('boardWrap');
+  if (!viewport || !wrap) return;
+
+  // Temporariamente remover transform para medir tamanho real
+  wrap.style.transform = 'scale(1)';
+  const vw = viewport.clientWidth  - 16;
+  const vh = viewport.clientHeight - 16;
+  const bw = MAP_W;
+  const bh = MAP_H;
+
+  if (vw <= 0 || vh <= 0) return;
+
+  const fitScale = Math.min(vw / bw, vh / bh);
+  applyZoom(fitScale);
+}
+
+// Pan com arrastar (drag)
+(function initPan() {
+  let dragging = false, startX = 0, startY = 0, scrollLeft = 0, scrollTop = 0;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const vp = document.getElementById('boardViewport');
+    if (!vp) return;
+
+    vp.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
+      dragging = true;
+      startX = e.pageX - vp.offsetLeft;
+      startY = e.pageY - vp.offsetTop;
+      scrollLeft = vp.scrollLeft;
+      scrollTop  = vp.scrollTop;
+    });
+    vp.addEventListener('mouseleave', () => { dragging = false; });
+    vp.addEventListener('mouseup',    () => { dragging = false; });
+    vp.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      e.preventDefault();
+      const x = e.pageX - vp.offsetLeft;
+      const y = e.pageY - vp.offsetTop;
+      vp.scrollLeft = scrollLeft - (x - startX);
+      vp.scrollTop  = scrollTop  - (y - startY);
+    });
+
+    // Zoom com scroll do mouse sobre o mapa
+    vp.addEventListener('wheel', e => {
+      e.preventDefault();
+      adjustZoom(e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP);
+    }, { passive: false });
+  });
+})();
+
+// Reajusta ao redimensionar janela
+window.addEventListener('resize', () => {
+  if (document.getElementById('screen-game') &&
+      document.getElementById('screen-game').classList.contains('active')) {
+    fitBoard();
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+createFloatingIcons();
+initTeams();
+</script>
+</body>
+</html>
