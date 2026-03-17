@@ -1,0 +1,399 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+#app{font-family:'Nunito',sans-serif;max-width:680px;margin:0 auto;padding:1rem;}
+.screen{display:none;}
+.screen.active{display:block;}
+.entry-wrap{background:#1a1a2e;border-radius:20px;padding:2rem;border:2px solid #2a2a4e;}
+.entry-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,200,0,0.18);border:1.5px solid #ffc800;border-radius:99px;padding:5px 16px;font-size:12px;font-weight:800;color:#ffc800;letter-spacing:0.05em;margin-bottom:1.25rem;}
+.entry-title{font-size:28px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px;}
+.entry-title span{color:#ffc800;}
+.entry-sub{font-size:14px;color:#aaa;margin-bottom:1.75rem;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.75rem;}
+.stat-box{background:#252545;border:1.5px solid #3a3a6e;border-radius:14px;padding:14px;text-align:center;}
+.stat-icon{font-size:22px;margin-bottom:4px;}
+.stat-val{font-size:20px;font-weight:900;color:#fff;}
+.stat-lbl{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+.field-lbl{font-size:12px;font-weight:800;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;display:block;}
+.name-select{width:100%;padding:13px 16px;font-size:15px;font-family:'Nunito',sans-serif;font-weight:700;border:2px solid #3a3a6e;border-radius:12px;background:#252545;color:#fff;appearance:none;cursor:pointer;margin-bottom:1.25rem;outline:none;}
+.name-select:focus{border-color:#ffc800;}
+.name-select option{background:#252545;color:#fff;}
+.btn-play{width:100%;padding:16px;font-size:17px;font-weight:900;font-family:'Nunito',sans-serif;background:#ffc800;color:#1a1a2e;border:none;border-radius:14px;cursor:pointer;letter-spacing:0.03em;transition:transform 0.1s,filter 0.1s;}
+.btn-play:hover{filter:brightness(1.1);transform:translateY(-2px);}
+.btn-play:active{transform:scale(0.98);}
+.quiz-top{background:#1a1a2e;border-radius:16px;padding:14px 16px;margin-bottom:1rem;border:2px solid #2a2a4e;}
+.quiz-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.player-chip{display:flex;align-items:center;gap:10px;}
+.avatar{width:36px;height:36px;background:#ffc800;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#1a1a2e;flex-shrink:0;}
+.player-name{font-size:14px;font-weight:800;color:#fff;}
+.player-sub{font-size:11px;color:#888;}
+.timer-chip{display:flex;align-items:center;gap:6px;background:#252545;border:2px solid #3a3a6e;border-radius:99px;padding:7px 16px;font-size:15px;font-weight:900;color:#fff;font-family:'Nunito',sans-serif;}
+.timer-chip.warn{background:#2a1f00;border-color:#ff9600;color:#ff9600;}
+.timer-chip.danger{background:#2a0000;border-color:#ff4444;color:#ff4444;animation:pulse 0.8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+.xp-row{display:flex;align-items:center;gap:10px;}
+.xp-label{font-size:12px;font-weight:800;color:#ffc800;white-space:nowrap;}
+.xp-bar-wrap{flex:1;height:10px;background:#252545;border-radius:99px;overflow:hidden;border:1px solid #3a3a6e;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,#ffc800,#ff8c00);border-radius:99px;transition:width 0.4s ease;}
+.xp-count{font-size:12px;font-weight:700;color:#888;white-space:nowrap;}
+.dots-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;padding:12px 14px;background:#1a1a2e;border-radius:12px;border:2px solid #2a2a4e;}
+.dot{width:13px;height:13px;border-radius:50%;background:#2a2a4e;border:2px solid #3a3a6e;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.dot:hover{transform:scale(1.4);border-color:#ffc800;}
+.dot.answered{background:#ffc800;border-color:#ffc800;}
+.dot.current{background:#fff;border-color:#fff;transform:scale(1.3);}
+.q-card{background:#1a1a2e;border:2px solid #2a2a4e;border-radius:18px;padding:1.5rem;margin-bottom:1rem;}
+.q-num-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,200,0,0.15);border:1.5px solid rgba(255,200,0,0.4);border-radius:99px;padding:4px 14px;font-size:12px;font-weight:800;color:#ffc800;margin-bottom:14px;}
+.q-text{font-size:15px;font-weight:700;color:#fff;line-height:1.65;margin-bottom:1.25rem;}
+.opts{display:flex;flex-direction:column;gap:10px;}
+.opt-btn{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 16px;font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;border:2px solid #3a3a6e;border-radius:12px;background:#252545;color:#ddd;cursor:pointer;transition:all 0.15s;}
+.opt-btn:hover{background:#2e2e5e;border-color:#ffc800;color:#fff;}
+.opt-btn.selected{background:#2a2000;border-color:#ffc800;color:#ffc800;}
+.opt-btn.selected .opt-letter{background:#ffc800;color:#1a1a2e;border-color:#ffc800;}
+.opt-letter{width:30px;height:30px;border-radius:8px;background:#1a1a2e;border:2px solid #3a3a6e;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;color:#aaa;transition:all 0.15s;}
+.nav-row{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px;margin-top:4px;}
+.btn-nav{padding:13px 10px;font-size:14px;font-weight:800;font-family:'Nunito',sans-serif;background:#252545;color:#fff;border:2px solid #3a3a6e;border-radius:12px;cursor:pointer;transition:all 0.15s;}
+.btn-nav:hover:not(:disabled){background:#2e2e5e;border-color:#888;}
+.btn-nav:disabled{opacity:0.3;cursor:not-allowed;}
+.btn-finish{padding:13px 10px;font-size:14px;font-weight:900;font-family:'Nunito',sans-serif;background:#22c55e;color:#fff;border:2px solid #16a34a;border-radius:12px;cursor:pointer;transition:all 0.15s;}
+.btn-finish:hover{background:#16a34a;transform:translateY(-1px);}
+.result-wrap{background:#1a1a2e;border-radius:20px;padding:2rem;border:2px solid #2a2a4e;text-align:center;}
+.trophy{font-size:60px;margin-bottom:8px;}
+.result-title{font-size:24px;font-weight:900;color:#fff;margin-bottom:4px;}
+.result-name-big{font-size:15px;font-weight:700;color:#888;margin-bottom:1.5rem;}
+.score-ring-wrap{margin:0 auto 1rem;width:140px;height:140px;position:relative;}
+.score-ring-wrap svg{transform:rotate(-90deg);}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-big{font-size:36px;font-weight:900;color:#fff;}
+.score-small{font-size:13px;color:#666;font-weight:700;}
+.status-pill{display:inline-block;padding:8px 24px;border-radius:99px;font-size:14px;font-weight:800;margin-bottom:1.5rem;margin-top:8px;}
+.status-pill.ok{background:rgba(34,197,94,0.2);border:2px solid #22c55e;color:#22c55e;}
+.status-pill.fail{background:rgba(239,68,68,0.2);border:2px solid #ef4444;color:#ef4444;}
+.answers-grid{display:flex;flex-direction:column;gap:7px;text-align:left;margin-top:1rem;}
+.ans-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:10px;font-size:13px;font-weight:700;border:2px solid;}
+.ans-item.ok{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.3);color:#ccc;}
+.ans-item.fail{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.3);color:#ccc;}
+.ans-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;margin-top:1px;}
+.ans-item.ok .ans-icon{background:rgba(34,197,94,0.25);color:#22c55e;}
+.ans-item.fail .ans-icon{background:rgba(239,68,68,0.25);color:#ef4444;}
+.ans-qtext{font-size:12px;color:#666;margin-top:3px;font-weight:600;}
+.sheets-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:10px;font-size:13px;font-weight:700;border:2px solid #3a3a6e;background:#252545;color:#aaa;margin-top:1rem;}
+</style>
+
+<div id="app">
+  <div id="screen-entry" class="screen active">
+    <div class="entry-wrap">
+      <div class="entry-badge">🛡️ SEGURANÇA DO TRABALHO</div>
+      <div class="entry-title">Quiz <span>Challenge</span></div>
+      <div class="entry-sub">Responda 20 questões e mostre seu conhecimento!</div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-icon">❓</div><div class="stat-val">20</div><div class="stat-lbl">Questões</div></div>
+        <div class="stat-box"><div class="stat-icon">⏱️</div><div class="stat-val">60</div><div class="stat-lbl">Minutos</div></div>
+        <div class="stat-box"><div class="stat-icon">⭐</div><div class="stat-val">100</div><div class="stat-lbl">XP máx</div></div>
+      </div>
+      <label class="field-lbl" for="name-select">Selecione seu nome</label>
+      <select class="name-select" id="name-select">
+        <option value="">— escolha seu nome —</option>
+        <option>ANTONIELLY DOS SANTOS</option>
+        <option>CRISTHOFER RAILAN GEBIELUKA FERRAZ</option>
+        <option>CRISTOFER CARNEIRO DE SOUZA</option>
+        <option>EDSON MATHEUS DOS SANTOS</option>
+        <option>ENZO SOCOLOSKI DOS SANTOS</option>
+        <option>ERICK DOS SANTOS CARDOSO</option>
+        <option>FABIANE MARTINS DE ABREU</option>
+        <option>FELIPE BOAVA</option>
+        <option>GABRIEL SANTIAGO ZANON</option>
+        <option>GABRIELLY BOHMANN MARFIL</option>
+        <option>INGRID VITORIA RIBEIRO DA SILVA</option>
+        <option>ISABELE DE MATTOS SPERANDIO MACHADO</option>
+        <option>ISABELI RIBAS</option>
+        <option>ISABELLY RODRIGUES ALVES</option>
+        <option>JULYA CARNEIRO DE OLIVEIRA</option>
+        <option>KAINÃ BRISKY KALISZ</option>
+        <option>KAUÃ DE ALMEIDA GOMES</option>
+        <option>KAUÃ MATHEUS DOS SANTOS ALMEIDA</option>
+        <option>LAÍS CRISTINA CAMARGO SILVA</option>
+        <option>LUAN RABE DE OLIVEIRA</option>
+        <option>LUCAS GABRIEL LOPES DOS SANTOS</option>
+        <option>LUIZ GUSTAVO DA SILVA ROSNER</option>
+        <option>MARIA EDUARDA PICARSKI GONÇALVES</option>
+        <option>MARIA ISABELLY DE FREITAS SCHNAIDER</option>
+        <option>MURILO YURI DOS SANTOS</option>
+        <option>NATALY VITÓRIA SILVA RIBEIRO</option>
+        <option>NATHALY DEWEISY WOGLER LIMA</option>
+        <option>PEDRO HENRICK DE ALMEIDA COSTA</option>
+        <option>VICTOR MARCELO SILVA DE OLIVEIRA</option>
+        <option>VIKTOR DE OLIVEIRA BARBOSA</option>
+        <option>VINICIUS DE OLIVEIRA BARBOSA</option>
+        <option>YASMIN PONTES SOUZA</option>
+      </select>
+      <button class="btn-play" onclick="startQuiz()">🚀 INICIAR QUIZ</button>
+    </div>
+  </div>
+
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-top">
+      <div class="quiz-top-row">
+        <div class="player-chip">
+          <div class="avatar" id="avatar-initials">?</div>
+          <div>
+            <div class="player-name" id="display-name"></div>
+            <div class="player-sub" id="q-progress-lbl">Questão 1 de 20</div>
+          </div>
+        </div>
+        <div class="timer-chip" id="timer-chip">⏱ <span id="timer-display">60:00</span></div>
+      </div>
+      <div class="xp-row">
+        <span class="xp-label">XP</span>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+        <span class="xp-count" id="xp-count">0 / 100</span>
+      </div>
+    </div>
+    <div class="dots-wrap" id="dots-wrap"></div>
+    <div class="q-card">
+      <div class="q-num-badge" id="q-num-badge">⚡ Questão 1</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-nav" id="btn-prev" onclick="goTo(currentQ-1)" disabled>← Anterior</button>
+      <button class="btn-nav" id="btn-next" onclick="goTo(currentQ+1)">Próxima →</button>
+      <button class="btn-finish" onclick="confirmFinish()">✅ Finalizar</button>
+    </div>
+  </div>
+
+  <div id="screen-result" class="screen">
+    <div class="result-wrap">
+      <div class="trophy" id="trophy-icon">🏆</div>
+      <div class="result-title" id="result-title">Parabéns!</div>
+      <div class="result-name-big" id="result-name"></div>
+      <div class="score-ring-wrap">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="58" fill="none" stroke="#252545" stroke-width="12"/>
+          <circle cx="70" cy="70" r="58" fill="none" id="ring-fill" stroke="#ffc800" stroke-width="12" stroke-linecap="round" stroke-dasharray="364.4" stroke-dashoffset="364.4"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-big" id="score-big">0</div>
+          <div class="score-small">de 20</div>
+        </div>
+      </div>
+      <div class="status-pill" id="status-pill">—</div>
+      <div class="sheets-bar" id="sheets-bar" style="display:none"></div>
+      <div class="answers-grid" id="answers-grid"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SHEETS_URL="https://script.google.com/macros/s/AKfycbwVjIoHrK1UTV72f5k8dm1r4dmX9y0hhrvliMomqxGR-Wh_R4-yCX73s8N2xYuxNIf-/exec";
+
+const ALL_Q=[
+  {q:"Um perigo pode causar danos, o risco é a probabilidade de que isso aconteça, e os riscos e perigos potenciais NÃO são prioridade quando avaliados juntos. Qual sequência V/F está correta?",opts:["V, V, F","V, F, V","F, V, F","F, F, V"],ans:0},
+  {q:"Qual é a ordem correta do conceito de segurança do trabalho?",opts:["Execução, monitoramento e planejamento","Monitoramento, execução e planejamento","Monitoramento, planejamento e execução","Planejamento, execução, monitoramento"],ans:3},
+  {q:"Qual o significado da letra C na sigla PDCA?",opts:["Verificar","Capacitar","Informar","Nenhuma alternativa correta"],ans:0},
+  {q:"Qual o significado da letra D na sigla PDCA?",opts:["Direcionar","Treinamento","Executar","Nenhuma alternativa correta"],ans:2},
+  {q:"Qual a característica dos indicadores reativos?",opts:["Avaliam consequências; Atuam depois do problema","Atuam antes do acidente; Foco na prevenção","Todas as alternativas corretas","Nenhuma alternativa correta"],ans:0},
+  {q:"Qual a característica dos indicadores proativos?",opts:["Avaliam consequências; Atuam depois do problema","Atuam antes do acidente; Foco na prevenção","Todas as alternativas estão corretas","Nenhuma alternativa correta"],ans:1},
+  {q:"O que significa a letra P na sigla PDCA?",opts:["Prevenir","Planejar","Produzir","Priorizar"],ans:1},
+  {q:"O que significa a letra A na sigla PDCA?",opts:["Avaliar","Ajustar","Agir","Analisar"],ans:2},
+  {q:"O que significa a sigla EPI?",opts:["Equipamento de Proteção Individual","Equipamento de Prevenção Industrial","Elemento de Proteção Interna","Equipamento de Produção Individual"],ans:0},
+  {q:"Qual é a principal função do uso de EPI?",opts:["Melhorar a produtividade","Reduzir custos da empresa","Proteger o trabalhador contra riscos","Aumentar o conforto no trabalho"],ans:2},
+  {q:"Qual órgão regula normas de segurança do trabalho no Brasil?",opts:["IBGE","Ministério do Trabalho e Emprego","INSS","Receita Federal"],ans:1},
+  {q:"O que é um acidente de trabalho?",opts:["Qualquer acidente fora da empresa","Evento sem danos ao trabalhador","Ocorrência que causa lesão ou doença relacionada ao trabalho","Apenas acidentes com máquinas"],ans:2},
+  {q:"O que significa CIPA?",opts:["Comissão Interna de Prevenção de Acidentes","Comitê Industrial de Proteção Ambiental","Centro de Inspeção de Processos Administrativos","Comissão Internacional de Prevenção Ambiental"],ans:0},
+  {q:"Qual cor identifica equipamentos de combate a incêndio?",opts:["Azul","Verde","Vermelho","Amarelo"],ans:2},
+  {q:"O que é risco ergonômico?",opts:["Exposição a produtos químicos","Problemas causados por postura inadequada ou esforço repetitivo","Risco de explosão","Contato com eletricidade"],ans:1},
+  {q:"Qual equipamento é utilizado para proteção auditiva?",opts:["Óculos de proteção","Luvas","Protetor auricular","Máscara respiratória"],ans:2},
+  {q:"O que fazer ao identificar uma situação de risco no trabalho?",opts:["Ignorar","Continuar trabalhando normalmente","Comunicar imediatamente ao responsável","Resolver sozinho sem avisar"],ans:2},
+  {q:"O que significa a sigla PGR?",opts:["Ordem de serviço","Programa de controle médico e saúde ocupacional","Programa de gerenciamento de risco","Gerenciamento de risco ocupacional"],ans:2},
+  {q:"Qual a diferença entre risco e perigo?",opts:["Perigo é a chance de algo acontecer, e risco é aquilo que causa dano","Perigo é a fonte que pode causar dano, e risco é a probabilidade desse dano acontecer","Perigo e risco são a mesma coisa","Risco é sempre maior que o perigo"],ans:1},
+  {q:"Quais são os tipos de risco ocupacionais?",opts:["Físico, químico, biológico, ergonômico e acidentes","Acidente, biológico, ergonômico, químico, físico","Ergonômico, químico, biológico, acidente, físico","Químico, acidente, físico, ergonômico, biológico"],ans:0},
+  {q:"Qual é a diferença entre perigo imediato e oculto?",opts:["Perigo imediato pode causar dano na hora; o perigo oculto não é facilmente percebido","Perigo imediato só existe em máquinas","Perigo imediato não causa acidentes","Perigo oculto é visível e o perigo imediato é invisível"],ans:0},
+  {q:"Qual é a principal função do PGR?",opts:["Apenas registrar acidentes","Identificar, avaliar e controlar os riscos ocupacionais no ambiente de trabalho","Substituir todas as normas de segurança","Garantir apenas o uso de EPIs"],ans:1},
+  {q:"O que significa APR?",opts:["Análise de Processo de Risco","Avaliação de Perigo Rotativo","Análise Preliminar de Risco","Ação Preventiva de Rotina"],ans:2},
+  {q:"Qual o principal objetivo da APR?",opts:["Demitir funcionários","Aumentar produção","Punir erros","Identificar e prevenir riscos antes da atividade"],ans:3},
+  {q:"Qual desses é um EPI?",opts:["Escada","Andaime","Máquina","Capacete"],ans:3},
+  {q:"Quem é responsável por fornecer os EPIs?",opts:["Funcionário","Governo","Cliente","Empregador"],ans:3},
+  {q:"O que são NRs?",opts:["Normas Regionais","Normas de Risco","Normas Regulamentadoras","Normas de Rotina"],ans:2},
+  {q:"Qual NR trata da CIPA?",opts:["NR-10","NR-6","NR-5","NR-12"],ans:2},
+  {q:"A NR-6 está relacionada a:",opts:["Máquinas","Eletricidade","Trabalho em altura","EPIs"],ans:3},
+  {q:"O que significa PCMSO?",opts:["Laudo Técnico das Condições Ambientais","Saúde e Segurança no Trabalho","Programa de Controle Médico de Saúde Ocupacional","Diálogo Diário de Segurança"],ans:2},
+  {q:"Qual a função do PCMSO?",opts:["Identificar e classificar riscos","Monitorar a saúde dos trabalhadores por meio de exames ocupacionais","Elaborar ordens de serviço","Substituir o PGR"],ans:1},
+  {q:"Quantos tipos principais de riscos ocupacionais existem?",opts:["3","4","5","7"],ans:2},
+  {q:"Qual dos exemplos abaixo é um risco físico?",opts:["Vírus","Poeira química","Ruídos","Bactérias"],ans:2},
+  {q:"O que a matriz de risco avalia?",opts:["O salário do trabalhador","A probabilidade e a gravidade do risco","O horário de trabalho","A produção da empresa"],ans:1},
+  {q:"Qual NR trata do Gerenciamento de Risco Ocupacional?",opts:["NR-1","NR-5","NR-6","NR-9"],ans:0},
+  {q:"A NR-33 trata de:",opts:["Ergonomia no trabalho","Trabalho em altura","Segurança em espaços confinados","Uso de EPIs"],ans:2},
+  {q:"A NR-35 estabelece regras para:",opts:["Trabalho em escritório","Trabalho em altura","Trabalho com máquinas","Trabalho com eletricidade"],ans:1},
+  {q:"O que é perigo oculto?",opts:["É o perigo sempre visível","É específico de caminhões","É o perigo que não é percebido facilmente","Não existe perigo oculto"],ans:2},
+  {q:"Qual é um exemplo de risco biológico?",opts:["Ruído excessivo","Produtos químicos","Queda de altura","Bactérias"],ans:3},
+  {q:"O que é a CIPA?",opts:["Comissão paritária para prevenir acidentes e doenças no trabalho","Órgão Federal que fiscaliza empresas","Sindicato de técnicos de segurança","Programa de exames médicos"],ans:0},
+  {q:"Em qual situação a APR deve ser realizada?",opts:["Após o término da atividade","Antes de iniciar qualquer tarefa com riscos","Apenas em caso de acidente","Somente em empresas grandes"],ans:1},
+  {q:"O trabalhador pode recusar o uso de EPI?",opts:["Sim, se não quiser","Sim, se estiver calor","Não, o uso é obrigatório","Só em dias específicos"],ans:2},
+  {q:"Para que servem as NRs?",opts:["Organizar empresas","Criar regras de produção","Garantir segurança e saúde no trabalho","Controlar salários"],ans:2},
+  {q:"Quem deve garantir que as NR sejam cumpridas?",opts:["Apenas o trabalhador","Apenas o governo","O empregador e os trabalhadores","Somente o sindicato"],ans:2},
+  {q:"Qual o significado do PDCA?",opts:["Planejar, desenvolver, controlar, avaliar","Planejar, executar, checar, agir","Produzir, direcionar, corrigir, administrar","Planejar, decidir, comunicar, analisar"],ans:1},
+  {q:"Qual a relação entre GRO e PGR?",opts:["GRO é o processo; PGR é o programa que documenta as ações","PGR é mais amplo que o GRO","GRO trata apenas de exames médicos","PGR substitui o GRO"],ans:0},
+  {q:"Qual NR é a de trabalho em altura?",opts:["NR-15","NR-10","NR-35","NR-30"],ans:2},
+  {q:"O que são EPC?",opts:["Equipamentos de uso individual","Usados apenas por supervisores","Equipamentos de proteção coletiva que protegem todos","Ferramentas de produção"],ans:2},
+  {q:"A NR-10 trata de:",opts:["Trabalho em altura","Segurança com eletricidade","Espaço confinado","Incêndio"],ans:1},
+  {q:"A NR-23 é sobre:",opts:["Produtos químicos","Incêndio e combate ao fogo","Espaços confinados","Ergonomia"],ans:1},
+  {q:"Qual NR trata especificamente do trabalho em altura (acima de 2 metros)?",opts:["NR-06","NR-10","NR-35","NR-12"],ans:2},
+  {q:"O que é um incidente (quase acidente)?",opts:["Ocorrência sem lesão, mas que poderia ter causado","Acidente grave com afastamento","Doença ocupacional","Acidente durante o trajeto"],ans:0},
+  {q:"O que significa a sigla CLT?",opts:["Conselho Livre do Trabalhador","Consolidação das Leis Trabalhistas","Código de Leis Trabalhistas","Confederação Livre do Trabalhador"],ans:1},
+  {q:"A sigla CAT refere-se à?",opts:["Cadastro de Acidente Técnico","Comunicação de Acidente de Trabalho","Controle de Atividades Temporárias","Comissão de Análise Técnica"],ans:1},
+  {q:"O que é perigo?",opts:["Chance de acontecer algo","Fonte que pode causar dano","Resultado de um acidente","Tipo de norma"],ans:1},
+  {q:"O que significa risco?",opts:["Apenas a gravidade do dano","Apenas a causa do problema","Probabilidade + gravidade","Tipo de equipamento"],ans:2},
+  {q:"O que quer dizer GRO?",opts:["Grupo de Risco Operacional","Gerenciamento de Riscos Ocupacionais","Guia de Regras Operacionais","Gestão de Recursos Organizacionais"],ans:1},
+  {q:"O que é um inventário de riscos?",opts:["Lista de funcionários","Controle de equipamentos","Levantamento dos riscos do trabalho","Registro de salários"],ans:2},
+  {q:"O que é um indicador proativo?",opts:["Mede acidentes ocorridos","Mede falhas já existentes","Mede ações de prevenção","Mede custos"],ans:2},
+  {q:"Quando um risco é considerado alto?",opts:["Quando não há perigo","Quando a chance e o dano são baixos","Quando a probabilidade e a gravidade são altas","Quando não há controle"],ans:2},
+  {q:"Qual é um dos objetivos de incluir fatores psicossociais na gestão de segurança?",opts:["Aumentar produtividade sem considerar cansaço","Prevenir doenças mentais ocupacionais e promover bem-estar","Substituir o uso de EPIs","Reduzir salários"],ans:1},
+  {q:"Segundo a NR-23, os extintores devem ser selecionados com base em:",opts:["Cor da parede","Classe de incêndio (A, B, C ou D) e carga de incêndio","Preço mais baixo","Peso do equipamento"],ans:1},
+  {q:"Qual dos indicadores mede o que já aconteceu?",opts:["Indicadores reativos","Indicadores proativos","Indicadores estratégicos","Nenhuma das alternativas"],ans:0},
+  {q:"Qual característica é essencial para um bom indicador?",opts:["Confiável","Complexo","Irrelevante","Inconsciente"],ans:0},
+  {q:"Fiação exposta representa qual tipo de risco?",opts:["Biológico","Químico","Ergonômico","Elétrico"],ans:3},
+  {q:"Qual NR trata de eletricidade?",opts:["NR-10","NR-12","NR-18","NR-22"],ans:0},
+  {q:"Qual a NR considerada a NR 'mãe'?",opts:["NR-01","NR-02","NR-07","NR-19"],ans:0},
+  {q:"Qual é a ordem correta das medidas de controle?",opts:["Substituição, eliminação, EPI, controles administrativos","EPI, controles administrativos, engenharia, substituição","Eliminação, substituição, controles de engenharia, controles administrativos e EPI","Controles de engenharia, controles administrativos, substituição, eliminação"],ans:2},
+  {q:"Qual NR trata de ergonomia e postura?",opts:["NR-15","NR-11","NR-17","NR-22"],ans:2},
+  {q:"Qual a importância do EPI?",opts:["Oferecer proteção contra riscos ocupacionais no ambiente de trabalho","Impedir completamente qualquer risco","Substituir treinamentos","Proteger apenas contra cortes"],ans:0},
+  {q:"O uso do EPI é obrigatório quando?",opts:["O funcionário se sentir seguro","As medidas coletivas não forem suficientes","A fiscalização estiver presente","O equipamento for confortável"],ans:1},
+  {q:"Qual das alternativas representa um risco físico?",opts:["Poeira e fumo","Vírus e bactérias","Ruído e vibração","Postura inadequada"],ans:2},
+  {q:"O que significa EPC?",opts:["Equipamento de proteção coletiva","Equipamento de proteção completa","Equipamento de proteção contra quedas","Estrutura de proteção contra incêndios"],ans:0},
+  {q:"Qual a diferença entre EPI e EPC?",opts:["Não existe diferença","EPI é coletivo e EPC é individual","EPI protege o indivíduo e EPC protege o grupo","Ambos são iguais"],ans:2},
+  {q:"Qual NR trata de transporte de carga?",opts:["NR-11","NR-15","NR-26","NR-18"],ans:0},
+  {q:"O que significa ACT no ciclo PDCA?",opts:["Verificar","Executar","Planejar","Agir"],ans:3},
+  {q:"Perigo imediato é aquele que:",opts:["Pode causar dano rapidamente ou na hora","Aparece depois de anos","Não causa danos","Só existe em escritório"],ans:0},
+  {q:"Indicadores proativos medem:",opts:["Somente acidentes já ocorridos","Gravidade de afastamentos","Ações de prevenção como inspeções e riscos eliminados","Número de demissões"],ans:2},
+  {q:"Qual NR fala sobre proteção contra incêndios?",opts:["NR-23","NR-14","NR-22","NR-21"],ans:0},
+  {q:"Cortes são um risco classificado como:",opts:["Biológico","Físico","Químico","Acidente"],ans:3},
+  {q:"Qual NR estabelece que o empregador deve elaborar o PGR?",opts:["NR-1","NR-5","NR-6","NR-17"],ans:0},
+  {q:"Perigo é a fonte, situação ou ato com potencial de causar dano. Essa afirmação é:",opts:["Verdadeira","Falsa","Parcialmente correta","Não se aplica"],ans:0},
+  {q:"A NR-17 está relacionada à:",opts:["Trabalho com faca","Ergonomia","Eletricidade","Espaços confinados"],ans:1},
+  {q:"O que é OS (Ordem de Serviço)?",opts:["Orientar trabalhadores sobre riscos e procedimentos seguros","Controlar exames médicos","Identificar apenas riscos ambientais","Substituir o PGR"],ans:0},
+  {q:"A NR-18 está relacionada a:",opts:["Construção civil","Uso de EPI","Trabalho em escritório","Transporte de cargas"],ans:0},
+  {q:"Qual NR trata de espaços confinados?",opts:["NR-35","NR-17","NR-33","NR-8"],ans:2}
+];
+
+let quiz=[],answers=[],currentQ=0,timerInt=null,secsLeft=3600,student="";
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+function startQuiz(){
+  const sel=document.getElementById('name-select').value;
+  if(!sel){alert('Selecione seu nome para continuar.');return;}
+  student=sel;
+  quiz=shuffle(ALL_Q).slice(0,20);
+  answers=new Array(20).fill(null);
+  const parts=sel.split(' ');
+  const initials=(parts[0][0]+(parts[1]?parts[1][0]:'')).toUpperCase();
+  document.getElementById('avatar-initials').textContent=initials;
+  document.getElementById('display-name').textContent=parts[0];
+  buildDots();showScreen('screen-quiz');renderQ(0);startTimer();
+}
+
+function buildDots(){
+  const w=document.getElementById('dots-wrap');w.innerHTML='';
+  for(let i=0;i<20;i++){const d=document.createElement('div');d.className='dot';d.id='d'+i;d.onclick=()=>goTo(i);w.appendChild(d);}
+}
+
+function updateDots(){
+  for(let i=0;i<20;i++){const d=document.getElementById('d'+i);d.className='dot'+(answers[i]!==null?' answered':'')+(i===currentQ?' current':'');}
+}
+
+function renderQ(idx){
+  currentQ=idx;
+  const q=quiz[idx];
+  const L=['A','B','C','D'];
+  document.getElementById('q-num-badge').textContent='⚡ Questão '+(idx+1);
+  document.getElementById('q-text').textContent=q.q;
+  const opts=document.getElementById('opts');opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt-btn'+(answers[idx]===i?' selected':'');
+    btn.innerHTML='<span class="opt-letter">'+L[i]+'</span>'+o;
+    btn.onclick=()=>pick(idx,i);
+    opts.appendChild(btn);
+  });
+  const done=answers.filter(a=>a!==null).length;
+  document.getElementById('q-progress-lbl').textContent='Questão '+(idx+1)+' de 20';
+  const xp=Math.round((done/20)*100);
+  document.getElementById('xp-bar').style.width=xp+'%';
+  document.getElementById('xp-count').textContent=xp+' / 100 XP';
+  document.getElementById('btn-prev').disabled=idx===0;
+  document.getElementById('btn-next').disabled=idx===19;
+  updateDots();
+}
+
+function pick(qIdx,optIdx){answers[qIdx]=optIdx;renderQ(qIdx);}
+function goTo(idx){if(idx>=0&&idx<20)renderQ(idx);}
+
+function startTimer(){
+  secsLeft=3600;
+  timerInt=setInterval(()=>{
+    secsLeft--;
+    const m=String(Math.floor(secsLeft/60)).padStart(2,'0');
+    const s=String(secsLeft%60).padStart(2,'0');
+    document.getElementById('timer-display').textContent=m+':'+s;
+    const chip=document.getElementById('timer-chip');
+    chip.className=secsLeft<=300?'timer-chip danger':secsLeft<=600?'timer-chip warn':'timer-chip';
+    if(secsLeft<=0){clearInterval(timerInt);finishQuiz();}
+  },1000);
+}
+
+function confirmFinish(){
+  const u=answers.filter(a=>a===null).length;
+  if(u>0&&!confirm(u+' questão(ões) sem resposta. Finalizar mesmo assim?'))return;
+  finishQuiz();
+}
+
+function finishQuiz(){
+  clearInterval(timerInt);
+  let score=0;
+  quiz.forEach((q,i)=>{if(answers[i]===q.ans)score++;});
+  showResults(score);sendSheets(score);
+}
+
+function showResults(score){
+  showScreen('screen-result');
+  const pct=Math.round((score/20)*100);
+  const ok=score>=10;
+  document.getElementById('trophy-icon').textContent=score>=18?'🏆':score>=14?'🥈':score>=10?'🥉':'💪';
+  document.getElementById('result-title').textContent=ok?'Parabéns, você passou!':'Continue estudando!';
+  document.getElementById('result-name').textContent=student;
+  document.getElementById('score-big').textContent=score;
+  const ring=document.getElementById('ring-fill');
+  const circ=364.4;
+  ring.setAttribute('stroke',ok?'#22c55e':'#ef4444');
+  setTimeout(()=>{ring.style.transition='stroke-dashoffset 1s ease';ring.setAttribute('stroke-dashoffset',String(circ-(circ*(score/20))));},150);
+  const pill=document.getElementById('status-pill');
+  pill.textContent=pct+'% de acertos — '+(ok?'Aprovado ✓':'Recuperação');
+  pill.className='status-pill '+(ok?'ok':'fail');
+  const grid=document.getElementById('answers-grid');grid.innerHTML='';
+  const L=['A','B','C','D'];
+  quiz.forEach((q,i)=>{
+    const c=answers[i]===q.ans;
+    const div=document.createElement('div');
+    div.className='ans-item '+(c?'ok':'fail');
+    div.innerHTML='<div class="ans-icon">'+(c?'✓':'✗')+'</div><div><div style="font-weight:800;color:#fff">Q'+(i+1)+(c?'':' — Correto: '+L[q.ans])+'</div><div class="ans-qtext">'+q.q.substring(0,80)+'…</div></div>';
+    grid.appendChild(div);
+  });
+}
+
+async function sendSheets(score){
+  const el=document.getElementById('sheets-bar');
+  el.style.display='flex';el.textContent='⏳ Enviando para o Google Sheets...';
+  const now=new Date();
+  const dt=now.toLocaleDateString('pt-BR')+' '+now.toLocaleTimeString('pt-BR');
+  const L=['A','B','C','D'];
+  let det='';
+  quiz.forEach((q,i)=>{const r=answers[i]!==null?L[answers[i]]:'NR';det+='Q'+(i+1)+':'+r+'('+L[q.ans]+')['+(answers[i]===q.ans?'OK':'X')+']; ';});
+  try{
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:student,data:dt,pontuacao:score,total:20,percentual:Math.round((score/20)*100),detalhes:det.trim()})});
+    el.textContent='✅ Resultado salvo no Google Sheets!';
+  }catch(e){el.textContent='⚠️ Falha no envio. Anote: '+student+' — '+score+'/20';}
+}
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+</script>
