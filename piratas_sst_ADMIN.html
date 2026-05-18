@@ -1271,6 +1271,17 @@
                 popularSelectAlunos();
                 mostrarAlerta('success', `✅ ${dadosRanking.length} alunos carregados com sucesso!`);
                 
+                // DEBUG: mostra as primeiras linhas do log no console
+                if (dadosLog.length > 0) {
+                    console.log('=== COLUNAS DA PLAN2 (primeiras 3 linhas) ===');
+                    dadosLog.slice(0, 3).forEach((linha, i) => {
+                        console.log('Linha ' + i + ':', JSON.stringify(linha));
+                    });
+                    console.log('Chaves disponíveis:', Object.keys(dadosLog[0]));
+                } else {
+                    console.log('Plan2 está vazia ou não carregou!');
+                }
+                
                 setTimeout(() => document.getElementById('alertContainer').innerHTML = '', 3000);
             } catch (e) {
                 mostrarAlerta('error', '❌ Erro ao carregar dados. Verifique as URLs!');
