@@ -1290,11 +1290,13 @@
                 const nomeLog = (t.Aluno || t.aluno || '').toLowerCase().trim();
                 if (nomeLog !== nomeAluno.toLowerCase().trim()) return;
 
-                // Coluna "Descrição" contém "atribuir" ou "descontar" (vem do campo dados.tipo do script)
-                const descricao = (t['Descrição'] || t['Descricao'] || t['descricao'] || t['descrição'] || t.Tipo || t.tipo || '').toLowerCase().trim();
+                // Busca o valor da coluna Descrição em todas as chaves (ignora espaços extras no nome da coluna)
+                const descricao = Object.entries(t)
+                    .filter(([k]) => k.trim().toLowerCase().replace(/ã/g,'a').startsWith('descri'))
+                    .map(([,v]) => v)[0] || '';
                 const qtd = parseFloat(t.Quantidade || t.quantidade || 0);
 
-                if (descricao.includes('atribuir')) {
+                if (descricao.toLowerCase().trim() === 'atribuir') {
                     totalGanho += qtd;
                 }
             });
