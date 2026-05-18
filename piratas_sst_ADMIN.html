@@ -1278,28 +1278,25 @@
         }
 
         function calcularSaldoCompleto(nomeAluno, ouroP1) {
-            // ouroP1 = saldo atual na Plan1 (já descontado o que foi gasto)
-            // Plan2 (log) tem todas as transações com tipo "atribuir" ou "descontar"
-            //
-            // FÓRMULA:
-            //   totalGasto  = soma de todas as linhas "descontar" no log
-            //   totalGanho  = ouroP1 + totalGasto   (reconstrói o histórico)
-            //   podeGastar  = ouroP1  (já é o saldo correto da Plan1)
+            // podeGastar = Ouro da Plan1 (direto)
+            // totalGanho = soma da coluna Quantidade na Plan2
+            //              onde a coluna Descrição contém "atribuir"
 
-            let totalGasto = 0;
+            let totalGanho = 0;
 
             dadosLog.forEach(t => {
                 const nomeLog = (t.Aluno || t.aluno || '').toLowerCase().trim();
                 if (nomeLog !== nomeAluno.toLowerCase().trim()) return;
-                const qtd = parseFloat(t.Quantidade || t.quantidade || 0);
+
                 const tipo = (t.Tipo || t.tipo || '').toLowerCase().trim();
-                if (tipo === 'descontar') totalGasto += qtd;
+                const qtd = parseFloat(t.Quantidade || t.quantidade || 0);
+
+                if (tipo === 'atribuir') {
+                    totalGanho += qtd;
+                }
             });
 
-            const totalGanho = ouroP1 + totalGasto;   // reconstrói total histórico
-            const podeGastar = ouroP1;                 // saldo atual direto da Plan1
-
-            return { totalGanho, podeGastar };
+            return { totalGanho, podeGastar: ouroP1 };
         }
 
         function exibirRanking() {
