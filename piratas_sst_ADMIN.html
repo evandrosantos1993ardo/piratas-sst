@@ -899,7 +899,7 @@
                     <div class="stat-card">
                         <div class="stat-icon">💰</div>
                         <div class="stat-value" id="saldoOuro">0</div>
-                        <div class="stat-label">Moedas de Ouro</div>
+                        <div class="stat-label">🟢 Pode Gastar (Saldo Atual)</div>
                         <div class="patente-badge">
                             <div class="patente-nome" id="patenteNome">Grumete</div>
                             <div style="font-size: 0.9em; color: #e0e0e0; margin-top: 5px;" id="patenteProxima">Próxima: Marinheiro</div>
@@ -907,6 +907,11 @@
                                 <div class="patente-barra" id="patenteProgresso" style="width: 0%">0%</div>
                             </div>
                         </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-value" id="totalGanhoAluno">0</div>
+                        <div class="stat-label">💰 Total Ganho (Histórico)</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">🏆</div>
@@ -1272,30 +1277,76 @@
             }
         }
 
+        function calcularSaldoDoLog(nomeAluno) {
+            // Soma todas as transações do log (Plan2) para o aluno
+            let totalGanho = 0;
+            let totalGasto = 0;
+            
+            dadosLog.forEach(t => {
+                const nomeLog = (t.Aluno || t.aluno || '').toLowerCase().trim();
+                if (nomeLog !== nomeAluno.toLowerCase().trim()) return;
+                
+                const qtd = parseFloat(t.Quantidade || t.quantidade || 0);
+                const tipo = (t.Tipo || t.tipo || '').toLowerCase().trim();
+                
+                if (tipo === 'atribuir') {
+                    totalGanho += qtd;
+                } else if (tipo === 'descontar') {
+                    totalGasto += qtd;
+                }
+            });
+            
+            return { totalGanho, totalGasto, saldoAtual: totalGanho - totalGasto };
+        }
+
         function exibirRanking() {
             const container = document.getElementById('rankingPrincipal');
             const medals = ['🥇', '🥈', '🥉'];
             
-            const ranking = [...dadosRanking].sort((a, b) => {
-                const ouroA = parseInt(a.Ouro || a.ouro || 0);
-                const ouroB = parseInt(b.Ouro || b.ouro || 0);
-                return ouroB - ouroA;
-            });
-            
-            container.innerHTML = ranking.map((aluno, i) => {
+            // Monta dados com saldo calculado pelo log (Plan2)
+            const dadosComSaldo = dadosRanking.map(aluno => {
                 const nome = aluno.Nome || aluno.nome || 'Sem nome';
-                const ouro = parseInt(aluno.Ouro || aluno.ouro || 0);
-                const patente = obterPatente(ouro);
+                const saldo = calcularSaldoDoLog(nome);
+                // Se não há nenhuma transação no log, usa o valor da planilha como fallback
+                const temLog = dadosLog.some(t => (t.Aluno || t.aluno || '').toLowerCase().trim() === nome.toLowerCase().trim());
+                const saldoFinal = temLog ? saldo.saldoAtual : parseInt(aluno.Ouro || aluno.ouro || 0);
+                const totalGanho = temLog ? saldo.totalGanho : parseInt(aluno.Ouro || aluno.ouro || 0);
+                return { ...aluno, _saldoFinal: Math.max(0, saldoFinal), _totalGanho: totalGanho };
+            });
+
+            // Ordena pelo saldo atual (pode gastar)
+            const ranking = [...dadosComSaldo].sort((a, b) => b._saldoFinal - a._saldoFinal);
+            
+            container.innerHTML = `
+                <div style="display:grid; grid-template-columns: 60px 1fr 140px 140px 50px; gap:8px; padding: 10px 18px; color:#ffd700; font-weight:bold; font-size:0.95em; border-bottom: 2px solid rgba(255,215,0,0.3); margin-bottom:8px;">
+                    <div>#</div>
+                    <div>Aluno / Patente</div>
+                    <div style="text-align:center;">💰 Total Ganho</div>
+                    <div style="text-align:center;">🟢 Pode Gastar</div>
+                    <div></div>
+                </div>
+            ` + ranking.map((aluno, i) => {
+                const nome = aluno.Nome || aluno.nome || 'Sem nome';
+                const saldoAtual = aluno._saldoFinal;
+                const totalGanho = aluno._totalGanho;
+                const patente = obterPatente(saldoAtual);
                 
                 return `
-                    <div class="ranking-item">
-                        <div class="rank-position">#${i + 1}</div>
+                    <div class="ranking-item" style="display:grid; grid-template-columns: 60px 1fr 140px 140px 50px; gap:8px; align-items:center;">
+                        <div class="rank-position" style="font-size:1.6em; min-width:unset;">#${i + 1}</div>
                         <div class="rank-info">
                             <div class="rank-name">${nome}</div>
                             <div class="rank-patente">${patente.emoji} ${patente.nome}</div>
                         </div>
-                        <div class="rank-gold">${ouro} 💰</div>
-                        ${i < 3 ? `<div style="font-size: 2.5em; margin-left: 15px; filter: drop-shadow(0 5px 10px rgba(255,215,0,0.5));">${medals[i]}</div>` : ''}
+                        <div style="text-align:center;">
+                            <div style="color:#aad4ff; font-size:1.1em; font-weight:bold;">${totalGanho} 💰</div>
+                            <div style="color:#aaa; font-size:0.75em;">total ganho</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="color:${saldoAtual > 0 ? '#4CAF50' : '#f44336'}; font-size:1.2em; font-weight:bold;">${saldoAtual} 💰</div>
+                            <div style="color:#aaa; font-size:0.75em;">disponível</div>
+                        </div>
+                        <div style="font-size:2em; filter:drop-shadow(0 5px 10px rgba(255,215,0,0.5));">${i < 3 ? medals[i] : ''}</div>
                     </div>
                 `;
             }).join('');
@@ -1334,11 +1385,19 @@
 
         function exibirDetalhesAluno(aluno) {
             const nome = aluno.Nome || aluno.nome;
-            const ouro = parseInt(aluno.Ouro || aluno.ouro || 0);
+            const saldoLog = calcularSaldoDoLog(nome);
+            const temLog = dadosLog.some(t => (t.Aluno || t.aluno || '').toLowerCase().trim() === nome.toLowerCase().trim());
+            const ouro = temLog ? Math.max(0, saldoLog.saldoAtual) : parseInt(aluno.Ouro || aluno.ouro || 0);
+            const totalGanho = temLog ? saldoLog.totalGanho : ouro;
             
-            const ranking = [...dadosRanking].sort((a, b) => 
-                parseInt(b.Ouro || b.ouro || 0) - parseInt(a.Ouro || a.ouro || 0)
-            );
+            // Ranking ordenado por saldo atual (calculado pelo log)
+            const dadosComSaldo = dadosRanking.map(a => {
+                const n = a.Nome || a.nome || '';
+                const s = calcularSaldoDoLog(n);
+                const tl = dadosLog.some(t => (t.Aluno || t.aluno || '').toLowerCase().trim() === n.toLowerCase().trim());
+                return { ...a, _saldoFinal: tl ? Math.max(0, s.saldoAtual) : parseInt(a.Ouro || a.ouro || 0) };
+            });
+            const ranking = [...dadosComSaldo].sort((a, b) => b._saldoFinal - a._saldoFinal);
             const posicao = ranking.findIndex(a => (a.Nome || a.nome) === nome) + 1;
             
             const transacoes = dadosLog.filter(t => 
@@ -1349,6 +1408,7 @@
             const progresso = calcularProgresso(ouro);
             
             document.getElementById('saldoOuro').textContent = ouro;
+            document.getElementById('totalGanhoAluno').textContent = totalGanho;
             document.getElementById('totalMissoes').textContent = transacoes.length;
             document.getElementById('rankingPosicao').textContent = `#${posicao}`;
             document.getElementById('patenteNome').textContent = `${patente.emoji} ${patente.nome}`;
