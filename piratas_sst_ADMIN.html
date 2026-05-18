@@ -1277,69 +1277,45 @@
             }
         }
 
-        function calcularSaldoDoLog(nomeAluno) {
-            // Soma todas as transações do log (Plan2) para o aluno
-            let totalGanho = 0;
+        function calcularSaldoCompleto(nomeAluno, ouroP1) {
+            // ouroP1 = saldo atual na Plan1 (já descontado o que foi gasto)
+            // Plan2 (log) tem todas as transações com tipo "atribuir" ou "descontar"
+            //
+            // FÓRMULA:
+            //   totalGasto  = soma de todas as linhas "descontar" no log
+            //   totalGanho  = ouroP1 + totalGasto   (reconstrói o histórico)
+            //   podeGastar  = ouroP1  (já é o saldo correto da Plan1)
+
             let totalGasto = 0;
-            
+
             dadosLog.forEach(t => {
                 const nomeLog = (t.Aluno || t.aluno || '').toLowerCase().trim();
                 if (nomeLog !== nomeAluno.toLowerCase().trim()) return;
-                
                 const qtd = parseFloat(t.Quantidade || t.quantidade || 0);
                 const tipo = (t.Tipo || t.tipo || '').toLowerCase().trim();
-                
-                // Qualquer coisa que não seja explicitamente "descontar" conta como ganho
-                if (tipo === 'descontar') {
-                    totalGasto += qtd;
-                } else {
-                    // 'atribuir' ou qualquer outro valor positivo = ganho
-                    totalGanho += qtd;
-                }
+                if (tipo === 'descontar') totalGasto += qtd;
             });
-            
-            return { totalGanho, totalGasto, saldoAtual: totalGanho - totalGasto };
-        }
 
-        function calcularSaldoCompleto(nomeAluno, ouroPlaniha) {
-            // Se há transações no log, usa somente o log (fonte de verdade)
-            // Se não há nenhuma transação, usa o valor da Plan1
-            const temLog = dadosLog.some(t => 
-                (t.Aluno || t.aluno || '').toLowerCase().trim() === nomeAluno.toLowerCase().trim()
-            );
-            
-            if (!temLog) {
-                // Sem log: saldo da Plan1 = total ganho = pode gastar
-                return { totalGanho: ouroPlaniha, saldoAtual: ouroPlaniha };
-            }
-            
-            const saldo = calcularSaldoDoLog(nomeAluno);
-            
-            // Se o totalGanho do log for menor que o ouro da Plan1,
-            // significa que a Plan1 tem saldo inicial que não foi lançado no log ainda.
-            // Nesse caso, usamos o ouro da Plan1 como base de comparação.
-            // Total ganho = max(totalGanho do log, ouro da Plan1 + totalGasto)
-            // pois: ouro Plan1 = totalGanho - totalGasto  →  totalGanho = ouroPlaniha + totalGasto
-            const totalGanhoReal = Math.max(saldo.totalGanho, ouroPlaniha + saldo.totalGasto);
-            const saldoReal = totalGanhoReal - saldo.totalGasto;
-            
-            return { totalGanho: totalGanhoReal, saldoAtual: Math.max(0, saldoReal) };
+            const totalGanho = ouroP1 + totalGasto;   // reconstrói total histórico
+            const podeGastar = ouroP1;                 // saldo atual direto da Plan1
+
+            return { totalGanho, podeGastar };
         }
 
         function exibirRanking() {
             const container = document.getElementById('rankingPrincipal');
             const medals = ['🥇', '🥈', '🥉'];
             
-            // Monta dados com saldo calculado pelo log (Plan2) reconciliado com Plan1
+            // Monta dados com total ganho e pode gastar calculados via Plan1 + log Plan2
             const dadosComSaldo = dadosRanking.map(aluno => {
                 const nome = aluno.Nome || aluno.nome || 'Sem nome';
                 const ouroP1 = parseInt(aluno.Ouro || aluno.ouro || 0);
-                const { totalGanho, saldoAtual } = calcularSaldoCompleto(nome, ouroP1);
-                return { ...aluno, _saldoFinal: saldoAtual, _totalGanho: totalGanho };
+                const { totalGanho, podeGastar } = calcularSaldoCompleto(nome, ouroP1);
+                return { ...aluno, _totalGanho: totalGanho, _podeGastar: podeGastar };
             });
 
-            // Ordena pelo saldo atual (pode gastar)
-            const ranking = [...dadosComSaldo].sort((a, b) => b._saldoFinal - a._saldoFinal);
+            // Ordena pelo TOTAL GANHO (histórico)
+            const ranking = [...dadosComSaldo].sort((a, b) => b._totalGanho - a._totalGanho);
             
             container.innerHTML = `
                 <div style="display:grid; grid-template-columns: 60px 1fr 140px 140px 50px; gap:8px; padding: 10px 18px; color:#ffd700; font-weight:bold; font-size:0.95em; border-bottom: 2px solid rgba(255,215,0,0.3); margin-bottom:8px;">
@@ -1351,9 +1327,9 @@
                 </div>
             ` + ranking.map((aluno, i) => {
                 const nome = aluno.Nome || aluno.nome || 'Sem nome';
-                const saldoAtual = aluno._saldoFinal;
+                const saldoAtual = aluno._podeGastar;
                 const totalGanho = aluno._totalGanho;
-                const patente = obterPatente(saldoAtual);
+                const patente = obterPatente(totalGanho);
                 
                 return `
                     <div class="ranking-item" style="display:grid; grid-template-columns: 60px 1fr 140px 140px 50px; gap:8px; align-items:center;">
@@ -1410,16 +1386,16 @@
         function exibirDetalhesAluno(aluno) {
             const nome = aluno.Nome || aluno.nome;
             const ouroP1 = parseInt(aluno.Ouro || aluno.ouro || 0);
-            const { totalGanho, saldoAtual: ouro } = calcularSaldoCompleto(nome, ouroP1);
+            const { totalGanho, podeGastar: ouro } = calcularSaldoCompleto(nome, ouroP1);
             
-            // Ranking ordenado por saldo atual (calculado pelo log)
+            // Ranking ordenado por TOTAL GANHO
             const dadosComSaldo = dadosRanking.map(a => {
                 const n = a.Nome || a.nome || '';
                 const p1 = parseInt(a.Ouro || a.ouro || 0);
-                const { saldoAtual } = calcularSaldoCompleto(n, p1);
-                return { ...a, _saldoFinal: saldoAtual };
+                const { totalGanho: tg } = calcularSaldoCompleto(n, p1);
+                return { ...a, _totalGanho: tg };
             });
-            const ranking = [...dadosComSaldo].sort((a, b) => b._saldoFinal - a._saldoFinal);
+            const ranking = [...dadosComSaldo].sort((a, b) => b._totalGanho - a._totalGanho);
             const posicao = ranking.findIndex(a => (a.Nome || a.nome) === nome) + 1;
             
             const transacoes = dadosLog.filter(t => 
