@@ -1,4 +1,3 @@
-08+42
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1280,39 +1279,37 @@
         }
 
         function calcularSaldoCompleto(nomeAluno, ouroP1) {
-            // totalGanho = soma de Quantidade onde Tipo === 'atribuir'
-            // podeGastar = totalGanho - totalGasto (Tipo === 'descontar')
-            // Se não houver registros no log, usa ouroP1 da Plan1 como fallback
+            // Plan2 colunas: Data, Nome, Quantidade, Descricao, Missao, Valor Final
+            // totalGanho = soma de Quantidade onde Descricao === 'atribuir'
+            // podeGastar = Ouro da Plan1 (saldo atual ja calculado pela planilha)
 
             let totalGanho = 0;
-            let totalGasto = 0;
             let temRegistros = false;
 
             dadosLog.forEach(t => {
-                const nomeLog = (t.Aluno || t.aluno || '').toLowerCase().trim();
+                // Coluna "Nome" na Plan2
+                const nomeLog = (t.Nome || t.nome || t.Aluno || t.aluno || '').toLowerCase().trim();
                 if (nomeLog !== nomeAluno.toLowerCase().trim()) return;
 
-                // Busca o Tipo da transação (coluna Tipo)
-                const tipo = (t.Tipo || t.tipo || '').toLowerCase().trim();
+                // Coluna "Descricao" contem "atribuir" ou "descontar"
+                const descKey = Object.keys(t).find(k => k.trim().toLowerCase().replace(/[^a-z]/g,'').startsWith('descri')) || '';
+                const descricao = (t[descKey] || '').toLowerCase().trim();
                 const qtd = parseFloat(t.Quantidade || t.quantidade || 0);
 
                 if (!isNaN(qtd) && qtd > 0) {
                     temRegistros = true;
-                    if (tipo === 'atribuir') {
+                    if (descricao === 'atribuir') {
                         totalGanho += qtd;
-                    } else if (tipo === 'descontar') {
-                        totalGasto += qtd;
                     }
                 }
             });
 
-            // Se não tem registros no log, usa o valor da Plan1 diretamente
+            // podeGastar vem direto da Plan1 (saldo atual ja calculado pela planilha)
             if (!temRegistros) {
                 return { totalGanho: ouroP1, podeGastar: ouroP1 };
             }
 
-            const podeGastar = Math.max(0, totalGanho - totalGasto);
-            return { totalGanho, podeGastar };
+            return { totalGanho, podeGastar: ouroP1 };
         }
 
         function exibirRanking() {
