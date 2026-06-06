@@ -695,7 +695,7 @@
                 <div class="stat-card">
                     <div class="stat-icon">💰</div>
                     <div class="stat-value" id="saldoOuro">0</div>
-                    <div class="stat-label">Moedas de Ouro</div>
+                    <div class="stat-label">🟢 Pode Gastar (Saldo Atual)</div>
                     <div class="patente-badge">
                         <div class="patente-nome" id="patenteNome">Grumete</div>
                         <div style="font-size: 0.9em; color: #e0e0e0; margin-top: 5px;" id="patenteProxima">Próxima: Marinheiro</div>
@@ -703,6 +703,11 @@
                             <div class="patente-barra" id="patenteProgresso" style="width: 0%">0%</div>
                         </div>
                     </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value" id="totalGanhoAluno">0</div>
+                    <div class="stat-label">💰 Total Ganho (Histórico)</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🏆</div>
@@ -920,20 +925,55 @@
             }
         }
 
+        function calcularSaldoCompleto(nomeAluno, ouroP1) {
+            // Plan2 colunas: Data, Nome, Quantidade, Descrição, Missão, Valor Final
+            // totalGanho = soma de Quantidade onde Descrição === 'atribuir'
+            // podeGastar = Ouro da Plan1 (saldo atual da planilha)
+
+            let totalGanho = 0;
+            let temRegistros = false;
+
+            dadosLog.forEach(t => {
+                const nomeLog = (t.Nome || t.nome || t.Aluno || t.aluno || '').toLowerCase().trim();
+                if (nomeLog !== nomeAluno.toLowerCase().trim()) return;
+
+                const descKey = Object.keys(t).find(k => k.trim().toLowerCase().replace(/[^a-z]/g,'').startsWith('descri')) || '';
+                const descricao = (t[descKey] || '').toLowerCase().trim();
+                const qtd = parseFloat(t.Quantidade || t.quantidade || 0);
+
+                if (!isNaN(qtd) && qtd > 0) {
+                    temRegistros = true;
+                    if (descricao === 'atribuir') {
+                        totalGanho += qtd;
+                    }
+                }
+            });
+
+            if (!temRegistros) {
+                return { totalGanho: ouroP1, podeGastar: ouroP1 };
+            }
+
+            return { totalGanho, podeGastar: ouroP1 };
+        }
+
         function exibirRanking() {
             const container = document.getElementById('rankingPrincipal');
             const medals = ['🥇', '🥈', '🥉'];
-            
-            const ranking = [...dadosRanking].sort((a, b) => {
-                const ouroA = parseInt(a.Ouro || a.ouro || 0);
-                const ouroB = parseInt(b.Ouro || b.ouro || 0);
-                return ouroB - ouroA;
+
+            // Calcula totalGanho para cada aluno e ordena por ele
+            const dadosComSaldo = dadosRanking.map(aluno => {
+                const nome = aluno.Nome || aluno.nome || 'Sem nome';
+                const ouroP1 = parseInt(aluno.Ouro || aluno.ouro || 0);
+                const { totalGanho, podeGastar } = calcularSaldoCompleto(nome, ouroP1);
+                return { ...aluno, _totalGanho: totalGanho, _podeGastar: podeGastar };
             });
+
+            const ranking = [...dadosComSaldo].sort((a, b) => b._totalGanho - a._totalGanho);
             
             container.innerHTML = ranking.map((aluno, i) => {
                 const nome = aluno.Nome || aluno.nome || 'Sem nome';
-                const ouro = parseInt(aluno.Ouro || aluno.ouro || 0);
-                const patente = obterPatente(ouro);
+                const totalGanho = aluno._totalGanho;
+                const patente = obterPatente(totalGanho);
                 
                 return `
                     <div class="ranking-item">
@@ -942,7 +982,7 @@
                             <div class="rank-name">${nome}</div>
                             <div class="rank-patente">${patente.emoji} ${patente.nome}</div>
                         </div>
-                        <div class="rank-gold">${ouro} 💰</div>
+                        <div class="rank-gold">${totalGanho} 💰</div>
                         ${i < 3 ? `<div style="font-size: 2.5em; margin-left: 15px; filter: drop-shadow(0 5px 10px rgba(255,215,0,0.5));">${medals[i]}</div>` : ''}
                     </div>
                 `;
@@ -970,21 +1010,29 @@
 
         function exibirDetalhesAluno(aluno) {
             const nome = aluno.Nome || aluno.nome;
-            const ouro = parseInt(aluno.Ouro || aluno.ouro || 0);
-            
-            const ranking = [...dadosRanking].sort((a, b) => 
-                parseInt(b.Ouro || b.ouro || 0) - parseInt(a.Ouro || a.ouro || 0)
-            );
+            const ouroP1 = parseInt(aluno.Ouro || aluno.ouro || 0);
+            const { totalGanho, podeGastar: ouro } = calcularSaldoCompleto(nome, ouroP1);
+
+            // Ranking ordenado por totalGanho
+            const dadosComSaldo = dadosRanking.map(a => {
+                const n = a.Nome || a.nome || '';
+                const p1 = parseInt(a.Ouro || a.ouro || 0);
+                const { totalGanho: tg } = calcularSaldoCompleto(n, p1);
+                return { ...a, _totalGanho: tg };
+            });
+            const ranking = [...dadosComSaldo].sort((a, b) => b._totalGanho - a._totalGanho);
             const posicao = ranking.findIndex(a => (a.Nome || a.nome) === nome) + 1;
             
+            // Busca transações pelo campo Nome (não Aluno)
             const transacoes = dadosLog.filter(t => 
-                (t.Aluno || t.aluno || '').toLowerCase() === nome.toLowerCase()
+                (t.Nome || t.nome || t.Aluno || t.aluno || '').toLowerCase() === nome.toLowerCase()
             );
             
-            const patente = obterPatente(ouro);
-            const progresso = calcularProgresso(ouro);
+            const patente = obterPatente(totalGanho);
+            const progresso = calcularProgresso(totalGanho);
             
             document.getElementById('saldoOuro').textContent = ouro;
+            document.getElementById('totalGanhoAluno').textContent = totalGanho;
             document.getElementById('totalMissoes').textContent = transacoes.length;
             document.getElementById('rankingPosicao').textContent = `#${posicao}`;
             document.getElementById('patenteNome').textContent = `${patente.emoji} ${patente.nome}`;
