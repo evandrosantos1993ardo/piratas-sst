@@ -1,4 +1,4 @@
-13+28
+08+42
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1280,28 +1280,39 @@
         }
 
         function calcularSaldoCompleto(nomeAluno, ouroP1) {
-            // podeGastar = Ouro da Plan1 (direto)
-            // totalGanho = soma da coluna Quantidade na Plan2
-            //              onde a coluna Descrição contém "atribuir"
+            // totalGanho = soma de Quantidade onde Tipo === 'atribuir'
+            // podeGastar = totalGanho - totalGasto (Tipo === 'descontar')
+            // Se não houver registros no log, usa ouroP1 da Plan1 como fallback
 
             let totalGanho = 0;
+            let totalGasto = 0;
+            let temRegistros = false;
 
             dadosLog.forEach(t => {
                 const nomeLog = (t.Aluno || t.aluno || '').toLowerCase().trim();
                 if (nomeLog !== nomeAluno.toLowerCase().trim()) return;
 
-                // Busca o valor da coluna Descrição em todas as chaves (ignora espaços extras no nome da coluna)
-                const descricao = Object.entries(t)
-                    .filter(([k]) => k.trim().toLowerCase().replace(/ã/g,'a').startsWith('descri'))
-                    .map(([,v]) => v)[0] || '';
+                // Busca o Tipo da transação (coluna Tipo)
+                const tipo = (t.Tipo || t.tipo || '').toLowerCase().trim();
                 const qtd = parseFloat(t.Quantidade || t.quantidade || 0);
 
-                if (descricao.toLowerCase().trim() === 'atribuir') {
-                    totalGanho += qtd;
+                if (!isNaN(qtd) && qtd > 0) {
+                    temRegistros = true;
+                    if (tipo === 'atribuir') {
+                        totalGanho += qtd;
+                    } else if (tipo === 'descontar') {
+                        totalGasto += qtd;
+                    }
                 }
             });
 
-            return { totalGanho, podeGastar: ouroP1 };
+            // Se não tem registros no log, usa o valor da Plan1 diretamente
+            if (!temRegistros) {
+                return { totalGanho: ouroP1, podeGastar: ouroP1 };
+            }
+
+            const podeGastar = Math.max(0, totalGanho - totalGasto);
+            return { totalGanho, podeGastar };
         }
 
         function exibirRanking() {
